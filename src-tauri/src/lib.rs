@@ -3,6 +3,7 @@ use std::error::Error;
 use tauri::{async_runtime::spawn, App};
 use tokio::sync::mpsc;
 
+mod config;
 mod device;
 mod events;
 

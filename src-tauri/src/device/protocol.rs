@@ -27,20 +27,29 @@ pub enum ClientDeviceMessage {
     },
 }
 
+pub type DeviceId = Uuid;
+pub type AccessToken = String;
+
 /// Device message coming from the server side
 #[derive(Deserialize)]
 #[serde(tag = "type")]
 pub enum ServerDeviceMessage {
+    /// Device access was denied
+    Denied {},
+
     /// Device access was approved
     Approved {
         /// Unique ID of the device
-        device_id: Uuid,
+        device_id: DeviceId,
         /// Device access token for future requests
-        access_token: String,
+        access_token: AccessToken,
     },
 
     /// Device is authenticated
     Authenticated {},
+
+    /// Provided access token was invalid
+    InvalidAccessToken {},
 
     /// Update the current profile data and its tiles
     ProfileUpdate {},
