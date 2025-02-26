@@ -4187,6 +4187,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "futures",
+ "parking_lot",
  "serde",
  "serde_json",
  "tauri",
