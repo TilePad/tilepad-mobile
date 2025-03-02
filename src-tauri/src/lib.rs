@@ -1,11 +1,8 @@
 use std::error::Error;
 
-use tauri::{async_runtime::spawn, App};
-use tokio::sync::mpsc;
+use tauri::App;
 
 mod config;
-mod device;
-mod events;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -28,16 +25,6 @@ fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     // use that subscriber to process traces emitted after this point
     tracing::subscriber::set_global_default(subscriber)?;
-
-    let app_handle = app.handle();
-
-    let (app_event_tx, app_event_rx) = mpsc::unbounded_channel();
-
-    // Spawn event processor
-    spawn(events::processing::process_events(
-        app_handle.clone(),
-        app_event_rx,
-    ));
 
     Ok(())
 }

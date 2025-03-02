@@ -1,4 +1,4 @@
-use std::net::IpAddr;
+use std::net::{IpAddr, SocketAddr};
 
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -34,5 +34,5 @@ pub struct Controller {
 #[serde(tag = "type")]
 pub enum ControllerConnection {
     /// Connection through a socket
-    Socket { address: IpAddr, port: u16 },
+    Socket { address: SocketAddr },
 }
