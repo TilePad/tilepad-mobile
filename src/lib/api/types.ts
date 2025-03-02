@@ -1,0 +1,59 @@
+export type ClientDeviceMessage =
+  | { type: "RequestApproval"; name: string }
+  | { type: "RequestTiles" }
+  | { type: "Authenticate"; access_token: string }
+  | { type: "TileClicked"; tile_id: string };
+
+export type ServerDeviceMessage =
+  | { type: "Declined" }
+  | { type: "Approved"; device_id: string; access_token: string }
+  | { type: "Revoked" }
+  | { type: "Authenticated" }
+  | { type: "InvalidAccessToken" }
+  | { type: "Tiles"; tiles: TileModel[]; folder: FolderModel };
+
+export type ConnectionDetails = { host: string; port: number };
+
+export interface TileModel {
+  id: string;
+  config: TileConfig;
+  folder_id: string;
+  row: number;
+  column: number;
+}
+
+export interface TileConfig {
+  plugin_id: string;
+  action_id: string;
+  icon: TileIcon;
+  properties: object;
+}
+
+export type TileIconNone = object;
+export type TileIconPluginIcon = {
+  plugin_id: string;
+  icon: string;
+};
+
+export enum TileIconType {
+  None = "None",
+  PluginIcon = "PluginIcon",
+}
+
+export type TileIcon =
+  | ({ type: TileIconType.None } & TileIconNone)
+  | ({ type: TileIconType.PluginIcon } & TileIconPluginIcon);
+
+export interface FolderModel {
+  id: string;
+  name: string;
+  config: FolderConfig;
+  profile_id: string;
+  default: boolean;
+  order: number;
+}
+
+export interface FolderConfig {
+  rows: number;
+  columns: number;
+}
