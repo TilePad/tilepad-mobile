@@ -2,6 +2,7 @@
   import type { TileModel, ConnectionDetails } from "$lib/api/types";
 
   import { getPluginAssetPath } from "$lib/utils/url";
+  import TileLabelElm from "./TileLabelElm.svelte";
 
   type Props = {
     tile: TileModel;
@@ -33,6 +34,8 @@
       alt="Tile Icon"
     />
   {/if}
+
+  <TileLabelElm label={config.label} />
 </div>
 
 <style>
