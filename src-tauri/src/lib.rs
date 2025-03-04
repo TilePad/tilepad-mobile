@@ -15,6 +15,9 @@ pub fn run() {
 }
 
 fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
+    #[cfg(mobile)]
+    app.handle().plugin(tauri_plugin_barcode_scanner::init())?;
+
     let subscriber = tracing_subscriber::fmt()
         .compact()
         .with_file(true)

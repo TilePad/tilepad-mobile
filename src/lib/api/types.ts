@@ -27,6 +27,7 @@ export interface TileConfig {
   action_id: string;
   icon: TileIcon;
   properties: object;
+  label: TileLabel;
 }
 
 export type TileIconNone = object;
@@ -56,4 +57,26 @@ export interface FolderModel {
 export interface FolderConfig {
   rows: number;
   columns: number;
+}
+
+export interface TileLabel {
+  enabled: boolean;
+  label: string;
+  align: LabelAlign;
+  font_size: number;
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
+  color: string;
+}
+
+export enum LabelAlign {
+  Bottom = "Bottom",
+  Middle = "Middle",
+  Top = "Top",
+}
+
+export interface EncodedInterfaces {
+  addr: string[];
+  port: number;
 }
