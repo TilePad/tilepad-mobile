@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { TileModel, ConnectionDetails } from "$lib/api/types";
 
+  import { ripple } from "svelte-ripple-action";
   import { getPluginAssetPath } from "$lib/utils/url";
 
   import TileLabelElm from "./TileLabelElm.svelte";
@@ -16,14 +17,7 @@
   const config = $derived(tile.config);
 </script>
 
-<div
-  class="tile"
-  onclick={onClick}
-  tabindex="0"
-  role="button"
-  aria-roledescription="button"
-  onkeydown={() => {}}
->
+<button class="tile" onclick={onClick} use:ripple>
   {#if config.icon.type === "PluginIcon"}
     <img
       class="tile__icon"
@@ -37,7 +31,7 @@
   {/if}
 
   <TileLabelElm label={config.label} />
-</div>
+</button>
 
 <style>
   .tile {
@@ -57,6 +51,11 @@
     font-size: 1.5rem;
     user-select: none;
     overflow: hidden;
+    transition: 0.15s ease transform;
+  }
+
+  .tile:active {
+    transform: scale(0.95);
   }
 
   .tile__icon {

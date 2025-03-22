@@ -1,5 +1,6 @@
 <script lang="ts">
   import "$lib/styles/app.css";
+  import "svelte-ripple-action/ripple.css";
 
   let { children } = $props();
 </script>
