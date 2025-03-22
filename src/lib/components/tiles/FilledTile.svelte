@@ -2,6 +2,7 @@
   import type { TileModel, ConnectionDetails } from "$lib/api/types";
 
   import { getPluginAssetPath } from "$lib/utils/url";
+
   import TileLabelElm from "./TileLabelElm.svelte";
 
   type Props = {
@@ -54,9 +55,11 @@
     height: 100%;
     color: #ccc;
     font-size: 1.5rem;
+    user-select: none;
+    overflow: hidden;
   }
 
   .tile__icon {
-    width: 3.5rem;
+    width: 100%;
   }
 </style>
