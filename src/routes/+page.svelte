@@ -3,13 +3,11 @@
     TileModel,
     FolderModel,
     ConnectionDetails,
-    EncodedInterfaces,
     ClientDeviceMessage,
     ServerDeviceMessage,
   } from "$lib/api/types";
 
-  import { testServerConnection } from "$lib/api/server";
-  import * as barcode from "@tauri-apps/plugin-barcode-scanner";
+  import Connect from "$lib/components/Connect.svelte";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
 
   enum Status {
@@ -20,15 +18,11 @@
     Revoked = "Revoked",
   }
 
-  let scanning = false;
   let status: Status = Status.Pending;
   let socket: WebSocket | null = null;
 
   let data: { tiles: TileModel[]; folder: FolderModel } | null = null;
   let connection: ConnectionDetails | undefined = undefined;
-
-  let host: string = "localhost";
-  let port: number = 59371;
 
   function onConnect(host: string, port: number) {
     connection = { host, port };
@@ -98,70 +92,29 @@
       }
     }
   }
-
-  async function onClickScan() {
-    try {
-      const hasPermission = await barcode.checkPermissions();
-      if (hasPermission !== "granted") {
-        const result = await barcode.requestPermissions();
-        if (result === "denied") {
-          console.error("DENIED PERMISSION REQUEST");
-          barcode.openAppSettings();
-          return;
-        }
-      }
-
-      const scanned = await barcode.scan({
-        windowed: false,
-        formats: [barcode.Format.QRCode],
-      });
-
-      const content = scanned.content;
-      const parsed: EncodedInterfaces = JSON.parse(content);
-
-      for (const addr of parsed.addr) {
-        const connection = await testServerConnection(addr, parsed.port);
-        if (!connection) {
-          continue;
-        }
-
-        onConnect(addr, parsed.port);
-        return;
-      }
-
-      console.error("All connections were invalid");
-    } catch (err) {
-      console.error("failed to scan qr", err);
-    }
-  }
 </script>
 
-<div class="layout">
-  <div>
-    <button onclick={onClickScan}> Scan </button>
-    <button onclick={() => onConnect(host, port)}> Connect </button>
-    Host: <input type="text" bind:value={host} />
-    Port: <input type="number" bind:value={port} />
-
-    {status}
+{#if status === Status.Pending}
+  <Connect {onConnect} />
+{:else if status === Status.Connected}
+  <div class="layout">
+    <div class="tiles">
+      {#if data && connection}
+        <TilesView
+          {connection}
+          tiles={data.tiles}
+          folder={data.folder}
+          onClick={(tileId) => {
+            sendMessage({
+              type: "TileClicked",
+              tile_id: tileId,
+            });
+          }}
+        />
+      {/if}
+    </div>
   </div>
-
-  <div class="tiles">
-    {#if data && connection}
-      <TilesView
-        {connection}
-        tiles={data.tiles}
-        folder={data.folder}
-        onClick={(tileId) => {
-          sendMessage({
-            type: "TileClicked",
-            tile_id: tileId,
-          });
-        }}
-      />
-    {/if}
-  </div>
-</div>
+{/if}
 
 <style>
   .layout {
