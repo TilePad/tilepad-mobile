@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { DeviceModel } from "$lib/api/types";
+  import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
   import { onMount } from "svelte";
   import { getErrorMessage } from "$lib/utils/error";
@@ -9,13 +10,7 @@
   import DeviceListItem from "./DeviceListItem.svelte";
 
   type Props = {
-    onConnect: (
-      deviceId: string,
-      name: string,
-      host: string,
-      port: number,
-      access_token: string | null,
-    ) => void;
+    onConnect: (details: TilepadSocketDetails) => void;
   };
 
   const { onConnect }: Props = $props();

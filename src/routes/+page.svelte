@@ -1,148 +1,48 @@
 <script lang="ts">
-  import type {
-    TileModel,
-    FolderModel,
-    ConnectionDetails,
-    ClientDeviceMessage,
-    ServerDeviceMessage,
-  } from "$lib/api/types";
-
-  import { updateDevice } from "$lib/api/devices";
-  import { hostname } from "@tauri-apps/plugin-os";
+  import { createTilepadSocket } from "$lib/api/socket.svelte";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import DeviceList from "$lib/components/device/DeviceList.svelte";
 
-  enum Status {
-    Pending = "Pending",
-    PendingApproval = "PendingApproval",
-    Connecting = "Connecting",
-    Connected = "Connected",
-    Declined = "Declined",
-    Revoked = "Revoked",
-  }
+  const {
+    state: stateRef,
+    socket: socketRef,
+    connect,
+    disconnect,
+    clickTile,
+  } = createTilepadSocket();
 
-  let status: Status = Status.Pending;
-  let socket: WebSocket | null = null;
-
-  let data: { tiles: TileModel[]; folder: FolderModel } | null = null;
-  let connection: ConnectionDetails | undefined = undefined;
-
-  function onConnect(
-    deviceId: string,
-    name: string,
-    host: string,
-    port: number,
-    accessToken: string | null,
-  ) {
-    connection = { deviceId, host, port, accessToken };
-    status = Status.Connecting;
-    const ws = new WebSocket(`ws://${host}:${port}/devices/ws`);
-    socket = ws;
-
-    ws.onopen = () => {
-      status = Status.Connected;
-
-      if (accessToken) {
-        sendMessage({ type: "Authenticate", access_token: accessToken });
-      } else {
-        status = Status.PendingApproval;
-        sendMessage({ type: "RequestApproval", name: "Test Device" });
-      }
-    };
-
-    ws.onclose = () => {
-      socket = null;
-      status = Status.Pending;
-    };
-
-    ws.onmessage = (event) => {
-      const msg: ServerDeviceMessage = JSON.parse(event.data);
-      onMessage(msg);
-    };
-  }
-
-  function sendMessage(message: ClientDeviceMessage) {
-    const msg = JSON.stringify(message);
-    if (socket) socket.send(msg);
-  }
-
-  function onMessage(msg: ServerDeviceMessage) {
-    switch (msg.type) {
-      case "Declined": {
-        if (socket) socket.close();
-        socket = null;
-        status = Status.Declined;
-        break;
-      }
-      case "Approved": {
-        const token = msg.access_token;
-
-        if (connection) {
-          connection = { ...connection, accessToken: token };
-          updateDevice(connection.deviceId, {
-            access_token: token,
-          });
-        }
-
-        sendMessage({ type: "Authenticate", access_token: token });
-        break;
-      }
-      case "Revoked": {
-        if (socket) socket.close();
-        socket = null;
-        status = Status.Revoked;
-        break;
-      }
-      case "Authenticated": {
-        sendMessage({ type: "RequestTiles" });
-        break;
-      }
-      case "InvalidAccessToken": {
-        hostname().then((hostname) => {
-          if (!hostname) return;
-
-          sendMessage({ type: "RequestApproval", name: hostname });
-
-          if (connection) {
-            connection = { ...connection, accessToken: null };
-            updateDevice(connection.deviceId, {
-              access_token: null,
-            });
-          }
-        });
-
-        break;
-      }
-      case "Tiles": {
-        data = { tiles: msg.tiles, folder: msg.folder };
-        break;
-      }
-    }
-  }
+  let state = $derived.by(stateRef);
+  let socket = $derived.by(socketRef);
 </script>
 
-{#if status === Status.Pending}
-  <DeviceList {onConnect} />
-{:else if status === Status.PendingApproval}
-  <p>Waiting for approval</p>
-{:else if status === Status.Connected}
+{#if state.type === "Initial"}
+  <DeviceList onConnect={connect} />
+{:else if state.type === "Connecting"}
+  <p>Connecting...</p>
+{:else if state.type === "RequestingApproval"}
+  <p>Waiting for approval...</p>
+{:else if state.type === "Authenticating"}
+  <p>Authenticating...</p>
+{:else if state.type === "Authenticated"}
+  <button onclick={disconnect}>Disconnect</button>
   <div class="layout">
     <div class="tiles">
-      {#if data && connection}
+      {#if socket != null && state.folder !== null}
         <TilesView
-          {connection}
-          tiles={data.tiles}
-          folder={data.folder}
+          connection={socket.details}
+          tiles={state.tiles}
+          folder={state.folder}
           onClick={(tileId) => {
-            sendMessage({
-              type: "TileClicked",
-              tile_id: tileId,
-            });
+            clickTile(tileId);
           }}
         />
       {/if}
     </div>
   </div>
+{:else if state.type === "Declined"}
+  <button onclick={disconnect}>Back</button>
+{:else if state.type === "Revoked"}
+  <button onclick={disconnect}>Back</button>
 {/if}
 
 <style>

@@ -1,17 +1,12 @@
 <script lang="ts">
   import type { DeviceModel } from "$lib/api/types";
+  import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
   import { invoke } from "@tauri-apps/api/core";
 
   type Props = {
     device: DeviceModel;
-    onConnect: (
-      deviceId: string,
-      name: string,
-      host: string,
-      port: number,
-      access_token: string | null,
-    ) => void;
+    onConnect: (details: TilepadSocketDetails) => void;
   };
 
   const { device, onConnect }: Props = $props();
@@ -23,13 +18,12 @@
 
 <button
   onclick={() =>
-    onConnect(
-      device.id,
-      device.name,
-      device.host,
-      device.port,
-      device.access_token,
-    )}
+    onConnect({
+      deviceId: device.id,
+      host: device.host,
+      port: device.port,
+      accessToken: device.access_token,
+    })}
 >
   {device.name}
 

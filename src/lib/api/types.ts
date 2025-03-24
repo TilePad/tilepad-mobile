@@ -37,13 +37,6 @@ export type ServerDeviceMessage =
   | { type: "InvalidAccessToken" }
   | { type: "Tiles"; tiles: TileModel[]; folder: FolderModel };
 
-export type ConnectionDetails = {
-  deviceId: string;
-  host: string;
-  port: number;
-  accessToken: string | null;
-};
-
 export interface TileModel {
   id: string;
   config: TileConfig;

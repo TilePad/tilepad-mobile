@@ -1,7 +1,7 @@
-import type { ConnectionDetails } from "$lib/api/types";
+import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
 export function getPluginAssetPath(
-  connection: ConnectionDetails,
+  connection: TilepadSocketDetails,
   pluginId: string,
   path: string,
 ) {

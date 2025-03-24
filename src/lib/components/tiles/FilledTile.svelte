@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { TileModel, ConnectionDetails } from "$lib/api/types";
+  import type { TileModel } from "$lib/api/types";
+  import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
   import { ripple } from "svelte-ripple-action";
   import { getPluginAssetPath } from "$lib/utils/url";
@@ -8,7 +9,7 @@
 
   type Props = {
     tile: TileModel;
-    connection: ConnectionDetails;
+    connection: TilepadSocketDetails;
     onClick: VoidFunction;
   };
 

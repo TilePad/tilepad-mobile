@@ -1,9 +1,6 @@
 <script lang="ts">
-  import type {
-    TileModel,
-    FolderModel,
-    ConnectionDetails,
-  } from "$lib/api/types";
+  import type { TileModel, FolderModel } from "$lib/api/types";
+  import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
   import TileGrid from "$lib/components/tiles/TileGrid.svelte";
 
@@ -13,7 +10,7 @@
   type Props = {
     tiles: TileModel[];
     folder: FolderModel;
-    connection: ConnectionDetails;
+    connection: TilepadSocketDetails;
     onClick: (tileId: string) => void;
   };
 
