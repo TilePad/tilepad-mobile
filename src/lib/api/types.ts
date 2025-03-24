@@ -1,3 +1,28 @@
+export type DeviceModel = {
+  id: string;
+  name: string;
+  host: string;
+  port: number;
+  access_token: string | null;
+  order: number;
+  created_at: string;
+};
+
+export type CreateDevice = {
+  name: string;
+  host: string;
+  port: number;
+  access_token: string | null;
+  order: number;
+};
+
+export type UpdateDevice = {
+  name?: string;
+  host?: string;
+  port?: number;
+  access_token?: string | null;
+};
+
 export type ClientDeviceMessage =
   | { type: "RequestApproval"; name: string }
   | { type: "RequestTiles" }
@@ -12,7 +37,12 @@ export type ServerDeviceMessage =
   | { type: "InvalidAccessToken" }
   | { type: "Tiles"; tiles: TileModel[]; folder: FolderModel };
 
-export type ConnectionDetails = { host: string; port: number };
+export type ConnectionDetails = {
+  deviceId: string;
+  host: string;
+  port: number;
+  accessToken: string | null;
+};
 
 export interface TileModel {
   id: string;

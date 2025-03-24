@@ -7,11 +7,14 @@
     ServerDeviceMessage,
   } from "$lib/api/types";
 
-  import Connect from "$lib/components/Connect.svelte";
+  import { updateDevice } from "$lib/api/devices";
+  import { hostname } from "@tauri-apps/plugin-os";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
+  import DeviceList from "$lib/components/device/DeviceList.svelte";
 
   enum Status {
     Pending = "Pending",
+    PendingApproval = "PendingApproval",
     Connecting = "Connecting",
     Connected = "Connected",
     Declined = "Declined",
@@ -24,8 +27,14 @@
   let data: { tiles: TileModel[]; folder: FolderModel } | null = null;
   let connection: ConnectionDetails | undefined = undefined;
 
-  function onConnect(host: string, port: number) {
-    connection = { host, port };
+  function onConnect(
+    deviceId: string,
+    name: string,
+    host: string,
+    port: number,
+    accessToken: string | null,
+  ) {
+    connection = { deviceId, host, port, accessToken };
     status = Status.Connecting;
     const ws = new WebSocket(`ws://${host}:${port}/devices/ws`);
     socket = ws;
@@ -33,10 +42,10 @@
     ws.onopen = () => {
       status = Status.Connected;
 
-      const token = localStorage.getItem("ACCESS_TOKEN");
-      if (token) {
-        sendMessage({ type: "Authenticate", access_token: token });
+      if (accessToken) {
+        sendMessage({ type: "Authenticate", access_token: accessToken });
       } else {
+        status = Status.PendingApproval;
         sendMessage({ type: "RequestApproval", name: "Test Device" });
       }
     };
@@ -67,7 +76,14 @@
       }
       case "Approved": {
         const token = msg.access_token;
-        localStorage.setItem("ACCESS_TOKEN", token);
+
+        if (connection) {
+          connection = { ...connection, accessToken: token };
+          updateDevice(connection.deviceId, {
+            access_token: token,
+          });
+        }
+
         sendMessage({ type: "Authenticate", access_token: token });
         break;
       }
@@ -82,8 +98,19 @@
         break;
       }
       case "InvalidAccessToken": {
-        sendMessage({ type: "RequestApproval", name: "Test Device" });
-        localStorage.removeItem("ACCESS_TOKEN");
+        hostname().then((hostname) => {
+          if (!hostname) return;
+
+          sendMessage({ type: "RequestApproval", name: hostname });
+
+          if (connection) {
+            connection = { ...connection, accessToken: null };
+            updateDevice(connection.deviceId, {
+              access_token: null,
+            });
+          }
+        });
+
         break;
       }
       case "Tiles": {
@@ -95,7 +122,9 @@
 </script>
 
 {#if status === Status.Pending}
-  <Connect {onConnect} />
+  <DeviceList {onConnect} />
+{:else if status === Status.PendingApproval}
+  <p>Waiting for approval</p>
 {:else if status === Status.Connected}
   <div class="layout">
     <div class="tiles">

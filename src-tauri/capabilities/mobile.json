@@ -8,6 +8,8 @@
     "main"
   ],
   "permissions": [
-    "barcode-scanner:default"
+    "barcode-scanner:default",
+    "os:default",
+    "os:allow-hostname"
   ]
 }

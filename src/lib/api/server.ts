@@ -1,19 +1,24 @@
+import { getErrorMessage } from "$lib/utils/error";
+
 export async function testServerConnection(
   host: string,
   port: number,
-): Promise<boolean> {
+): Promise<
+  { result: "ok"; name: string } | { result: "error"; message: string }
+> {
   try {
     const res = await fetchWithTimeout(
       `http://${host}:${port}/server/details`,
       {},
       100,
     );
-    if (!res.ok) return false;
+    if (!res.ok) return { result: "error", message: "got error response" };
     const data = await res.json();
-    if (data.identifier !== "TILEPAD_CONTROLLER_SERVER") return false;
-    return true;
+    if (data.identifier !== "TILEPAD_CONTROLLER_SERVER")
+      return { result: "error", message: "not a tilepad server" };
+    return { result: "ok", name: data.hostname };
   } catch (err) {
-    return false;
+    return { result: "error", message: getErrorMessage(err) };
   }
 }
 

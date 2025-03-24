@@ -1,15 +1,26 @@
 use std::error::Error;
 
-use tauri::App;
+use anyhow::Context;
+use tauri::{async_runtime::block_on, App, Manager};
 
+mod commands;
 mod config;
+mod database;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    use commands::devices;
+
     tauri::Builder::default()
+        .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
         .setup(setup)
-        .invoke_handler(tauri::generate_handler![])
+        .invoke_handler(tauri::generate_handler![
+            devices::devices_get_devices,
+            devices::devices_create_device,
+            devices::devices_remove_device,
+            devices::devices_update_device
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -28,6 +39,16 @@ fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
 
     // use that subscriber to process traces emitted after this point
     tracing::subscriber::set_global_default(subscriber)?;
+
+    let app_data_path = app
+        .path()
+        .app_data_dir()
+        .context("failed to get app data dir")?;
+
+    let db = block_on(database::connect_database(app_data_path.join("app.db")))
+        .context("failed to load database")?;
+
+    app.manage(db.clone());
 
     Ok(())
 }
