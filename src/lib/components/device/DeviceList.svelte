@@ -1,10 +1,8 @@
 <script lang="ts">
-  import type { DeviceModel } from "$lib/api/types";
   import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
-  import { onMount } from "svelte";
   import { getErrorMessage } from "$lib/utils/error";
-  import { getDevices, createDevice } from "$lib/api/devices";
+  import { createDevice, createDevicesQuery } from "$lib/api/devices";
 
   import AddDeviceForm from "./AddDeviceForm.svelte";
   import DeviceListItem from "./DeviceListItem.svelte";
@@ -15,11 +13,7 @@
 
   const { onConnect }: Props = $props();
 
-  let devicesPromise: Promise<DeviceModel[]> | undefined = $state();
-
-  onMount(() => {
-    devicesPromise = getDevices();
-  });
+  const devicesQuery = createDevicesQuery();
 
   let create = $state(false);
 
@@ -36,28 +30,24 @@
       access_token: null,
       order,
     });
-
-    devicesPromise = getDevices();
   }
 </script>
 
-{#if devicesPromise}
-  {#await devicesPromise}
-    <p>Loading...</p>
-  {:then devices}
-    <button onclick={() => (create = !create)}>Create</button>
-    <AddDeviceForm
-      bind:open={create}
-      onAddDevice={(name, host, port) =>
-        onAddDevice(name, host, port, devices.length)}
-    />
+{#if $devicesQuery.isLoading}
+  <p>Loading...</p>
+{:else if $devicesQuery.isError}
+  <p>Failed to get devices: {getErrorMessage($devicesQuery.error)}</p>
+{:else if $devicesQuery.isSuccess}
+  <button onclick={() => (create = !create)}>Create</button>
+  <AddDeviceForm
+    bind:open={create}
+    onAddDevice={(name, host, port) =>
+      onAddDevice(name, host, port, $devicesQuery.data.length)}
+  />
 
-    <div class="devices">
-      {#each devices as device}
-        <DeviceListItem {device} {onConnect} />
-      {/each}
-    </div>
-  {:catch err}
-    <p>Failed to get devices: {getErrorMessage(err)}</p>
-  {/await}
+  <div class="devices">
+    {#each $devicesQuery.data as device}
+      <DeviceListItem {device} {onConnect} />
+    {/each}
+  </div>
 {/if}

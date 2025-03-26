@@ -1,11 +1,11 @@
 import { hostname } from "@tauri-apps/plugin-os";
 
+import type { TileModel } from "./types/tiles";
+import type { FolderModel } from "./types/folders";
 import type {
-  TileModel,
-  FolderModel,
   ClientDeviceMessage,
   ServerDeviceMessage,
-} from "./types";
+} from "./types/protocol";
 
 import { updateDevice } from "./devices";
 
@@ -72,7 +72,7 @@ class Socket {
   }
 }
 
-type TilepadSocket = {
+export type TilepadSocket = {
   state: () => SocketState;
   socket: () => Socket | null;
   connect: (details: TilepadSocketDetails) => void;

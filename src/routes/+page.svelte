@@ -1,60 +1,37 @@
 <script lang="ts">
-  import { createTilepadSocket } from "$lib/api/socket.svelte";
-  import TilesView from "$lib/components/tiles/TilesView.svelte";
-  import DeviceList from "$lib/components/device/DeviceList.svelte";
+  import InitialView from "$lib/views/InitialView.svelte";
+  import RevokedView from "$lib/views/RevokedView.svelte";
+  import DeclinedView from "$lib/views/DeclinedView.svelte";
+  import ConnectingView from "$lib/views/ConnectingView.svelte";
+  import AuthenticatedView from "$lib/views/AuthenticatedView.svelte";
+  import RequestingApproval from "$lib/views/RequestingApproval.svelte";
+  import AuthenticatingView from "$lib/views/AuthenticatingView.svelte";
+  import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
-  const {
-    state: stateRef,
-    socket: socketRef,
-    connect,
-    disconnect,
-    clickTile,
-  } = createTilepadSocket();
+  const { state: stateRef, socket: socketRef } = getTilepadSocket();
 
   let state = $derived.by(stateRef);
   let socket = $derived.by(socketRef);
 </script>
 
 {#if state.type === "Initial"}
-  <DeviceList onConnect={connect} />
+  <InitialView />
 {:else if state.type === "Connecting"}
-  <p>Connecting...</p>
+  <ConnectingView />
 {:else if state.type === "RequestingApproval"}
-  <p>Waiting for approval...</p>
+  <RequestingApproval />
 {:else if state.type === "Authenticating"}
-  <p>Authenticating...</p>
+  <AuthenticatingView />
 {:else if state.type === "Authenticated"}
-  <button onclick={disconnect}>Disconnect</button>
-  <div class="layout">
-    <div class="tiles">
-      {#if socket != null && state.folder !== null}
-        <TilesView
-          connection={socket.details}
-          tiles={state.tiles}
-          folder={state.folder}
-          onClick={(tileId) => {
-            clickTile(tileId);
-          }}
-        />
-      {/if}
-    </div>
-  </div>
+  {#if socket != null && state.folder !== null}
+    <AuthenticatedView
+      details={socket.details}
+      folder={state.folder}
+      tiles={state.tiles}
+    />
+  {/if}
 {:else if state.type === "Declined"}
-  <button onclick={disconnect}>Back</button>
+  <DeclinedView />
 {:else if state.type === "Revoked"}
-  <button onclick={disconnect}>Back</button>
+  <RevokedView />>
 {/if}
-
-<style>
-  .layout {
-    height: 100%;
-    display: flex;
-
-    flex-flow: column;
-  }
-
-  .tiles {
-    flex: auto;
-    overflow: hidden;
-  }
-</style>
