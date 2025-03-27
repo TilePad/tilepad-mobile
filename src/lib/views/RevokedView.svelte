@@ -5,6 +5,8 @@
 </script>
 
 <div class="layout">
+  <h1>Revoked</h1>
+  <p>This device has been revoked</p>
   <button onclick={disconnect}>Back</button>
 </div>
 

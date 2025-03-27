@@ -1,1 +1,18 @@
-<p>Connecting...</p>
+<script lang="ts">
+  import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
+
+  const { disconnect } = getTilepadSocket();
+</script>
+
+<div class="layout">
+  <h1>Connecting...</h1>
+</div>
+
+<style>
+  .layout {
+    height: 100%;
+    display: flex;
+
+    flex-flow: column;
+  }
+</style>

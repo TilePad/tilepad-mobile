@@ -5,6 +5,8 @@
 </script>
 
 <div class="layout">
+  <h1>Declined</h1>
+  <p>Device was declined access to tilepad</p>
   <button onclick={disconnect}>Back</button>
 </div>
 
