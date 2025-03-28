@@ -28,6 +28,11 @@ export function updateDevice(deviceId: string, update: UpdateDevice) {
   return invoke<DeviceModel>("devices_update_device", { deviceId, update });
 }
 
+export async function removeDevice(deviceId: string) {
+  await invoke("devices_remove_device", { deviceId });
+  invalidateDevices();
+}
+
 // [QUERIES] ------------------------------------------------------
 
 export function createDevicesQuery() {

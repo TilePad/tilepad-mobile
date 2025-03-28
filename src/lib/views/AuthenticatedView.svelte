@@ -3,9 +3,9 @@
   import type { FolderModel } from "$lib/api/types/folders";
   import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
+  import Button from "$lib/components/input/Button.svelte";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
-  import Button from "$lib/components/input/Button.svelte";
 
   type Props = {
     details: TilepadSocketDetails;

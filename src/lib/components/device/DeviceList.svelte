@@ -4,6 +4,7 @@
   import { getErrorMessage } from "$lib/utils/error";
   import { createDevice, createDevicesQuery } from "$lib/api/devices";
 
+  import Button from "../input/Button.svelte";
   import AddDeviceForm from "./AddDeviceForm.svelte";
   import DeviceListItem from "./DeviceListItem.svelte";
 
@@ -38,16 +39,44 @@
 {:else if $devicesQuery.isError}
   <p>Failed to get devices: {getErrorMessage($devicesQuery.error)}</p>
 {:else if $devicesQuery.isSuccess}
-  <button onclick={() => (create = !create)}>Create</button>
-  <AddDeviceForm
-    bind:open={create}
-    onAddDevice={(name, host, port) =>
-      onAddDevice(name, host, port, $devicesQuery.data.length)}
-  />
+  <div class="layout">
+    <div class="header">
+      <h1>Devices</h1>
+      <Button onclick={() => (create = !create)}>Create</Button>
+    </div>
 
-  <div class="devices">
-    {#each $devicesQuery.data as device}
-      <DeviceListItem {device} {onConnect} />
-    {/each}
+    <AddDeviceForm
+      bind:open={create}
+      onAddDevice={(name, host, port) =>
+        onAddDevice(name, host, port, $devicesQuery.data.length)}
+    />
+
+    <div class="devices">
+      {#each $devicesQuery.data as device}
+        <DeviceListItem {device} {onConnect} />
+      {/each}
+    </div>
   </div>
 {/if}
+
+<style>
+  .devices {
+    display: flex;
+    flex-flow: column;
+    gap: 1rem;
+  }
+
+  .layout {
+    display: flex;
+    flex-flow: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+</style>
