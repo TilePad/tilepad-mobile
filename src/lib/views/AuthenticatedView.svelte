@@ -3,6 +3,7 @@
   import type { FolderModel } from "$lib/api/types/folders";
   import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
+  import { fly } from "svelte/transition";
   import Button from "$lib/components/input/Button.svelte";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
@@ -18,7 +19,7 @@
   const { disconnect, clickTile } = getTilepadSocket();
 </script>
 
-<div class="layout">
+<div class="layout" in:fly={{ x: -100, duration: 250 }}>
   <div class="actions">
     <Button onclick={disconnect}>Disconnect</Button>
   </div>
