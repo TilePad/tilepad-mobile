@@ -6,14 +6,14 @@
   import AuthenticatedView from "$lib/views/AuthenticatedView.svelte";
   import RequestingApproval from "$lib/views/RequestingApproval.svelte";
   import AuthenticatingView from "$lib/views/AuthenticatingView.svelte";
-  import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
-  import ConnectionFailedView from "$lib/views/ConnectionFailedView.svelte";
   import ConnectionLostView from "$lib/views/ConnectionLostView.svelte";
+  import ConnectionFailedView from "$lib/views/ConnectionFailedView.svelte";
+  import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
-  const { state: stateRef, socket: socketRef } = getTilepadSocket();
+  const { state: stateRef, details: detailsRef } = getTilepadSocket();
 
   let state = $derived.by(stateRef);
-  let socket = $derived.by(socketRef);
+  let details = $derived.by(detailsRef);
 </script>
 
 {#if state.type === "Initial"}
@@ -25,12 +25,8 @@
 {:else if state.type === "Authenticating"}
   <AuthenticatingView />
 {:else if state.type === "Authenticated"}
-  {#if socket != null && state.folder !== null}
-    <AuthenticatedView
-      details={socket.details}
-      folder={state.folder}
-      tiles={state.tiles}
-    />
+  {#if details != null && state.folder !== null}
+    <AuthenticatedView {details} folder={state.folder} tiles={state.tiles} />
   {/if}
 {:else if state.type === "Declined"}
   <DeclinedView />

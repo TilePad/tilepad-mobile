@@ -4,16 +4,16 @@
   import PulseLoader from "$lib/components/PulseLoader.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
-  const { socket: socketRef, disconnect } = getTilepadSocket();
-  const socket = $derived.by(socketRef);
+  const { details: detailsRef, disconnect } = getTilepadSocket();
+  const details = $derived.by(detailsRef);
 </script>
 
 <div class="layout">
   <div class="modal">
     <PulseLoader />
 
-    {#if socket !== null}
-      <p class="host">{socket.details.host}:{socket.details.port}</p>
+    {#if details !== null}
+      <p class="host">{details.host}:{details.port}</p>
     {/if}
 
     <h1>Waiting for approval</h1>

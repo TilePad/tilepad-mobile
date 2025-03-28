@@ -41,87 +41,131 @@ export interface TilepadSocketDetails {
   accessToken: string | null;
 }
 
-type OnSocketMessage = (msg: ServerDeviceMessage) => void;
-
-class Socket {
-  ws: WebSocket;
-  details: TilepadSocketDetails;
-
-  onOpen: VoidFunction | undefined;
-  onClose: VoidFunction | undefined;
-  onMessage: OnSocketMessage | undefined;
-
-  constructor(details: TilepadSocketDetails) {
-    this.ws = new WebSocket(`ws://${details.host}:${details.port}/devices/ws`);
-    this.details = details;
-
-    this.ws.onopen = () => {
-      if (this.onOpen) this.onOpen();
-    };
-    this.ws.onclose = () => {
-      if (this.onClose) this.onClose();
-    };
-    this.ws.onmessage = (event) => {
-      const msg: ServerDeviceMessage = JSON.parse(event.data);
-      if (this.onMessage) this.onMessage(msg);
-    };
-  }
-
-  sendMessage(message: ClientDeviceMessage) {
-    this.ws.send(JSON.stringify(message));
-  }
-
-  close() {
-    this.ws.close();
-  }
-}
-
 export type TilepadSocket = {
   state: () => SocketState;
-  socket: () => Socket | null;
+  details: () => TilepadSocketDetails | null;
   connect: (details: TilepadSocketDetails) => void;
   disconnect: () => void;
   clickTile: (tileId: string) => void;
 };
 
+type DisconnectFunction = VoidFunction;
+type ClickTileFunction = (tileId: string) => void;
+
 export function createTilepadSocket(): TilepadSocket {
-  let socket: Socket | null = $state(null);
+  let detailsState: TilepadSocketDetails | null = $state(null);
   let state: SocketState = $state({ type: "Initial" });
+
+  let onDisconnect: DisconnectFunction | undefined;
+  let onClickTile: ClickTileFunction | undefined;
+
+  const disconnect = () => {
+    state = { type: "Initial" };
+
+    // Call current disconnect callback
+    if (onDisconnect) {
+      onDisconnect();
+      onDisconnect = undefined;
+    }
+  };
 
   const connect = (details: TilepadSocketDetails) => {
     // Disconnect if already connected
     disconnect();
 
-    // Establish connection
-    socket = new Socket(details);
-    state = { type: "Connecting" };
+    function setState(currentState: SocketState) {
+      state = currentState;
 
-    const requestApproval = async (socket: Socket) => {
+      switch (state.type) {
+        // When authenticated setup the tile click handler
+        case "Authenticated": {
+          onClickTile = (tileId) => {
+            sendMessage({
+              type: "TileClicked",
+              tile_id: tileId,
+            });
+          };
+
+          break;
+        }
+
+        // Clear tile click handler
+        default: {
+          onClickTile = undefined;
+          break;
+        }
+      }
+    }
+
+    setState({ type: "Connecting" });
+
+    detailsState = details;
+
+    // Establish connection
+    const socket = new WebSocket(
+      `ws://${details.host}:${details.port}/devices/ws`,
+    );
+
+    socket.onopen = () => {
+      // Connection opened
+      if (details.accessToken) {
+        state = { type: "Authenticating" };
+        sendMessage({
+          type: "Authenticate",
+          access_token: details.accessToken,
+        });
+      } else {
+        requestApproval();
+      }
+    };
+
+    socket.onmessage = (event) => {
+      const msg: ServerDeviceMessage = JSON.parse(event.data);
+      onMessage(msg);
+    };
+
+    socket.onclose = () => {
+      if (state.type === "Connecting") {
+        setState({ type: "ConnectionFailed" });
+      } else if (state.type !== "Initial") {
+        setState({ type: "ConnectionLost" });
+      }
+    };
+
+    // Setup disconnect handler
+    onDisconnect = () => {
+      setState({ type: "Initial" });
+      socket.close();
+    };
+
+    const sendMessage = (msg: ClientDeviceMessage) => {
+      socket.send(JSON.stringify(msg));
+    };
+
+    const requestApproval = async () => {
       state = { type: "RequestingApproval" };
 
       // Request the device name
       let name = await hostname();
       if (!name) name = "Tilepad Device";
 
-      socket.sendMessage({ type: "RequestApproval", name });
+      sendMessage({ type: "RequestApproval", name });
 
       // Clear current access token
-      updateDevice(socket.details.deviceId, { access_token: null });
+      updateDevice(details.deviceId, { access_token: null });
     };
 
-    socket.onMessage = (msg) => {
-      if (!socket) return;
-
+    function onMessage(msg: ServerDeviceMessage) {
       switch (msg.type) {
         // Server declined approval
         case "Declined": {
-          state = { type: "Declined" };
+          setState({ type: "Declined" });
           break;
         }
 
         // Server revoked access
         case "Revoked": {
-          state = { type: "Revoked" };
+          setState({ type: "Revoked" });
           break;
         }
 
@@ -130,86 +174,47 @@ export function createTilepadSocket(): TilepadSocket {
           const token = msg.access_token;
 
           // Update current device access token
-          updateDevice(socket.details.deviceId, { access_token: token });
-          state = { type: "Authenticating" };
+          updateDevice(details.deviceId, { access_token: token });
+          setState({ type: "Authenticating" });
 
           // Authenticate with the current token
-          socket.sendMessage({ type: "Authenticate", access_token: token });
+          sendMessage({ type: "Authenticate", access_token: token });
           break;
         }
 
         case "Authenticated": {
-          state = { type: "Authenticated", tiles: [], folder: null };
-          socket.sendMessage({ type: "RequestTiles" });
+          setState({ type: "Authenticated", tiles: [], folder: null });
+          sendMessage({ type: "RequestTiles" });
           break;
         }
 
         case "InvalidAccessToken": {
-          requestApproval(socket);
+          requestApproval();
           break;
         }
         case "Tiles": {
           if (state.type === "Authenticated") {
-            state = { ...state, tiles: msg.tiles, folder: msg.folder };
+            setState({ ...state, tiles: msg.tiles, folder: msg.folder });
           }
 
           break;
         }
       }
-    };
-
-    // Handle connection opened
-    socket.onOpen = () => {
-      if (!socket) return;
-
-      if (details.accessToken) {
-        state = { type: "Authenticating" };
-        socket.sendMessage({
-          type: "Authenticate",
-          access_token: details.accessToken,
-        });
-      } else {
-        requestApproval(socket);
-      }
-    };
-
-    // Handle connection closed
-    socket.onClose = () => {
-      if (state.type === "Connecting") {
-        state = { type: "ConnectionFailed" };
-      } else if (state.type !== "Initial") {
-        state = { type: "ConnectionLost" };
-      }
-    };
-  };
-
-  const disconnect = () => {
-    if (socket) {
-      socket.close();
-      socket = null;
     }
-
-    state = { type: "Initial" };
-  };
-
-  const clickTile = (tileId: string) => {
-    if (!socket) return;
-    socket.sendMessage({
-      type: "TileClicked",
-      tile_id: tileId,
-    });
   };
 
   return {
     state() {
       return state;
     },
-    socket() {
-      return socket;
+    details() {
+      return detailsState;
     },
     connect,
     disconnect,
 
-    clickTile,
+    clickTile: (tileId: string) => {
+      if (onClickTile) onClickTile(tileId);
+    },
   };
 }

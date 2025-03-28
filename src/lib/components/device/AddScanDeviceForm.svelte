@@ -6,7 +6,8 @@
 
   import Button from "../input/Button.svelte";
   import PulseLoader from "../PulseLoader.svelte";
-  import DialogCloseButton from "../dialog/DialogCloseButton.svelte";
+  import TextInput from "../input/TextInput.svelte";
+  import NumberInput from "../input/NumberInput.svelte";
 
   type Props = {
     onAddDevice: (name: string, host: string, port: number) => void;
@@ -18,9 +19,9 @@
     Initial: 0,
     Scanning: 1,
     Scanned: 2,
-    Checking: 2,
-    NothingValid: 3,
-    InvalidQR: 4,
+    Checking: 3,
+    NothingValid: 4,
+    InvalidQR: 5,
   };
 
   let currentState = $state(State.Initial);
@@ -70,6 +71,8 @@
       return;
     }
 
+    currentState = State.Checking;
+
     for (const addr of parsed.addr) {
       // Test for a valid connection
       const connection = await testServerConnection(addr, parsed.port);
@@ -104,15 +107,15 @@
 {:else if currentState === State.Scanned}
   <form onsubmit={onSubmit}>
     <label for="name">Name</label>
-    <input id="name" type="text" bind:value={name} />
+    <TextInput id="name" type="text" bind:value={name} />
 
     <label for="host">Host</label>
-    <input id="host" type="text" bind:value={host} />
+    <TextInput id="host" type="text" bind:value={host} />
 
     <label for="port">Port</label>
-    <input id="port" type="number" bind:value={port} />
+    <NumberInput id="port" bind:value={port} />
 
-    <DialogCloseButton type="submit" buttonLabel={{ text: "Save" }} />
+    <Button type="submit">Save</Button>
   </form>
 {:else if currentState === State.NothingValid}
   <p>None of the scanned addresses were connectable</p>
