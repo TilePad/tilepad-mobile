@@ -3,9 +3,11 @@
   import type { FolderModel } from "$lib/api/types/folders";
   import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
+  import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import Button from "$lib/components/input/Button.svelte";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
+  import { keepScreenOn } from "tauri-plugin-keep-screen-on-api";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
   type Props = {
@@ -17,6 +19,14 @@
   const { details, tiles, folder }: Props = $props();
 
   const { disconnect, clickTile } = getTilepadSocket();
+
+  onMount(() => {
+    keepScreenOn(true);
+
+    return () => {
+      keepScreenOn(false);
+    };
+  });
 </script>
 
 <div class="layout" in:fly={{ x: -100, duration: 250 }}>

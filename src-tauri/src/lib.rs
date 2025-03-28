@@ -14,6 +14,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_keep_screen_on::init())
         .setup(setup)
         .invoke_handler(tauri::generate_handler![
             devices::devices_get_devices,
