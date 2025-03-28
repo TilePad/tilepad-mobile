@@ -111,14 +111,12 @@ export function createTilepadSocket(): TilepadSocket {
       switch (msg.type) {
         // Server declined approval
         case "Declined": {
-          disconnect();
           state = { type: "Declined" };
           break;
         }
 
         // Server revoked access
         case "Revoked": {
-          disconnect();
           state = { type: "Revoked" };
           break;
         }

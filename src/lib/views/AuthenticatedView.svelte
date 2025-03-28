@@ -5,6 +5,7 @@
 
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
+  import Button from "$lib/components/input/Button.svelte";
 
   type Props = {
     details: TilepadSocketDetails;
@@ -18,7 +19,10 @@
 </script>
 
 <div class="layout">
-  <button onclick={disconnect}>Disconnect</button>
+  <div class="actions">
+    <Button onclick={disconnect}>Disconnect</Button>
+  </div>
+
   <div class="tiles">
     <TilesView
       connection={details}
@@ -42,5 +46,15 @@
   .tiles {
     flex: auto;
     overflow: hidden;
+  }
+
+  .actions {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    background-color: #322e38;
+    padding: 0.5rem;
+    align-items: center;
   }
 </style>
