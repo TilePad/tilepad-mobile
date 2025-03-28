@@ -7,6 +7,8 @@
   import RequestingApproval from "$lib/views/RequestingApproval.svelte";
   import AuthenticatingView from "$lib/views/AuthenticatingView.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
+  import ConnectionFailedView from "$lib/views/ConnectionFailedView.svelte";
+  import ConnectionLostView from "$lib/views/ConnectionLostView.svelte";
 
   const { state: stateRef, socket: socketRef } = getTilepadSocket();
 
@@ -34,4 +36,8 @@
   <DeclinedView />
 {:else if state.type === "Revoked"}
   <RevokedView />>
+{:else if state.type === "ConnectionFailed"}
+  <ConnectionFailedView />
+{:else if state.type === "ConnectionLost"}
+  <ConnectionLostView />
 {/if}

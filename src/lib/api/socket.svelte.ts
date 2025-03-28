@@ -27,7 +27,11 @@ type SocketState =
   // Request for approval was declined
   | { type: "Declined" }
   // Server revoked the current access
-  | { type: "Revoked" };
+  | { type: "Revoked" }
+  // Failed to connect
+  | { type: "ConnectionFailed" }
+  // Connection lost
+  | { type: "ConnectionLost" };
 
 // Details about a tilepad socket we are connecting to
 export interface TilepadSocketDetails {
@@ -171,7 +175,11 @@ export function createTilepadSocket(): TilepadSocket {
 
     // Handle connection closed
     socket.onClose = () => {
-      state = { type: "Initial" };
+      if (state.type === "Connecting") {
+        state = { type: "ConnectionFailed" };
+      } else if (state.type !== "Initial") {
+        state = { type: "ConnectionLost" };
+      }
     };
   };
 
