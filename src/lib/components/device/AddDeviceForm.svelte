@@ -1,59 +1,68 @@
 <script lang="ts">
+  import HTabs from "../HTabs.svelte";
+  import Dialog from "../dialog/Dialog.svelte";
   import AddScanDeviceForm from "./AddScanDeviceForm.svelte";
   import AddManualDeviceForm from "./AddManualDeviceForm.svelte";
+  import DialogCloseButton from "../dialog/DialogCloseButton.svelte";
 
   type Props = {
-    open: boolean;
     onAddDevice: (name: string, host: string, port: number) => void;
   };
 
-  let { open = $bindable(), onAddDevice }: Props = $props();
+  let { onAddDevice: onAddDeviceOuter }: Props = $props();
 
-  const Tab = {
-    Scan: 0,
-    Manual: 1,
-  };
+  let open = $state(false);
 
-  let tab = $state(Tab.Scan);
+  function onAddDevice(name: string, host: string, port: number) {
+    onAddDeviceOuter(name, host, port);
+    onClose();
+  }
 
   function onClose() {
     open = false;
   }
 </script>
 
-{#if open}
-  <div class="overlay"></div>
-  <div class="dialog">
-    <button onclick={onClose}>Cancel</button>
+{#snippet scanContent()}
+  <p>Scan connection from a QR code</p>
+  <AddScanDeviceForm {onAddDevice} />
+{/snippet}
 
-    <div>
-      <button onclick={() => (tab = Tab.Scan)}>Scan</button>
-      <button onclick={() => (tab = Tab.Manual)}>Manual</button>
-    </div>
+{#snippet manualContent()}
+  <p>Manually enter connection details</p>
+  <AddManualDeviceForm {onAddDevice} />
+{/snippet}
 
-    <div>
-      {#if tab === Tab.Scan}
-        <!-- Scan -->
-        <AddScanDeviceForm {onAddDevice} />
-      {:else if tab === Tab.Manual}
-        <!-- Manual -->
-        <AddManualDeviceForm {onAddDevice} />
-      {/if}
+<Dialog
+  {open}
+  onOpenChange={(value) => (open = value)}
+  buttonLabel={{ text: "Create" }}
+>
+  {#snippet children()}
+    <div class="content">
+      <DialogCloseButton buttonLabel={{ text: "Cancel" }} />
+
+      <HTabs
+        tabs={[
+          {
+            value: "scan",
+            label: "Scan",
+            content: scanContent,
+          },
+          {
+            value: "manual",
+            label: "Manual",
+            content: manualContent,
+          },
+        ]}
+      />
     </div>
-  </div>
-{/if}
+  {/snippet}
+</Dialog>
 
 <style>
-  .overlay {
-    background-color: #00000050;
-  }
-
-  .dialog {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #000000;
+  .content {
     padding: 1rem;
+    min-width: 25rem;
   }
 </style>

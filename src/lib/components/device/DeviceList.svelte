@@ -4,7 +4,6 @@
   import { getErrorMessage } from "$lib/utils/error";
   import { createDevice, createDevicesQuery } from "$lib/api/devices";
 
-  import Button from "../input/Button.svelte";
   import AddDeviceForm from "./AddDeviceForm.svelte";
   import DeviceListItem from "./DeviceListItem.svelte";
 
@@ -15,8 +14,6 @@
   const { onConnect }: Props = $props();
 
   const devicesQuery = createDevicesQuery();
-
-  let create = $state(false);
 
   async function onAddDevice(
     name: string,
@@ -42,14 +39,11 @@
   <div class="layout">
     <div class="header">
       <h1>Devices</h1>
-      <Button onclick={() => (create = !create)}>Create</Button>
+      <AddDeviceForm
+        onAddDevice={(name, host, port) =>
+          onAddDevice(name, host, port, $devicesQuery.data.length)}
+      />
     </div>
-
-    <AddDeviceForm
-      bind:open={create}
-      onAddDevice={(name, host, port) =>
-        onAddDevice(name, host, port, $devicesQuery.data.length)}
-    />
 
     <div class="devices">
       {#each $devicesQuery.data as device}

@@ -1,8 +1,12 @@
 <script lang="ts">
-  import type { EncodedInterfaces } from "$lib/api/types";
+  import type { EncodedInterfaces } from "$lib/api/types/server";
 
   import { testServerConnection } from "$lib/api/server";
   import * as barcode from "@tauri-apps/plugin-barcode-scanner";
+
+  import Button from "../input/Button.svelte";
+  import PulseLoader from "../PulseLoader.svelte";
+  import DialogCloseButton from "../dialog/DialogCloseButton.svelte";
 
   type Props = {
     onAddDevice: (name: string, host: string, port: number) => void;
@@ -14,6 +18,7 @@
     Initial: 0,
     Scanning: 1,
     Scanned: 2,
+    Checking: 2,
     NothingValid: 3,
     InvalidQR: 4,
   };
@@ -90,9 +95,12 @@
 </script>
 
 {#if currentState === State.Initial}
-  <button onclick={onClickScan}> Scan </button>
+  <Button onclick={onClickScan}>Scan</Button>
 {:else if currentState === State.Scanning}
   <p>Scanning</p>
+{:else if currentState === State.Checking}
+  <PulseLoader />
+  <p>Checking addresses...</p>
 {:else if currentState === State.Scanned}
   <form onsubmit={onSubmit}>
     <label for="name">Name</label>
@@ -104,7 +112,7 @@
     <label for="port">Port</label>
     <input id="port" type="number" bind:value={port} />
 
-    <button type="submit">Connect</button>
+    <DialogCloseButton type="submit" buttonLabel={{ text: "Save" }} />
   </form>
 {:else if currentState === State.NothingValid}
   <p>None of the scanned addresses were connectable</p>

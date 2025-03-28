@@ -1,4 +1,8 @@
 <script lang="ts">
+  import Button from "../input/Button.svelte";
+  import TextInput from "../input/TextInput.svelte";
+  import NumberInput from "../input/NumberInput.svelte";
+
   type Props = {
     onAddDevice: (name: string, host: string, port: number) => void;
   };
@@ -17,13 +21,13 @@
 
 <form onsubmit={onSubmit}>
   <label for="name">Name</label>
-  <input id="name" type="text" bind:value={name} />
+  <TextInput id="name" type="text" bind:value={name} />
 
   <label for="host">Host</label>
-  <input id="host" type="text" bind:value={host} />
+  <TextInput id="host" type="text" bind:value={host} />
 
   <label for="port">Port</label>
-  <input id="port" type="number" bind:value={port} />
+  <NumberInput id="port" bind:value={port} />
 
-  <button type="submit">Create</button>
+  <Button type="submit">Create</Button>
 </form>
