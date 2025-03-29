@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { TileModel } from "$lib/api/types";
+  import type { TileModel } from "$lib/api/types/tiles";
   import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
   import { ripple } from "svelte-ripple-action";
-  import { getPluginAssetPath } from "$lib/utils/url";
 
+  import TileIcon from "./TileIcon.svelte";
   import TileLabelElm from "./TileLabelElm.svelte";
 
   type Props = {
@@ -19,18 +19,7 @@
 </script>
 
 <button class="tile" onclick={onClick} use:ripple>
-  {#if config.icon.type === "PluginIcon"}
-    <img
-      class="tile__icon"
-      src={getPluginAssetPath(
-        connection,
-        config.icon.plugin_id,
-        config.icon.icon,
-      )}
-      alt="Tile Icon"
-    />
-  {/if}
-
+  <TileIcon {connection} icon={tile.config.icon} />
   <TileLabelElm label={config.label} />
 </button>
 
@@ -57,9 +46,5 @@
 
   .tile:active {
     transform: scale(0.95);
-  }
-
-  .tile__icon {
-    width: 100%;
   }
 </style>
