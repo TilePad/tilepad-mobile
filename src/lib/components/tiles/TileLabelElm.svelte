@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { TileLabel } from "$lib/api/types";
+  import type { TileLabel } from "$lib/api/types/tiles";
 
   type Props = {
     label: TileLabel;

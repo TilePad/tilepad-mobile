@@ -15,6 +15,7 @@ pub fn run() {
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_keep_screen_on::init())
+        .plugin(tauri_plugin_haptics::init())
         .setup(setup)
         .invoke_handler(tauri::generate_handler![
             devices::devices_get_devices,

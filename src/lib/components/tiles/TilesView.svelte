@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { TileModel, FolderModel } from "$lib/api/types";
+  import type { TileModel } from "$lib/api/types/tiles";
+  import type { FolderModel } from "$lib/api/types/folders";
   import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
   import TileGrid from "$lib/components/tiles/TileGrid.svelte";

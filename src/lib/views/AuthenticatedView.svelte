@@ -6,6 +6,7 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import Button from "$lib/components/input/Button.svelte";
+  import { impactFeedback } from "@tauri-apps/plugin-haptics";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import { keepScreenOn } from "tauri-plugin-keep-screen-on-api";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
@@ -40,6 +41,11 @@
       {tiles}
       {folder}
       onClick={(tileId) => {
+        try {
+          impactFeedback("medium");
+        } catch (_err) {
+          //
+        }
         clickTile(tileId);
       }}
     />
