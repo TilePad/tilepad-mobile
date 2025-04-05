@@ -2,7 +2,11 @@
   import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
   import { TileIconType, type TileIcon } from "$lib/api/types/tiles";
-  import { getIconAssetPath, getPluginAssetPath } from "$lib/utils/url";
+  import {
+    getIconAssetPath,
+    getPluginAssetPath,
+    getUploadedIconAssetPath,
+  } from "$lib/utils/url";
 
   type Props = {
     icon: TileIcon;
@@ -22,6 +26,12 @@
   <img
     class="tile__icon"
     src={getIconAssetPath(connection, icon.pack_id, icon.path)}
+    alt="Tile Icon"
+  />
+{:else if icon.type === TileIconType.Uploaded}
+  <img
+    class="tile__icon"
+    src={getUploadedIconAssetPath(connection, icon.path)}
     alt="Tile Icon"
   />
 {/if}

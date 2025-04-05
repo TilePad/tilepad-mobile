@@ -21,3 +21,13 @@ export function getIconAssetPath(
     `http://${connection.host}:${connection.port}`,
   ).toString();
 }
+
+export function getUploadedIconAssetPath(
+  connection: TilepadSocketDetails,
+  path: string,
+) {
+  return new URL(
+    `/uploaded-icons/${path}`,
+    `http://${connection.host}:${connection.port}`,
+  ).toString();
+}
