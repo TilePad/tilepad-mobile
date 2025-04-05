@@ -2,14 +2,17 @@
   import Button from "$lib/components/input/Button.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
-  const { disconnect } = getTilepadSocket();
+  const { reconnect, disconnect } = getTilepadSocket();
 </script>
 
 <div class="layout">
   <div class="modal">
     <h1>Connection Lost</h1>
     <p>Lost connection</p>
-    <Button onclick={disconnect}>Back</Button>
+    <div class="actions">
+      <Button onclick={disconnect}>Back</Button>
+      <Button onclick={reconnect}>Reconnect</Button>
+    </div>
   </div>
 </div>
 
@@ -37,5 +40,11 @@
   p {
     color: #ccc;
     margin-bottom: 0.5rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-flow: row;
+    gap: 1rem;
   }
 </style>

@@ -46,6 +46,7 @@ export type TilepadSocket = {
   details: () => TilepadSocketDetails | null;
   connect: (details: TilepadSocketDetails) => void;
   disconnect: () => void;
+  reconnect: () => void;
   clickTile: (tileId: string) => void;
 };
 
@@ -66,6 +67,11 @@ export function createTilepadSocket(): TilepadSocket {
     if (onDisconnect) {
       onDisconnect();
       onDisconnect = undefined;
+    }
+  };
+  const reconnect = () => {
+    if (detailsState !== null) {
+      connect(detailsState);
     }
   };
 
@@ -212,6 +218,7 @@ export function createTilepadSocket(): TilepadSocket {
     },
     connect,
     disconnect,
+    reconnect,
 
     clickTile: (tileId: string) => {
       if (onClickTile) onClickTile(tileId);
