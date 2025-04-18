@@ -2,6 +2,7 @@
   import type { TileModel } from "$lib/api/types/tiles";
   import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
+  import { tap } from "svelte-gestures";
   import { ripple } from "svelte-ripple-action";
 
   import TileIcon from "./TileIcon.svelte";
@@ -18,7 +19,12 @@
   const config = $derived(tile.config);
 </script>
 
-<button class="tile" onclick={onClick} use:ripple>
+<button
+  class="tile"
+  use:ripple
+  use:tap={() => ({ timeframe: 1000 })}
+  ontap={onClick}
+>
   <TileIcon {connection} icon={tile.config.icon} />
   <TileLabelElm label={config.label} />
 </button>
