@@ -17,8 +17,14 @@ export interface TileConfig {
   plugin_id: PluginId;
   action_id: ActionId;
   icon: TileIcon;
+  icon_options: TileIconOptions;
   properties: object;
   label: TileLabel;
+}
+
+export interface TileIconOptions {
+  padding: number;
+  background_color: string;
 }
 
 export type TileIconNone = object;

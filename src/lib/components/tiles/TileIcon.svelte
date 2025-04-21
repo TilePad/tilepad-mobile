@@ -1,19 +1,28 @@
 <script lang="ts">
-  import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
-
-  import { TileIconType, type TileIcon } from "$lib/api/types/tiles";
+  import {
+    TileIconType,
+    type TileIcon,
+    type TileIconOptions,
+  } from "$lib/api/types/tiles";
   import {
     getIconAssetPath,
     getPluginAssetPath,
     getUploadedIconAssetPath,
   } from "$lib/utils/url";
 
+  import { getTilepadConnection } from "../WebsocketProvider.svelte";
+
   type Props = {
     icon: TileIcon;
-    connection: TilepadSocketDetails;
+    iconOptions: TileIconOptions;
   };
 
-  const { icon, connection }: Props = $props();
+  const { icon, iconOptions }: Props = $props();
+
+  const connection = $derived.by(getTilepadConnection());
+  const style = $derived(
+    `padding: calc(${iconOptions.padding}px * var(--tile-size-adjustment)); background-color: ${iconOptions.background_color}`,
+  );
 
   let error = $state(false);
 
@@ -29,6 +38,7 @@
     alt="Tile Icon"
     class:tile__icon--error={error}
     onerror={onError}
+    {style}
   />
 {:else if icon.type === TileIconType.IconPack}
   <img
@@ -37,6 +47,7 @@
     alt="Tile Icon"
     class:tile__icon--error={error}
     onerror={onError}
+    {style}
   />
 {:else if icon.type === TileIconType.Uploaded}
   <img
@@ -45,6 +56,7 @@
     alt="Tile Icon"
     class:tile__icon--error={error}
     onerror={onError}
+    {style}
   />
 {/if}
 

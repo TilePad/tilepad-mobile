@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { TileModel } from "$lib/api/types/tiles";
   import type { FolderModel } from "$lib/api/types/folders";
-  import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
   import TileGrid from "$lib/components/tiles/TileGrid.svelte";
 
@@ -11,11 +10,10 @@
   type Props = {
     tiles: TileModel[];
     folder: FolderModel;
-    connection: TilepadSocketDetails;
     onClick: (tileId: string) => void;
   };
 
-  const { tiles, folder, connection, onClick }: Props = $props();
+  const { tiles, folder, onClick }: Props = $props();
 
   function getTile(tiles: TileModel[], row: number, column: number) {
     return tiles.find((tile) => tile.row === row && tile.column === column);
@@ -27,7 +25,7 @@
     {#snippet tile(row, column)}
       {@const tile = getTile(tiles, row, column) ?? null}
       {#if tile !== null}
-        <FilledTile {connection} {tile} onClick={() => onClick(tile.id)} />
+        <FilledTile {tile} onClick={() => onClick(tile.id)} />
       {:else}
         <EmptyTile />
       {/if}

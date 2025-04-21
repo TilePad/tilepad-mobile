@@ -35,7 +35,7 @@
 
 <div
   class="grid"
-  style="--font-size-adjustment: {sizeAdjust};"
+  style="--tile-size-adjustment: {sizeAdjust};"
   bind:this={container}
   bind:clientWidth={containerWidth}
   bind:clientHeight={containerHeight}
@@ -55,7 +55,6 @@
   .grid {
     display: flex;
     flex-flow: column;
-    justify-content: center;
 
     width: 100%;
     height: 100%;

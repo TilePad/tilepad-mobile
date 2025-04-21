@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { TileModel } from "$lib/api/types/tiles";
-  import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
   import { tap } from "svelte-gestures";
   import { ripple } from "svelte-ripple-action";
@@ -10,11 +9,10 @@
 
   type Props = {
     tile: TileModel;
-    connection: TilepadSocketDetails;
     onClick: VoidFunction;
   };
 
-  const { connection, tile, onClick }: Props = $props();
+  const { tile, onClick }: Props = $props();
 
   const config = $derived(tile.config);
 </script>
@@ -25,7 +23,7 @@
   use:tap={() => ({ timeframe: 1000 })}
   ontap={onClick}
 >
-  <TileIcon {connection} icon={tile.config.icon} />
+  <TileIcon icon={tile.config.icon} iconOptions={tile.config.icon_options} />
   <TileLabelElm label={config.label} />
 </button>
 

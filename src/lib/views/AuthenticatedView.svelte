@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { TileModel } from "$lib/api/types/tiles";
   import type { FolderModel } from "$lib/api/types/folders";
-  import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
@@ -12,12 +11,11 @@
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
   type Props = {
-    details: TilepadSocketDetails;
     tiles: TileModel[];
-    folder: FolderModel | null;
+    folder: FolderModel;
   };
 
-  const { details, tiles, folder }: Props = $props();
+  const { tiles, folder }: Props = $props();
 
   const { disconnect, clickTile } = getTilepadSocket();
 
@@ -37,7 +35,6 @@
 
   <div class="tiles">
     <TilesView
-      connection={details}
       {tiles}
       {folder}
       onClick={(tileId) => {
