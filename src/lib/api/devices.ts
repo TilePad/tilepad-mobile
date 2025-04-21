@@ -28,6 +28,10 @@ export function updateDevice(deviceId: string, update: UpdateDevice) {
   return invoke<DeviceModel>("devices_update_device", { deviceId, update });
 }
 
+export function getDeviceName() {
+  return invoke<string>("get_device_name");
+}
+
 export async function removeDevice(deviceId: string) {
   await invoke("devices_remove_device", { deviceId });
   invalidateDevices();

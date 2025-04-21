@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { hostname } from "@tauri-apps/plugin-os";
+  import { getDeviceName } from "$lib/api/devices";
   import Button from "$lib/components/input/Button.svelte";
   import PulseLoader from "$lib/components/PulseLoader.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
@@ -21,7 +21,7 @@
     <p>
       Please approve this device
 
-      {#await hostname() then hostname}
+      {#await getDeviceName() then hostname}
         <span class="device-name">{hostname}</span>
       {/await}
     </p>

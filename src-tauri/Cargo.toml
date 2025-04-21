@@ -37,6 +37,7 @@ chrono = { version = "0.4.40", features = ["serde"] }
 tauri-plugin-os = "2"
 tauri-plugin-keep-screen-on = "0.1.2"
 tauri-plugin-haptics = "2.0.0"
+nick-name = "0.1.2"
 
 [dependencies.sqlx]
 version = "0.8.2"

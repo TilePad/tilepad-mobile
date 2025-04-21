@@ -41,3 +41,9 @@ pub async fn devices_update_device(
     let device = device.update(db.inner(), update).await?;
     Ok(device)
 }
+
+#[tauri::command]
+pub async fn get_device_name() -> CmdResult<String> {
+    let name = nick_name::NickName::new()?;
+    Ok(name.get()?)
+}

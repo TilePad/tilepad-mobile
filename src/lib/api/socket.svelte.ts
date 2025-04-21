@@ -1,5 +1,3 @@
-import { hostname } from "@tauri-apps/plugin-os";
-
 import type { TileModel } from "./types/tiles";
 import type { FolderModel } from "./types/folders";
 import type {
@@ -7,7 +5,7 @@ import type {
   ServerDeviceMessage,
 } from "./types/protocol";
 
-import { updateDevice } from "./devices";
+import { updateDevice, getDeviceName } from "./devices";
 
 type SocketState =
   //  Initial disconnected state
@@ -152,7 +150,7 @@ export function createTilepadSocket(): TilepadSocket {
       state = { type: "RequestingApproval" };
 
       // Request the device name
-      let name = await hostname();
+      let name = await getDeviceName();
       if (!name) name = "Tilepad Device";
 
       sendMessage({ type: "RequestApproval", name });

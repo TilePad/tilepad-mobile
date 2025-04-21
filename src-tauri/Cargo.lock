@@ -2395,6 +2395,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
 
 [[package]]
+name = "nick-name"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9860c725ce654683dbf1bb8264b9c9251027cb25f62ed016da15aeffb919ba84"
+dependencies = [
+ "cfg-if",
+ "jni",
+ "libc",
+ "ndk-context",
+ "objc2 0.5.2",
+ "thiserror 1.0.69",
+ "winapi",
+]
+
+[[package]]
 name = "nix"
 version = "0.29.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4848,6 +4863,7 @@ dependencies = [
  "async-trait",
  "chrono",
  "futures",
+ "nick-name",
  "parking_lot",
  "sea-query",
  "sea-query-binder",

@@ -21,7 +21,8 @@ pub fn run() {
             devices::devices_get_devices,
             devices::devices_create_device,
             devices::devices_remove_device,
-            devices::devices_update_device
+            devices::devices_update_device,
+            devices::get_device_name
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
