@@ -1,8 +1,7 @@
 <script lang="ts">
   import type { TileModel } from "$lib/api/types/tiles";
 
-  import { tap } from "svelte-gestures";
-  import { ripple } from "svelte-ripple-action";
+  import { tap, type TapCustomEvent } from "svelte-gestures";
 
   import TileIcon from "./TileIcon.svelte";
   import TileLabelElm from "./TileLabelElm.svelte";
@@ -15,14 +14,38 @@
   const { tile, onClick }: Props = $props();
 
   const config = $derived(tile.config);
+
+  function onTap(event: TapCustomEvent) {
+    onClick();
+
+    const button = event.currentTarget;
+    if (!(button instanceof HTMLButtonElement)) return;
+
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.detail.x - radius}px`;
+    circle.style.top = `${event.detail.y - radius}px`;
+    circle.classList.add("ripple");
+
+    // Remove old ripple if it exists
+    const oldRipple = button.querySelector(".ripple");
+    if (oldRipple) {
+      oldRipple.remove();
+    }
+
+    button.appendChild(circle);
+
+    // Remove after animation ends
+    circle.addEventListener("animationend", () => {
+      circle.remove();
+    });
+  }
 </script>
 
-<button
-  class="tile"
-  use:ripple
-  use:tap={() => ({ timeframe: 1000 })}
-  ontap={onClick}
->
+<button class="tile" use:tap={() => ({ timeframe: 1000 })} ontap={onTap}>
   <TileIcon icon={tile.config.icon} iconOptions={tile.config.icon_options} />
   <TileLabelElm label={config.label} />
 </button>
@@ -50,5 +73,20 @@
 
   .tile:active {
     transform: scale(0.95);
+  }
+  :global(.ripple) {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(0);
+    animation: ripple-animation 600ms linear;
+    pointer-events: none;
+  }
+
+  @keyframes ripple-animation {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
   }
 </style>

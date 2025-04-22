@@ -4,10 +4,11 @@
 
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
-  import Button from "$lib/components/input/Button.svelte";
   import { impactFeedback } from "@tauri-apps/plugin-haptics";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import { keepScreenOn } from "tauri-plugin-keep-screen-on-api";
+  import { swipe, type SwipeCustomEvent } from "svelte-gestures";
+  import ActionDrawer from "$lib/components/ActionDrawer.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
   type Props = {
@@ -17,7 +18,7 @@
 
   const { tiles, folder }: Props = $props();
 
-  const { disconnect, clickTile } = getTilepadSocket();
+  const { clickTile } = getTilepadSocket();
 
   onMount(() => {
     keepScreenOn(true);
@@ -26,13 +27,24 @@
       keepScreenOn(false);
     };
   });
+
+  let drawerOpen = $state(false);
+
+  function onSwipe(event: SwipeCustomEvent) {
+    const direction = event.detail.direction;
+    if (direction === "right") {
+      drawerOpen = true;
+    } else if (direction === "left") {
+      drawerOpen = false;
+    }
+  }
 </script>
 
-<div class="layout" in:fly={{ x: -100, duration: 250 }}>
-  <div class="actions">
-    <Button onclick={disconnect}>Disconnect</Button>
-  </div>
+<ActionDrawer open={drawerOpen} onClose={() => (drawerOpen = false)} />
 
+<svelte:body use:swipe={() => ({})} onswipe={onSwipe} />
+
+<div class="layout" in:fly={{ x: -100, duration: 250 }}>
   <div class="tiles">
     <TilesView
       {tiles}
@@ -52,23 +64,11 @@
 <style>
   .layout {
     height: 100%;
-    display: flex;
-
-    flex-flow: column;
+    width: 100%;
   }
 
   .tiles {
-    flex: auto;
     overflow: hidden;
-  }
-
-  .actions {
-    width: 100%;
-    display: flex;
-    gap: 1rem;
-    width: 100%;
-    background-color: #322e38;
-    padding: 0.5rem;
-    align-items: center;
+    height: 100%;
   }
 </style>
