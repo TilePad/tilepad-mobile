@@ -12,7 +12,7 @@
 
 <QueryClientProvider client={queryClient}>
   <WebsocketProvider>
-    <main class="main">
+    <main class="main" id="mainContent">
       {@render children()}
     </main>
   </WebsocketProvider>

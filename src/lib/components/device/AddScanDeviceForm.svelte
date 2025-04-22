@@ -1,10 +1,14 @@
 <script lang="ts">
   import type { EncodedInterfaces } from "$lib/api/types/server";
 
+  import { Portal } from "bits-ui";
+  import { onDestroy } from "svelte";
   import { testServerConnection } from "$lib/api/server";
+  import { cancel } from "@tauri-apps/plugin-barcode-scanner";
   import * as barcode from "@tauri-apps/plugin-barcode-scanner";
 
   import Button from "../input/Button.svelte";
+  import Dialog from "../dialog/Dialog.svelte";
   import PulseLoader from "../PulseLoader.svelte";
   import TextInput from "../input/TextInput.svelte";
   import NumberInput from "../input/NumberInput.svelte";
@@ -24,10 +28,13 @@
     InvalidQR: 5,
   };
 
+  let open = $state(false);
   let currentState = $state(State.Initial);
   let name = $state("");
   let host = $state("");
   let port = $state(0);
+
+  let restoreTransparency = () => {};
 
   /**
    * Handle scan QR code button
@@ -44,16 +51,52 @@
         }
       }
 
+      const restore = createTemporaryTransparency();
+      restoreTransparency = restore;
+
       const scanned = await barcode.scan({
-        windowed: false,
+        windowed: true,
         formats: [barcode.Format.QRCode],
       });
+
+      restore();
+      restoreTransparency = () => {};
 
       const content = scanned.content;
       onScanned(content);
     } catch (err) {
       console.error("failed to scan qr", err);
     }
+  }
+
+  function createTemporaryTransparency() {
+    const changes: {
+      element: HTMLElement;
+      originalOpacity: string;
+    }[] = [];
+
+    function makeTransparent(el: HTMLElement) {
+      const style = getComputedStyle(el);
+      changes.push({
+        element: el,
+        originalOpacity: style.opacity,
+      });
+
+      el.style.opacity = "0";
+    }
+
+    const originalBodyBg = document.body.style.backgroundColor;
+    document.body.style.backgroundColor = "transparent";
+
+    makeTransparent(document.getElementById("mainContent")!);
+
+    return () => {
+      document.body.style.backgroundColor = originalBodyBg;
+
+      for (const { element, originalOpacity } of changes) {
+        element.style.opacity = originalOpacity;
+      }
+    };
   }
 
   /**
@@ -94,31 +137,105 @@
   function onSubmit(event: Event) {
     event.preventDefault();
     onAddDevice(name, host, port);
+    onClose();
   }
+
+  function onClose() {
+    open = false;
+    currentState = State.Initial;
+    onCancel();
+  }
+
+  function onCancel() {
+    if (currentState === State.Scanning) cancel();
+    restoreTransparency();
+    restoreTransparency = () => {};
+  }
+
+  function onOpen() {
+    open = true;
+    currentState = State.Initial;
+    onClickScan();
+  }
+
+  onDestroy(() => {
+    onCancel();
+  });
 </script>
 
-{#if currentState === State.Initial}
-  <Button onclick={onClickScan}>Scan</Button>
-{:else if currentState === State.Scanning}
-  <p>Scanning</p>
-{:else if currentState === State.Checking}
-  <PulseLoader />
-  <p>Checking addresses...</p>
-{:else if currentState === State.Scanned}
-  <form onsubmit={onSubmit}>
-    <label for="name">Name</label>
-    <TextInput id="name" type="text" bind:value={name} />
+{#if !open || currentState !== State.Initial}
+  <Dialog {open} onOpenChange={(value) => (open = value)}>
+    {#snippet button({ props })}
+      <Button {...props} onclick={onOpen}>
+        <img src="/qr-icon.svg" alt="QR Icon" width="32px" height="32px" />
+        Scan QR Code
+      </Button>
+    {/snippet}
 
-    <label for="host">Host</label>
-    <TextInput id="host" type="text" bind:value={host} />
+    {#snippet children()}
+      <div class="content">
+        <Button onclick={onClose}>Cancel</Button>
 
-    <label for="port">Port</label>
-    <NumberInput id="port" bind:value={port} />
+        {#if currentState === State.Scanning}
+          <p>Scanning</p>
+        {:else if currentState === State.Checking}
+          <PulseLoader />
+          <p>Checking addresses...</p>
+        {:else if currentState === State.Scanned}
+          <form onsubmit={onSubmit}>
+            <label for="name">Name</label>
+            <TextInput id="name" type="text" bind:value={name} />
 
-    <Button type="submit">Save</Button>
-  </form>
-{:else if currentState === State.NothingValid}
-  <p>None of the scanned addresses were connectable</p>
-{:else if currentState === State.InvalidQR}
-  <p>QR code is not a valid Tilepad QR</p>
+            <label for="host">Host</label>
+            <TextInput id="host" type="text" bind:value={host} />
+
+            <label for="port">Port</label>
+            <NumberInput id="port" bind:value={port} />
+
+            <Button type="submit">Save</Button>
+          </form>
+        {:else if currentState === State.NothingValid}
+          <p>None of the scanned addresses were connectable</p>
+        {:else if currentState === State.InvalidQR}
+          <p>QR code is not a valid Tilepad QR</p>
+        {/if}
+      </div>
+    {/snippet}
+  </Dialog>
 {/if}
+
+{#if open && currentState === State.Initial}
+  <Portal to={document.body}>
+    <div class="scan-overlay">
+      <div class="top">
+        <h1>Scan QR Code</h1>
+        <Button onclick={onClose}>Cancel</Button>
+      </div>
+      <div class="skeleton" style="width: 100%; height: 0.5rem"></div>
+    </div>
+  </Portal>
+{/if}
+
+<style>
+  .content {
+    padding: 1rem;
+    min-width: 25rem;
+  }
+
+  .scan-overlay {
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #000000;
+    border-bottom-right-radius: 0.5rem;
+  }
+
+  .top {
+    display: flex;
+    gap: 1rem;
+  }
+</style>
