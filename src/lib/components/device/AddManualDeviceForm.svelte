@@ -37,8 +37,6 @@
 
   {#snippet children()}
     <div class="content">
-      <DialogCloseButton buttonLabel={{ text: "Cancel" }} />
-
       <form onsubmit={onSubmit}>
         <label for="name">Name</label>
         <TextInput id="name" type="text" bind:value={name} />
@@ -49,7 +47,10 @@
         <label for="port">Port</label>
         <NumberInput id="port" bind:value={port} />
 
-        <Button type="submit">Create</Button>
+        <div class="actions">
+          <DialogCloseButton buttonLabel={{ text: "Cancel" }} />
+          <Button type="submit">Create</Button>
+        </div>
       </form>
     </div>
   {/snippet}
@@ -57,7 +58,27 @@
 
 <style>
   .content {
+    display: flex;
+    flex-flow: column;
+    gap: 0.5rem;
     padding: 1rem;
     min-width: 25rem;
+  }
+
+  form {
+    display: flex;
+    flex-flow: column;
+    gap: 0.5rem;
+  }
+
+  .actions {
+    margin-top: 0.5rem;
+    display: flex;
+
+    gap: 1rem;
+  }
+
+  .actions :global(> *) {
+    flex: auto;
   }
 </style>

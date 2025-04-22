@@ -174,13 +174,17 @@
 
     {#snippet children()}
       <div class="content">
-        <Button onclick={onClose}>Cancel</Button>
-
         {#if currentState === State.Scanning}
           <p>Scanning</p>
+          <div class="actions">
+            <Button onclick={onClose}>Cancel</Button>
+          </div>
         {:else if currentState === State.Checking}
           <PulseLoader />
           <p>Checking addresses...</p>
+          <div class="actions">
+            <Button onclick={onClose}>Cancel</Button>
+          </div>
         {:else if currentState === State.Scanned}
           <form onsubmit={onSubmit}>
             <label for="name">Name</label>
@@ -192,12 +196,23 @@
             <label for="port">Port</label>
             <NumberInput id="port" bind:value={port} />
 
-            <Button type="submit">Save</Button>
+            <div class="actions">
+              <Button onclick={onClose}>Cancel</Button>
+              <Button type="submit">Save</Button>
+            </div>
           </form>
         {:else if currentState === State.NothingValid}
           <p>None of the scanned addresses were connectable</p>
+
+          <div class="actions">
+            <Button onclick={onClose}>Cancel</Button>
+          </div>
         {:else if currentState === State.InvalidQR}
           <p>QR code is not a valid Tilepad QR</p>
+
+          <div class="actions">
+            <Button onclick={onClose}>Cancel</Button>
+          </div>
         {/if}
       </div>
     {/snippet}
@@ -237,5 +252,22 @@
   .top {
     display: flex;
     gap: 1rem;
+  }
+
+  form {
+    display: flex;
+    flex-flow: column;
+    gap: 0.5rem;
+  }
+
+  .actions {
+    margin-top: 0.5rem;
+    display: flex;
+
+    gap: 1rem;
+  }
+
+  .actions :global(> *) {
+    flex: auto;
   }
 </style>
