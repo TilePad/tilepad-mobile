@@ -24,8 +24,13 @@ export async function createDevice(create: CreateDevice) {
   return model;
 }
 
-export function updateDevice(deviceId: string, update: UpdateDevice) {
-  return invoke<DeviceModel>("devices_update_device", { deviceId, update });
+export async function updateDevice(deviceId: string, update: UpdateDevice) {
+  const device = await invoke<DeviceModel>("devices_update_device", {
+    deviceId,
+    update,
+  });
+  invalidateDevices();
+  return device;
 }
 
 export function getDeviceName() {
