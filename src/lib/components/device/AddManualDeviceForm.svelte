@@ -27,11 +27,14 @@
   }
 </script>
 
-<Dialog
-  {open}
-  onOpenChange={(value) => (open = value)}
-  buttonLabel={{ text: "Manual Add" }}
->
+<Dialog {open} onOpenChange={(value) => (open = value)}>
+  {#snippet button({ props })}
+    <Button {...props}>
+      <img src="/form.svg" alt="QR Icon" width="32px" height="32px" />
+      Add Manually
+    </Button>
+  {/snippet}
+
   {#snippet children()}
     <div class="content">
       <DialogCloseButton buttonLabel={{ text: "Cancel" }} />
