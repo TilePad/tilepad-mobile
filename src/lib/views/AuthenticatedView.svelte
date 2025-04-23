@@ -3,7 +3,9 @@
   import type { FolderModel } from "$lib/api/types/folders";
 
   import { onMount } from "svelte";
+  import { toast } from "svelte-sonner";
   import { fly } from "svelte/transition";
+  import { toastErrorMessage } from "$lib/utils/error";
   import { impactFeedback } from "@tauri-apps/plugin-haptics";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import { keepScreenOn } from "tauri-plugin-keep-screen-on-api";

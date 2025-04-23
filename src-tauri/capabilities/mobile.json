@@ -14,6 +14,7 @@
     "haptics:allow-impact-feedback",
     "haptics:allow-notification-feedback",
     "haptics:allow-selection-feedback",
-    "haptics:allow-vibrate"
+    "haptics:allow-vibrate",
+    "keep-screen-on:allow-keep-screen-on"
   ]
 }
