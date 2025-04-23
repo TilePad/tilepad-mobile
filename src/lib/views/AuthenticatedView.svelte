@@ -21,10 +21,19 @@
   const { clickTile } = getTilepadSocket();
 
   onMount(() => {
-    keepScreenOn(true);
+    let dispose = false;
+    let loaded = false;
+
+    keepScreenOn(true).then(() => {
+      loaded = true;
+      if (dispose) {
+        keepScreenOn(false);
+      }
+    });
 
     return () => {
-      keepScreenOn(false);
+      dispose = true;
+      if (loaded) keepScreenOn(false);
     };
   });
 
