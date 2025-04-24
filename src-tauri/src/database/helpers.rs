@@ -76,11 +76,9 @@ where
     O: for<'r> FromRow<'r, SqliteRow> + Send + Unpin,
 {
     let (sql, values) = query.build_sqlx(SqliteQueryBuilder);
-    let result = sqlx::query_as_with(&sql, values)
+    sqlx::query_as_with(&sql, values)
         .fetch_optional(executor)
-        .await?;
-
-    Ok(result)
+        .await
 }
 
 pub trait UpdateStatementExt {

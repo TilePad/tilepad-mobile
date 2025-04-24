@@ -195,3 +195,54 @@ impl DeviceModel {
         .await
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::database::{
+        entity::device::{CreateDevice, DeviceModel},
+        mock_database,
+    };
+
+    /// Tests creating a device, ensures the returned model is correct
+    /// and that the inserted value matches
+    #[tokio::test]
+    async fn test_create_device() {
+        let name = "Test".to_string();
+        let host = "127.0.0.1".to_string();
+        let port = 8080;
+        let order = 0;
+        let access_token = Some("Test".to_string());
+
+        let db = mock_database().await;
+        let model = DeviceModel::create(
+            &db,
+            CreateDevice {
+                name: name.clone(),
+                host: host.clone(),
+                port,
+                order,
+                access_token: access_token.clone(),
+            },
+        )
+        .await
+        .unwrap();
+
+        // Ensure the return model is correct
+        assert_eq!(model.name, name);
+        assert_eq!(model.host, host);
+        assert_eq!(model.port, port);
+        assert_eq!(model.order, order);
+        assert_eq!(model.access_token, access_token);
+
+        // Ensure the copy in the database is correct
+        let model = DeviceModel::get_by_id(&db, model.id)
+            .await
+            .unwrap()
+            .expect("model should exist");
+        assert_eq!(model.name, name);
+        assert_eq!(model.host, host);
+        assert_eq!(model.port, port);
+        assert_eq!(model.order, order);
+        assert_eq!(model.access_token, access_token);
+    }
+}
