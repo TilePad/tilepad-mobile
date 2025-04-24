@@ -1,12 +1,16 @@
 {
   "words": [
+    "cdylib",
     "chrono",
     "iconify",
     "Iden",
     "jacobtread",
+    "rlib",
     "runed",
+    "serde",
     "sonner",
     "sqlx",
+    "staticlib",
     "tauri",
     "tilepad",
     "unplugin",
