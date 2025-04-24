@@ -1,5 +1,5 @@
 use chrono::{DateTime, Utc};
-use sea_query::{Expr, IdenStatic, Query};
+use sea_query::{Expr, IdenStatic, Order, Query};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 use uuid::Uuid;
@@ -11,17 +11,48 @@ use crate::database::{
 
 pub type DeviceId = Uuid;
 
+#[derive(IdenStatic, Copy, Clone)]
+#[iden(rename = "devices")]
+pub struct DevicesTable;
+
+#[derive(IdenStatic, Copy, Clone)]
+pub enum DevicesColumn {
+    /// Unique ID for the device
+    Id,
+    /// Host for connecting to the device
+    Host,
+    /// Port for connecting to the device
+    Port,
+    /// Name of the device
+    Name,
+    /// Access token for the device
+    AccessToken,
+    /// Order of the device in the UI
+    Order,
+    /// Timestamp when the device was added
+    CreatedAt,
+}
+
+/// Model representing a device
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
 pub struct DeviceModel {
+    /// Unique ID of the device
     pub id: DeviceId,
+    /// Name of the device
     pub name: String,
+    /// Host address of the device
     pub host: String,
+    /// Port of the device
     pub port: i32,
+    /// Access token of the device (If authenticated)
     pub access_token: Option<String>,
+    /// Order in the UI the device is displayed
     pub order: u32,
+    /// Date the device was created
     pub created_at: DateTime<Utc>,
 }
 
+/// Values required to create a device
 #[derive(Deserialize)]
 pub struct CreateDevice {
     pub name: String,
@@ -31,6 +62,7 @@ pub struct CreateDevice {
     pub access_token: Option<String>,
 }
 
+/// Values that can be updated on a device
 #[derive(Deserialize)]
 pub struct UpdateDevice {
     pub name: Option<String>,
@@ -41,6 +73,7 @@ pub struct UpdateDevice {
 }
 
 impl DeviceModel {
+    /// Create a new device
     pub async fn create(db: &DbPool, create: CreateDevice) -> anyhow::Result<DeviceModel> {
         let model = DeviceModel {
             id: Uuid::new_v4(),
@@ -48,7 +81,7 @@ impl DeviceModel {
             port: create.port,
             name: create.name,
             access_token: create.access_token,
-            order: 0,
+            order: create.order,
             created_at: Utc::now(),
         };
 
@@ -80,29 +113,10 @@ impl DeviceModel {
         Ok(model)
     }
 
-    pub async fn get_by_id(db: &DbPool, id: DeviceId) -> DbResult<Option<DeviceModel>> {
-        sql_query_maybe_one(
-            db,
-            Query::select()
-                .from(DevicesTable)
-                .columns([
-                    DevicesColumn::Id,
-                    DevicesColumn::Name,
-                    DevicesColumn::Host,
-                    DevicesColumn::Port,
-                    DevicesColumn::AccessToken,
-                    DevicesColumn::Order,
-                    DevicesColumn::CreatedAt,
-                ])
-                .and_where(Expr::col(DevicesColumn::Id).eq(id)),
-        )
-        .await
-    }
-
+    /// Update the device
     pub async fn update(
         mut self,
         db: &DbPool,
-
         update: UpdateDevice,
     ) -> anyhow::Result<DeviceModel> {
         sql_exec(
@@ -130,22 +144,7 @@ impl DeviceModel {
         Ok(self)
     }
 
-    pub async fn all(db: &DbPool) -> DbResult<Vec<DeviceModel>> {
-        sql_query_all(
-            db,
-            Query::select().from(DevicesTable).columns([
-                DevicesColumn::Id,
-                DevicesColumn::Name,
-                DevicesColumn::Host,
-                DevicesColumn::Port,
-                DevicesColumn::AccessToken,
-                DevicesColumn::Order,
-                DevicesColumn::CreatedAt,
-            ]),
-        )
-        .await
-    }
-
+    /// Delete a device by ID
     pub async fn delete(db: &DbPool, device_id: DeviceId) -> DbResult<()> {
         sql_exec(
             db,
@@ -155,26 +154,44 @@ impl DeviceModel {
         )
         .await
     }
-}
 
-#[derive(IdenStatic, Copy, Clone)]
-#[iden(rename = "devices")]
-pub struct DevicesTable;
+    /// Get a specific device by ID
+    pub async fn get_by_id(db: &DbPool, id: DeviceId) -> DbResult<Option<DeviceModel>> {
+        sql_query_maybe_one(
+            db,
+            Query::select()
+                .from(DevicesTable)
+                .columns([
+                    DevicesColumn::Id,
+                    DevicesColumn::Name,
+                    DevicesColumn::Host,
+                    DevicesColumn::Port,
+                    DevicesColumn::AccessToken,
+                    DevicesColumn::Order,
+                    DevicesColumn::CreatedAt,
+                ])
+                .and_where(Expr::col(DevicesColumn::Id).eq(id)),
+        )
+        .await
+    }
 
-#[derive(IdenStatic, Copy, Clone)]
-pub enum DevicesColumn {
-    /// Unique ID for the device
-    Id,
-    /// Host for connecting to the device
-    Host,
-    /// Port for connecting to the device
-    Port,
-    /// Name of the device
-    Name,
-    /// Access token for the device
-    AccessToken,
-    /// Order of the device in the UI
-    Order,
-    /// Timestamp when the device was added
-    CreatedAt,
+    /// Get all devices
+    pub async fn all(db: &DbPool) -> DbResult<Vec<DeviceModel>> {
+        sql_query_all(
+            db,
+            Query::select()
+                .from(DevicesTable)
+                .columns([
+                    DevicesColumn::Id,
+                    DevicesColumn::Name,
+                    DevicesColumn::Host,
+                    DevicesColumn::Port,
+                    DevicesColumn::AccessToken,
+                    DevicesColumn::Order,
+                    DevicesColumn::CreatedAt,
+                ])
+                .order_by(DevicesColumn::Order, Order::Asc),
+        )
+        .await
+    }
 }
