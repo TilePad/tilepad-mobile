@@ -11,20 +11,6 @@ where
         .to_owned()
 }
 
-pub fn uuid<T>(name: T) -> ColumnDef
-where
-    T: IntoIden,
-{
-    ColumnDef::new(name).uuid().not_null().to_owned()
-}
-
-pub fn uuid_null<T>(name: T) -> ColumnDef
-where
-    T: IntoIden,
-{
-    ColumnDef::new(name).uuid().null().to_owned()
-}
-
 pub fn string<T>(name: T) -> ColumnDef
 where
     T: IntoIden,
@@ -39,13 +25,6 @@ where
     ColumnDef::new(name).string().to_owned()
 }
 
-pub fn json<T>(name: T) -> ColumnDef
-where
-    T: IntoIden,
-{
-    ColumnDef::new(name).json_binary().not_null().to_owned()
-}
-
 pub fn integer<T>(name: T) -> ColumnDef
 where
     T: IntoIden,
@@ -58,11 +37,4 @@ where
     T: IntoIden,
 {
     ColumnDef::new(name).date_time().not_null().to_owned()
-}
-
-pub fn boolean<T>(name: T) -> ColumnDef
-where
-    T: IntoIden,
-{
-    ColumnDef::new(name).boolean().not_null().to_owned()
 }
