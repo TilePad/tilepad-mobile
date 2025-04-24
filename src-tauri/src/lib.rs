@@ -4,7 +4,6 @@ use anyhow::Context;
 use tauri::{async_runtime::block_on, App, Manager};
 
 mod commands;
-mod config;
 mod database;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
