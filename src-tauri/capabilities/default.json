@@ -8,8 +8,6 @@
   "permissions": [
     "core:default",
     "opener:default",
-    "os:default",
-    "os:allow-hostname",
     "haptics:allow-impact-feedback",
     "haptics:allow-notification-feedback",
     "haptics:allow-selection-feedback",
