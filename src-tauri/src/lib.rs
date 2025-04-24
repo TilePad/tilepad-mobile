@@ -11,7 +11,6 @@ pub fn run() {
     use commands::devices;
 
     tauri::Builder::default()
-        .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_keep_screen_on::init())
         .plugin(tauri_plugin_haptics::init())
         .setup(setup)

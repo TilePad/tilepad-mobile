@@ -43,7 +43,6 @@ chrono = { version = "0.4", features = ["serde"] }
 # Tauri plugins
 tauri-plugin-keep-screen-on = "0.1"
 tauri-plugin-haptics = "2"
-tauri-plugin-opener = "2"
 
 async-trait = "0.1"
 
