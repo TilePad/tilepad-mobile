@@ -43,6 +43,7 @@ pub enum MigrationsColumn {
     AppliedAt,
 }
 
+/// Apply migrations
 pub async fn migrate(db: &DbPool) -> anyhow::Result<()> {
     create_migrations_table(db)
         .await
@@ -91,6 +92,7 @@ pub async fn migrate(db: &DbPool) -> anyhow::Result<()> {
     Ok(())
 }
 
+/// Create the table that stores migrations
 async fn create_migrations_table(db: &DbPool) -> anyhow::Result<()> {
     sqlx::query(
         &Table::create()
@@ -115,6 +117,7 @@ async fn create_migrations_table(db: &DbPool) -> anyhow::Result<()> {
     Ok(())
 }
 
+/// Get all applied migrations from the database
 async fn get_applied_migrations(db: &DbPool) -> DbResult<Vec<AppliedMigration>> {
     let (query, _values) = Query::select()
         .columns([MigrationsColumn::Name, MigrationsColumn::AppliedAt])
@@ -124,6 +127,7 @@ async fn get_applied_migrations(db: &DbPool) -> DbResult<Vec<AppliedMigration>> 
     Ok(result)
 }
 
+/// Creates an entry in the database for a migration that was applied
 async fn create_applied_migration(
     db: &DbPool,
     name: String,

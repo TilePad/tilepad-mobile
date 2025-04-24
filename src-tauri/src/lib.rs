@@ -28,9 +28,11 @@ pub fn run() {
 }
 
 fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
+    // Setup "bar code" scanning library for scanning QR codes
     #[cfg(mobile)]
     app.handle().plugin(tauri_plugin_barcode_scanner::init())?;
 
+    // Setup tracing
     let subscriber = tracing_subscriber::fmt()
         .compact()
         .with_file(true)
@@ -39,17 +41,21 @@ fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
         .with_target(false)
         .finish();
 
-    // use that subscriber to process traces emitted after this point
     tracing::subscriber::set_global_default(subscriber)?;
 
+    // Get the app path
     let app_data_path = app
         .path()
         .app_data_dir()
         .context("failed to get app data dir")?;
 
-    let db = block_on(database::connect_database(app_data_path.join("app.db")))
-        .context("failed to load database")?;
+    // Get the db file path
+    let db_path = app_data_path.join("app.db");
 
+    // Connect to the database
+    let db = block_on(database::connect_database(db_path)).context("failed to load database")?;
+
+    // Provide the database as app state
     app.manage(db.clone());
 
     Ok(())
