@@ -1,7 +1,18 @@
-# Tauri + SvelteKit + TypeScript
+<img src="./assets/tilepad-logo.svg" width="256px" height="auto" > 
 
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
+(Mobile)
 
-## Recommended IDE Setup
+> ⚠️ WIP: TilePad is currently under active development. 
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+![License](https://img.shields.io/github/license/tilepad/tilepad-desktop?style=for-the-badge)
+
+**TilePad mobile** is the mobile app that runs on mobile devices in order to become the macropad for triggering **TilePad** tiles 
+
+
+<table>
+<tr>
+<td>
+<img src="./assets/tilepad-mockup.png" width="100%" height="auto" > 
+</td>
+</tr>
+</table>
