@@ -84,3 +84,4 @@ jobs:
           generate_release_notes: true
           files: |
             ./tilepad-${{ steps.app_version.outputs.version }}.apk
+            ./tilepad-${{ steps.app_version.outputs.version }}.aab
