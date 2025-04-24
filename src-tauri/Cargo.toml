@@ -1,9 +1,15 @@
 [package]
 name = "tilepad-mobile"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "Tilepad mobile app"
+authors = ["Jacobtread"]
 edition = "2021"
+repository = "https://github.com/TilePad/tilepad-desktop"
+readme = "../README.md"
+homepage = "https://tilepad.pages.dev/"
+license = "MIT"
+keywords = ["macropad"]
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
