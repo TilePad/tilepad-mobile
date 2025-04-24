@@ -53,7 +53,7 @@
 <style>
   .tile {
     position: relative;
-    background-color: #242129;
+    background-color: #151318;
     border: 2px solid #715c8f;
     border-radius: 5px;
     display: flex;
@@ -68,12 +68,8 @@
     font-size: 1.5rem;
     user-select: none;
     overflow: hidden;
-    transition: 0.15s ease transform;
   }
 
-  .tile:active {
-    transform: scale(0.95);
-  }
   :global(.ripple) {
     position: absolute;
     border-radius: 50%;
