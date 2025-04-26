@@ -26,7 +26,7 @@
   <AuthenticatingView />
 {:else if state.type === "Authenticated"}
   {#if details != null && state.folder !== null}
-    <AuthenticatedView folder={state.folder} tiles={state.tiles} />
+    <AuthenticatedView {details} folder={state.folder} tiles={state.tiles} />
   {/if}
 {:else if state.type === "Declined"}
   <DeclinedView />
