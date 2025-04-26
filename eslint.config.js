@@ -25,7 +25,7 @@ export default tseslint.config(
           ts: typescriptParser,
           typescript: typescriptParser,
         },
-        project: "./tsconfig.json",
+        project: "./tsconfig.app.json",
         extraFileExtensions: [".svelte"],
       },
     },

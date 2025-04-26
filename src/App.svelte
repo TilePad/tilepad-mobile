@@ -6,13 +6,13 @@
   import { SvelteQueryDevtools } from "@tanstack/svelte-query-devtools";
   import WebsocketProvider from "$lib/components/WebsocketProvider.svelte";
 
-  let { children } = $props();
+  import Pages from "./Pages.svelte";
 </script>
 
 <QueryClientProvider client={queryClient}>
   <WebsocketProvider>
     <main class="main" id="mainContent">
-      {@render children()}
+      <Pages />
     </main>
   </WebsocketProvider>
 

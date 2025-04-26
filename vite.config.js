@@ -1,12 +1,29 @@
 import { defineConfig } from "vite";
-import { sveltekit } from "@sveltejs/kit/vite";
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+import { svelte } from '@sveltejs/vite-plugin-svelte'
 
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [sveltekit()],
+  plugins: [svelte()],
+
+  resolve: {
+    alias: {
+      $lib: resolve(__dirname, 'src/lib'),
+    },
+  },
+
+  build: {
+    outDir: "build",
+  },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
@@ -19,10 +36,10 @@ export default defineConfig(async () => ({
     host: host || false,
     hmr: host
       ? {
-          protocol: "ws",
-          host,
-          port: 1421,
-        }
+        protocol: "ws",
+        host,
+        port: 1421,
+      }
       : undefined,
     watch: {
       // 3. tell vite to ignore watching `src-tauri`
