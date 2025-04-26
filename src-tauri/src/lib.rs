@@ -1,7 +1,7 @@
 use std::error::Error;
 
 use anyhow::Context;
-use tauri::{async_runtime::block_on, App, Manager};
+use tauri::{App, Manager, async_runtime::block_on};
 
 mod commands;
 mod database;
@@ -35,7 +35,7 @@ fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
         .compact()
         .with_file(true)
         .with_line_number(true)
-        .with_thread_ids(true)
+        .with_thread_ids(false)
         .with_target(false)
         .finish();
 
@@ -54,7 +54,7 @@ fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     let db = block_on(database::connect_database(db_path)).context("failed to load database")?;
 
     // Provide the database as app state
-    app.manage(db.clone());
+    app.manage(db);
 
     Ok(())
 }
