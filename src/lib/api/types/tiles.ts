@@ -9,13 +9,13 @@ export interface TileModel {
   id: TileId;
   config: TileConfig;
   folder_id: FolderId;
+  plugin_id: PluginId;
+  action_id: ActionId;
   row: number;
   column: number;
 }
 
 export interface TileConfig {
-  plugin_id: PluginId;
-  action_id: ActionId;
   icon: TileIcon;
   icon_options: TileIconOptions;
   properties: object;
