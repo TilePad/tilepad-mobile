@@ -66,7 +66,9 @@ export interface TileLabel {
   bold: boolean;
   italic: boolean;
   underline: boolean;
+  outline: boolean;
   color: string;
+  outline_color: string;
 }
 
 export enum LabelAlign {
