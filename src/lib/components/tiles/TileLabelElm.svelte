@@ -1,26 +1,11 @@
 <script lang="ts">
   import type { TileLabel } from "$lib/api/types/tiles";
 
-  import { useFontLoader } from "$lib/api/fonts";
-
-  import { getServerContext } from "../ServerProvider.svelte";
-
   type Props = {
     label: TileLabel;
   };
 
   const { label }: Props = $props();
-  const serverContext = getServerContext();
-  const serverURL = $derived(serverContext.serverURL);
-
-  const options = $derived({
-    serverURL,
-    fontName: label.font,
-    bold: label.bold,
-    italic: label.italic,
-  });
-
-  const fontQuery = useFontLoader(() => options);
 </script>
 
 {#if label.enabled && label.label.length > 0}
@@ -34,9 +19,6 @@
     class:label--outline={label.outline}
   >
     {label.label}
-
-    <!-- Hack required to make sure the font query is marked as active -->
-    {#if $fontQuery.isSuccess}{/if}
   </p>
 {/if}
 

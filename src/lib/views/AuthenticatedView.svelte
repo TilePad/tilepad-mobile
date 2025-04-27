@@ -5,6 +5,7 @@
 
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
+  import { loadFont } from "$lib/utils/fontLoader";
   import { impactFeedback } from "@tauri-apps/plugin-haptics";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import { keepScreenOn } from "tauri-plugin-keep-screen-on-api";
@@ -20,6 +21,7 @@
   };
 
   const { details, tiles, folder }: Props = $props();
+  const serverURL = $derived(`http://${details.host}:${details.port}`);
 
   const { clickTile } = getTilepadSocket();
 
@@ -50,11 +52,23 @@
       drawerOpen = false;
     }
   }
+
+  $effect(() => {
+    for (const tile of tiles) {
+      const label = tile.config.label;
+
+      // Roboto is a built in font and does not require loading
+      if (label.font === "Roboto") continue;
+
+      // Request the tile font be loading
+      loadFont(serverURL, label.font, label.bold, label.italic);
+    }
+  });
 </script>
 
 <svelte:body use:swipe={() => ({})} onswipe={onSwipe} />
 
-<ServerProvider serverURL="http://{details.host}:{details.port}">
+<ServerProvider {serverURL}>
   <ActionDrawer open={drawerOpen} onClose={() => (drawerOpen = false)} />
 
   <div class="layout" in:fly={{ x: -100, duration: 250 }}>
