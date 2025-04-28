@@ -1,6 +1,4 @@
 use std::error::Error;
-
-use anyhow::Context;
 use tauri::{App, Manager, async_runtime::block_on};
 
 mod commands;
@@ -18,7 +16,7 @@ pub fn run() {
             devices::devices_get_devices,
             devices::devices_create_device,
             devices::devices_remove_device,
-            devices::devices_update_device,
+            devices::devices_set_access_token,
             devices::get_device_name
         ])
         .run(tauri::generate_context!())
@@ -42,16 +40,19 @@ fn setup(app: &mut App) -> Result<(), Box<dyn Error>> {
     tracing::subscriber::set_global_default(subscriber)?;
 
     // Get the app path
-    let app_data_path = app
-        .path()
-        .app_data_dir()
-        .context("failed to get app data dir")?;
+    let app_data_path = app.path().app_data_dir()?;
 
     // Get the db file path
     let db_path = app_data_path.join("app.db");
 
     // Connect to the database
-    let db = block_on(database::connect_database(db_path)).context("failed to load database")?;
+    let db = match block_on(database::connect_database(db_path)) {
+        Ok(value) => value,
+        Err(cause) => {
+            tracing::error!(?cause, "failed to load database");
+            std::process::exit(1);
+        }
+    };
 
     // Provide the database as app state
     app.manage(db);

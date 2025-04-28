@@ -23,10 +23,3 @@ export type CreateDevice = {
   access_token: string | null;
   order: number;
 };
-
-export type UpdateDevice = {
-  name?: string;
-  host?: string;
-  port?: number;
-  access_token?: string | null;
-};

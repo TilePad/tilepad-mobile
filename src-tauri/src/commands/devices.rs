@@ -2,8 +2,8 @@ use anyhow::Context;
 use tauri::State;
 
 use crate::database::{
-    entity::device::{CreateDevice, DeviceId, DeviceModel, UpdateDevice},
     DbPool,
+    entity::device::{CreateDevice, DeviceId, DeviceModel},
 };
 
 use super::CmdResult;
@@ -32,17 +32,17 @@ pub async fn devices_remove_device(db: State<'_, DbPool>, device_id: DeviceId) -
     Ok(())
 }
 
-/// Update a specific device
+/// Update a specific device access token
 #[tauri::command]
-pub async fn devices_update_device(
+pub async fn devices_set_access_token(
     db: State<'_, DbPool>,
     device_id: DeviceId,
-    update: UpdateDevice,
+    access_token: Option<String>,
 ) -> CmdResult<DeviceModel> {
     let device = DeviceModel::get_by_id(db.inner(), device_id)
         .await?
         .context("device not found")?;
-    let device = device.update(db.inner(), update).await?;
+    let device = device.set_access_token(db.inner(), access_token).await?;
     Ok(device)
 }
 

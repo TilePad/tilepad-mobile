@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { createQuery } from "@tanstack/svelte-query";
 
-import type { DeviceModel, CreateDevice, UpdateDevice } from "./types/devices";
+import type { DeviceModel, CreateDevice } from "./types/devices";
 
 import { queryClient } from "./client";
 
@@ -24,10 +24,13 @@ export async function createDevice(create: CreateDevice) {
   return model;
 }
 
-export async function updateDevice(deviceId: string, update: UpdateDevice) {
-  const device = await invoke<DeviceModel>("devices_update_device", {
+export async function setDeviceAccessToken(
+  deviceId: string,
+  accessToken: string,
+) {
+  const device = await invoke<DeviceModel>("devices_set_access_token", {
     deviceId,
-    update,
+    accessToken,
   });
   invalidateDevices();
   return device;

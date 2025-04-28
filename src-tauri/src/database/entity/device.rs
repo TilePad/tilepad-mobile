@@ -1,37 +1,10 @@
+use crate::database::{DbPool, DbResult};
 use chrono::{DateTime, Utc};
-use sea_query::{Expr, IdenStatic, Order, Query};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 use uuid::Uuid;
 
-use crate::database::{
-    helpers::{sql_exec, sql_query_all, sql_query_maybe_one, UpdateStatementExt},
-    DbPool, DbResult,
-};
-
 pub type DeviceId = Uuid;
-
-#[derive(IdenStatic, Copy, Clone)]
-#[iden(rename = "devices")]
-pub struct DevicesTable;
-
-#[derive(IdenStatic, Copy, Clone)]
-pub enum DevicesColumn {
-    /// Unique ID for the device
-    Id,
-    /// Host for connecting to the device
-    Host,
-    /// Port for connecting to the device
-    Port,
-    /// Name of the device
-    Name,
-    /// Access token for the device
-    AccessToken,
-    /// Order of the device in the UI
-    Order,
-    /// Timestamp when the device was added
-    CreatedAt,
-}
 
 /// Model representing a device
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
@@ -62,19 +35,9 @@ pub struct CreateDevice {
     pub access_token: Option<String>,
 }
 
-/// Values that can be updated on a device
-#[derive(Deserialize)]
-pub struct UpdateDevice {
-    pub name: Option<String>,
-    pub host: Option<String>,
-    pub port: Option<i32>,
-    pub order: Option<u32>,
-    pub access_token: Option<Option<String>>,
-}
-
 impl DeviceModel {
     /// Create a new device
-    pub async fn create(db: &DbPool, create: CreateDevice) -> anyhow::Result<DeviceModel> {
+    pub async fn create(db: &DbPool, create: CreateDevice) -> DbResult<DeviceModel> {
         let model = DeviceModel {
             id: Uuid::new_v4(),
             host: create.host,
@@ -85,114 +48,63 @@ impl DeviceModel {
             created_at: Utc::now(),
         };
 
-        sql_exec(
-            db,
-            Query::insert()
-                .into_table(DevicesTable)
-                .columns([
-                    DevicesColumn::Id,
-                    DevicesColumn::Name,
-                    DevicesColumn::Host,
-                    DevicesColumn::Port,
-                    DevicesColumn::AccessToken,
-                    DevicesColumn::Order,
-                    DevicesColumn::CreatedAt,
-                ])
-                .values_panic([
-                    model.id.into(),
-                    model.name.clone().into(),
-                    model.host.clone().into(),
-                    model.port.into(),
-                    model.access_token.clone().into(),
-                    model.order.into(),
-                    model.created_at.into(),
-                ]),
+        sqlx::query(
+            "
+            INSERT INTO \"devices\" (\"id\", \"name\", \"host\", \"port\", \"access_token\", \"order\", \"created_at\")
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ",
         )
+        .bind(model.id)
+        .bind(&model.name)
+        .bind(&model.host)
+        .bind(model.port)
+        .bind(&model.access_token)
+        .bind(model.order)
+        .bind(model.created_at)
+        .execute(db)
         .await?;
 
         Ok(model)
     }
 
-    /// Update the device
-    pub async fn update(
+    pub async fn set_access_token(
         mut self,
         db: &DbPool,
-        update: UpdateDevice,
-    ) -> anyhow::Result<DeviceModel> {
-        sql_exec(
-            db,
-            Query::update()
-                .table(DevicesTable)
-                .and_where(Expr::col(DevicesColumn::Id).eq(self.id))
-                .cond_value(DevicesColumn::Name, update.name.as_ref())
-                .cond_value(DevicesColumn::Host, update.host.as_ref())
-                .cond_value(DevicesColumn::Port, update.port.as_ref().copied())
-                .cond_value(DevicesColumn::Order, update.order.as_ref().copied())
-                .cond_value(
-                    DevicesColumn::AccessToken,
-                    update.access_token.as_ref().cloned(),
-                ),
-        )
-        .await?;
+        access_token: Option<String>,
+    ) -> DbResult<DeviceModel> {
+        sqlx::query("UPDATE \"profiles\" SET \"access_token\" = ? WHERE \"id\" = ?")
+            .bind(&access_token)
+            .bind(self.id)
+            .execute(db)
+            .await?;
 
-        self.name = update.name.unwrap_or(self.name);
-        self.host = update.host.unwrap_or(self.host);
-        self.port = update.port.unwrap_or(self.port);
-        self.order = update.order.unwrap_or(self.order);
-        self.access_token = update.access_token.unwrap_or(self.access_token);
+        self.access_token = access_token;
 
         Ok(self)
     }
 
     /// Delete a device by ID
     pub async fn delete(db: &DbPool, device_id: DeviceId) -> DbResult<()> {
-        sql_exec(
-            db,
-            Query::delete()
-                .from_table(DevicesTable)
-                .and_where(Expr::col(DevicesColumn::Id).eq(device_id)),
-        )
-        .await
+        sqlx::query("DELETE FROM \"devices\" WHERE \"id\" = ?")
+            .bind(device_id)
+            .execute(db)
+            .await?;
+        Ok(())
     }
 
     /// Get a specific device by ID
     pub async fn get_by_id(db: &DbPool, id: DeviceId) -> DbResult<Option<DeviceModel>> {
-        sql_query_maybe_one(
-            db,
-            Query::select()
-                .from(DevicesTable)
-                .columns([
-                    DevicesColumn::Id,
-                    DevicesColumn::Name,
-                    DevicesColumn::Host,
-                    DevicesColumn::Port,
-                    DevicesColumn::AccessToken,
-                    DevicesColumn::Order,
-                    DevicesColumn::CreatedAt,
-                ])
-                .and_where(Expr::col(DevicesColumn::Id).eq(id)),
-        )
-        .await
+        sqlx::query_as("SELECT * FROM \"devices\" WHERE \"id\" = ?")
+            .bind(id)
+            .fetch_optional(db)
+            .await
     }
 
     /// Get all devices
     pub async fn all(db: &DbPool) -> DbResult<Vec<DeviceModel>> {
-        sql_query_all(
-            db,
-            Query::select()
-                .from(DevicesTable)
-                .columns([
-                    DevicesColumn::Id,
-                    DevicesColumn::Name,
-                    DevicesColumn::Host,
-                    DevicesColumn::Port,
-                    DevicesColumn::AccessToken,
-                    DevicesColumn::Order,
-                    DevicesColumn::CreatedAt,
-                ])
-                .order_by(DevicesColumn::Order, Order::Asc),
-        )
-        .await
+        sqlx::query_as("SELECT * FROM \"devices\" ORDER BY \"order\" ASC")
+            .fetch_all(db)
+            .await
     }
 }
 
@@ -201,7 +113,7 @@ mod test {
     use uuid::Uuid;
 
     use crate::database::{
-        entity::device::{CreateDevice, DeviceModel, UpdateDevice},
+        entity::device::{CreateDevice, DeviceModel},
         mock_database,
     };
 
@@ -278,7 +190,7 @@ mod test {
     /// Tests updating a device correctly updates the fields in the
     /// returned model and in the database
     #[tokio::test]
-    async fn test_update_device() {
+    async fn test_devices_set_access_token() {
         let name = "Test".to_string();
         let host = "127.0.0.1".to_string();
         let port = 8080;
@@ -302,16 +214,7 @@ mod test {
 
         // Update the model
         let model = model
-            .update(
-                &db,
-                UpdateDevice {
-                    name: Some(name.clone()),
-                    host: Some(host.clone()),
-                    port: Some(port),
-                    order: Some(order),
-                    access_token: Some(access_token.clone()),
-                },
-            )
+            .set_access_token(&db, access_token.clone())
             .await
             .unwrap();
 

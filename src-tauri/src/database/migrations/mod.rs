@@ -1,25 +1,41 @@
-use anyhow::Context;
 use chrono::{DateTime, Utc};
-use sea_query::{ColumnDef, IdenStatic, Query, SqliteQueryBuilder, Table};
-use sea_query_binder::SqlxBinder;
 use sqlx::prelude::FromRow;
 
 use super::{DbPool, DbResult};
 
-mod m202502251226_create_devices_table;
-mod schema;
-
-fn migrations() -> Vec<Box<dyn Migration>> {
-    vec![Box::new(
-        m202502251226_create_devices_table::DevicesMigration,
+fn migrations() -> Vec<SqlMigration> {
+    vec![SqlMigration::new(
+        "m202502251226_create_devices_table",
+        include_str!("m202502251226_create_devices_table.sql"),
     )]
 }
 
-#[async_trait::async_trait]
-pub trait Migration {
+pub trait Migration: Send + Sync {
     fn name(&self) -> &str;
 
-    async fn up(&self, db: &DbPool) -> anyhow::Result<()>;
+    async fn up(&self, db: &DbPool) -> DbResult<()>;
+}
+
+pub struct SqlMigration {
+    name: &'static str,
+    sql: &'static str,
+}
+
+impl SqlMigration {
+    pub fn new(name: &'static str, sql: &'static str) -> Self {
+        Self { name, sql }
+    }
+}
+
+impl Migration for SqlMigration {
+    fn name(&self) -> &str {
+        self.name
+    }
+
+    async fn up(&self, db: &DbPool) -> DbResult<()> {
+        sqlx::query(self.sql).execute(db).await?;
+        Ok(())
+    }
 }
 
 #[derive(FromRow)]
@@ -29,30 +45,14 @@ struct AppliedMigration {
     applied_at: DateTime<Utc>,
 }
 
-/// Table for storing migrations
-#[derive(IdenStatic, Copy, Clone)]
-#[iden(rename = "migrations")]
-pub struct MigrationsTable;
-
-/// Columns on the migrations table
-#[derive(IdenStatic, Copy, Clone)]
-pub enum MigrationsColumn {
-    /// Name of the migration
-    Name,
-    /// When the migration was applied
-    AppliedAt,
-}
-
-/// Apply migrations
-pub async fn migrate(db: &DbPool) -> anyhow::Result<()> {
-    create_migrations_table(db)
-        .await
-        .context("failed to create migrations table")?;
+pub async fn migrate(db: &DbPool) -> DbResult<()> {
+    if let Err(cause) = create_migrations_table(db).await {
+        tracing::error!(?cause, "failed to create migrations table");
+        return Err(cause);
+    }
 
     let migrations = migrations();
-    let mut applied = get_applied_migrations(db)
-        .await
-        .context("failed to get applied migrations")?;
+    let mut applied = get_applied_migrations(db).await?;
     let mut migration_names = Vec::new();
 
     for migration in &migrations {
@@ -65,16 +65,20 @@ pub async fn migrate(db: &DbPool) -> anyhow::Result<()> {
         }
 
         // Apply migration
-        migration
-            .up(db)
-            .await
-            .with_context(|| format!("failed to apply migration \"{name}\""))?;
+        if let Err(cause) = migration.up(db).await {
+            tracing::warn!(?cause, migration = ?name, "failed to apply migration");
+            return Err(cause);
+        }
 
         // Store applied migration
         let applied_at = Utc::now();
-        let migration = create_applied_migration(db, name.to_string(), applied_at)
-            .await
-            .with_context(|| format!("failed to store applied migration \"{name}\""))?;
+        let migration = match create_applied_migration(db, name.to_string(), applied_at).await {
+            Ok(value) => value,
+            Err(cause) => {
+                tracing::warn!(?cause, migration = ?name, "failed to store applied migration");
+                return Err(cause);
+            }
+        };
 
         applied.push(migration);
     }
@@ -92,56 +96,31 @@ pub async fn migrate(db: &DbPool) -> anyhow::Result<()> {
     Ok(())
 }
 
-/// Create the table that stores migrations
-async fn create_migrations_table(db: &DbPool) -> anyhow::Result<()> {
-    sqlx::query(
-        &Table::create()
-            .table(MigrationsTable)
-            .if_not_exists()
-            .col(
-                ColumnDef::new(MigrationsColumn::Name)
-                    .uuid()
-                    .not_null()
-                    .primary_key(),
-            )
-            .col(
-                ColumnDef::new(MigrationsColumn::AppliedAt)
-                    .date_time()
-                    .not_null(),
-            )
-            .build(SqliteQueryBuilder),
-    )
-    .execute(db)
-    .await?;
-
+async fn create_migrations_table(db: &DbPool) -> DbResult<()> {
+    sqlx::query(include_str!("m202502251151_create_migrations_table.sql"))
+        .execute(db)
+        .await?;
     Ok(())
 }
 
-/// Get all applied migrations from the database
 async fn get_applied_migrations(db: &DbPool) -> DbResult<Vec<AppliedMigration>> {
-    let (query, _values) = Query::select()
-        .columns([MigrationsColumn::Name, MigrationsColumn::AppliedAt])
-        .from(MigrationsTable)
-        .build(SqliteQueryBuilder);
-    let result: Vec<AppliedMigration> = sqlx::query_as(&query).fetch_all(db).await?;
+    let result: Vec<AppliedMigration> = sqlx::query_as("SELECT * FROM migrations")
+        .fetch_all(db)
+        .await?;
     Ok(result)
 }
 
-/// Creates an entry in the database for a migration that was applied
 async fn create_applied_migration(
     db: &DbPool,
     name: String,
     applied_at: DateTime<Utc>,
 ) -> DbResult<AppliedMigration> {
-    let (query, values) = Query::insert()
-        .columns([MigrationsColumn::Name, MigrationsColumn::AppliedAt])
-        .into_table(MigrationsTable)
-        .values_panic([name.as_str().into(), applied_at.into()])
-        .build_sqlx(SqliteQueryBuilder);
-
-    sqlx::query_with(&query, values).execute(db).await?;
+    sqlx::query("INSERT INTO migrations (name, applied_at) VALUES (?, ?)")
+        .bind(&name)
+        .bind(applied_at)
+        .execute(db)
+        .await?;
 
     let model = AppliedMigration { name, applied_at };
-
     Ok(model)
 }

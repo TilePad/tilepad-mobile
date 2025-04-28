@@ -34,6 +34,7 @@ uuid = { version = "1", features = ["v4"] }
 
 # Errors
 anyhow = "1"
+thiserror = "2"
 
 # Logging
 tracing = { version = "0.1", features = ["log"] }
@@ -60,33 +61,4 @@ tauri-plugin-barcode-scanner = "2"
 
 [dependencies.sqlx]
 version = "0.8.2"
-features = [
-    "runtime-tokio",
-    "tls-rustls",
-    "sqlite",
-    "derive",
-    "uuid",
-    "chrono",
-    "json",
-]
-
-[dependencies.sea-query]
-version = "0.32.1"
-features = [
-    "derive",
-    "thread-safe",
-    "backend-sqlite",
-    "with-chrono",
-    "with-json",
-    "with-uuid",
-]
-
-[dependencies.sea-query-binder]
-version = "0.7.0"
-features = [
-    "sqlx-sqlite",
-    "with-chrono",
-    "with-json",
-    "with-uuid",
-    "runtime-tokio-rustls",
-]
+features = ["runtime-tokio", "sqlite", "uuid", "chrono", "json", "macros"]

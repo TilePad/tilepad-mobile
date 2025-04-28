@@ -5,7 +5,7 @@ import type {
   ServerDeviceMessage,
 } from "./types/protocol";
 
-import { updateDevice, getDeviceName } from "./devices";
+import { getDeviceName, setDeviceAccessToken } from "./devices";
 
 type SocketState =
   //  Initial disconnected state
@@ -156,7 +156,7 @@ export function createTilepadSocket(): TilepadSocket {
       sendMessage({ type: "RequestApproval", name });
 
       // Clear current access token
-      updateDevice(details.deviceId, { access_token: null });
+      setDeviceAccessToken(details.deviceId, null);
     };
 
     function onMessage(msg: ServerDeviceMessage) {
@@ -178,7 +178,7 @@ export function createTilepadSocket(): TilepadSocket {
           const token = msg.access_token;
 
           // Update current device access token
-          updateDevice(details.deviceId, { access_token: token });
+          setDeviceAccessToken(details.deviceId, token);
           setState({ type: "Authenticating" });
 
           // Authenticate with the current token
