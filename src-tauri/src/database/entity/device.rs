@@ -72,7 +72,7 @@ impl DeviceModel {
         db: &DbPool,
         access_token: Option<String>,
     ) -> DbResult<DeviceModel> {
-        sqlx::query("UPDATE \"profiles\" SET \"access_token\" = ? WHERE \"id\" = ?")
+        sqlx::query("UPDATE \"devices\" SET \"access_token\" = ? WHERE \"id\" = ?")
             .bind(&access_token)
             .bind(self.id)
             .execute(db)
@@ -191,10 +191,10 @@ mod test {
     /// returned model and in the database
     #[tokio::test]
     async fn test_devices_set_access_token() {
-        let name = "Test".to_string();
-        let host = "127.0.0.1".to_string();
-        let port = 8080;
-        let order = 0;
+        let name = "Test 2".to_string();
+        let host = "127.0.0.2".to_string();
+        let port = 8081;
+        let order = 1;
         let access_token = Some("Test".to_string());
         let db = mock_database().await;
 
