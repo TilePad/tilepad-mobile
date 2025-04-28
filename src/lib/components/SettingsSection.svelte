@@ -8,6 +8,10 @@
   import CreatorSection from "$lib/components/CreatorSection.svelte";
   import LanguageSelector from "$lib/components/i18n/LanguageSelector.svelte";
   import { getSettingsContext } from "$lib/components/SettingsProvider.svelte";
+  import SolarDocumentAddBoldDuotone from "~icons/solar/document-add-bold-duotone";
+
+  import LicensesDialog from "./liceneses/LicensesDialog.svelte";
+
   const settingsContext = getSettingsContext();
   const currentSettings = $derived.by(settingsContext.settings);
   const setSettings = createSetSettingsMutation();
@@ -73,6 +77,14 @@
       {$t("device_name_description")}
     </p>
   </div>
+
+  <LicensesDialog
+    triggerProps={{ style: "background: #28272c;" }}
+    buttonLabel={{
+      text: $t("third_party_licenses"),
+      icon: SolarDocumentAddBoldDuotone,
+    }}
+  />
 
   <CreatorSection />
 </div>

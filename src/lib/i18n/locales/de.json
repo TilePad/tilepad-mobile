@@ -43,5 +43,7 @@
     "device_name": "Gerätename",
     "device_name_description": "Dieser Gerätename wird anderen Geräten bei Verbindungsversuchen angezeigt",
     "created_by": "Erstellt von",
-    "third_party_licenses": "Lizenzen Dritter"
+    "third_party_licenses": "Lizenzen Dritter",
+    "readme_error": "README konnte nicht geladen werden: {error}",
+    "close": "Schließen"
 }

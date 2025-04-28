@@ -13,13 +13,17 @@
     createTilepadSocket,
   } from "$lib/api/socket.svelte";
 
+  import { getSettingsContext } from "./SettingsProvider.svelte";
+
   type Props = {
     children: Snippet;
   };
 
   const { children }: Props = $props();
+  const settingsContext = getSettingsContext();
+  const settings = $derived.by(settingsContext.settings);
 
-  const socket = createTilepadSocket();
+  const socket = createTilepadSocket(() => settings.device_name);
 
   setContext(KEY, socket);
 </script>

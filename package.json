@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.app.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.app.json --watch",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "make:licenses": "node scripts/generate-licenses.mjs"
   },
   "license": "MIT",
   "dependencies": {
@@ -23,7 +24,9 @@
     "svelte-gestures": "^5.1.3",
     "svelte-i18n": "^4.0.1",
     "svelte-sonner": "^0.3.28",
-    "tauri-plugin-keep-screen-on-api": "^0.1.4"
+    "tauri-plugin-keep-screen-on-api": "^0.1.4",
+    "marked": "^15.0.8",
+    "isomorphic-dompurify": "^2.23.0"
   },
   "devDependencies": {
     "@iconify-json/solar": "^1.2.2",

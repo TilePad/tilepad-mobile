@@ -95,6 +95,8 @@
     width: 20rem;
     background-color: #131316;
     border-right: 1px solid #333;
+    overflow: auto;
+    height: 100%;
   }
 
   .right {

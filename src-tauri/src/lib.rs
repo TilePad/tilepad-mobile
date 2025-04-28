@@ -7,7 +7,7 @@ mod utils;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    use commands::{devices, settings};
+    use commands::{app, devices, settings};
 
     tauri::Builder::default()
         .plugin(tauri_plugin_keep_screen_on::init())
@@ -19,10 +19,11 @@ pub fn run() {
             devices::devices_create_device,
             devices::devices_remove_device,
             devices::devices_set_access_token,
-            devices::get_device_name,
             // Settings
             settings::settings_get_settings,
-            settings::settings_set_settings
+            settings::settings_set_settings,
+            // App
+            app::app_get_licenses
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

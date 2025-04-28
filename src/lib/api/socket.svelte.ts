@@ -5,7 +5,7 @@ import type {
   ServerDeviceMessage,
 } from "./types/protocol";
 
-import { getDeviceName, setDeviceAccessToken } from "./devices";
+import { setDeviceAccessToken } from "./devices";
 
 type SocketState =
   //  Initial disconnected state
@@ -51,7 +51,9 @@ export type TilepadSocket = {
 type DisconnectFunction = VoidFunction;
 type ClickTileFunction = (tileId: string) => void;
 
-export function createTilepadSocket(): TilepadSocket {
+export function createTilepadSocket(
+  getDeviceName: () => string,
+): TilepadSocket {
   let detailsState: TilepadSocketDetails | null = $state(null);
   let state: SocketState = $state({ type: "Initial" });
 
@@ -150,8 +152,7 @@ export function createTilepadSocket(): TilepadSocket {
       state = { type: "RequestingApproval" };
 
       // Request the device name
-      let name = await getDeviceName();
-      if (!name) name = "Tilepad Device";
+      const name = getDeviceName();
 
       sendMessage({ type: "RequestApproval", name });
 

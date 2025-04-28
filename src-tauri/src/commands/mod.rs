@@ -1,5 +1,6 @@
 use serde::Serialize;
 
+pub mod app;
 pub mod devices;
 pub mod settings;
 

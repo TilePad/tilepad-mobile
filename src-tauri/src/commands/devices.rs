@@ -1,12 +1,10 @@
-use anyhow::Context;
-use tauri::State;
-
+use super::CmdResult;
 use crate::database::{
     DbPool,
     entity::device::{CreateDevice, DeviceId, DeviceModel},
 };
-
-use super::CmdResult;
+use anyhow::Context;
+use tauri::State;
 
 /// Get a list of devices
 #[tauri::command]
@@ -44,10 +42,4 @@ pub async fn devices_set_access_token(
         .context("device not found")?;
     let device = device.set_access_token(db.inner(), access_token).await?;
     Ok(device)
-}
-
-/// Get the name of the current mobile device
-#[tauri::command]
-pub async fn get_device_name() -> CmdResult<String> {
-    Ok(crate::utils::device::get_device_name())
 }

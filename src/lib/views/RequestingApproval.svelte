@@ -1,9 +1,12 @@
 <script lang="ts">
   import { t } from "svelte-i18n";
-  import { getDeviceName } from "$lib/api/devices";
   import Button from "$lib/components/input/Button.svelte";
   import PulseLoader from "$lib/components/PulseLoader.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
+  import { getSettingsContext } from "$lib/components/SettingsProvider.svelte";
+
+  const settingsContext = getSettingsContext();
+  const settings = $derived.by(settingsContext.settings);
 
   const { details: detailsRef, disconnect } = getTilepadSocket();
   const details = $derived.by(detailsRef);
@@ -22,9 +25,7 @@
     <p>
       {$t("requesting_approval_device")}
 
-      {#await getDeviceName() then hostname}
-        <span class="device-name">{hostname}</span>
-      {/await}
+      <span class="device-name">{settings.device_name}</span>
     </p>
 
     <Button onclick={disconnect}>{$t("cancel")}</Button>

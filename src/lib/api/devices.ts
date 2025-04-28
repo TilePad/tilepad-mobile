@@ -26,7 +26,7 @@ export async function createDevice(create: CreateDevice) {
 
 export async function setDeviceAccessToken(
   deviceId: string,
-  accessToken: string,
+  accessToken: string | null,
 ) {
   const device = await invoke<DeviceModel>("devices_set_access_token", {
     deviceId,
@@ -34,10 +34,6 @@ export async function setDeviceAccessToken(
   });
   invalidateDevices();
   return device;
-}
-
-export function getDeviceName() {
-  return invoke<string>("get_device_name");
 }
 
 export async function removeDevice(deviceId: string) {

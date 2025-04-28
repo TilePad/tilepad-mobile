@@ -43,5 +43,7 @@
     "device_name": "Nombre del dispositivo",
     "device_name_description": "Este nombre de dispositivo será visible para otros dispositivos al intentar conectarse",
     "created_by": "Creado por",
-    "third_party_licenses": "Licencias de terceros"
+    "third_party_licenses": "Licencias de terceros",
+    "readme_error": "Error al cargar README: {error}",
+    "close": "Cerrar"
 }
