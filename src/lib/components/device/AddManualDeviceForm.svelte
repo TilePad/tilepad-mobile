@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { t } from "svelte-i18n";
+
   import Button from "../input/Button.svelte";
   import Dialog from "../dialog/Dialog.svelte";
   import TextInput from "../input/TextInput.svelte";
@@ -12,7 +14,7 @@
   const { onAddDevice }: Props = $props();
 
   let open = $state(false);
-  let name = $state("My Device");
+  let name = $state($t("default_device_name"));
   let host = $state("localhost");
   let port = $state(59371);
 
@@ -23,33 +25,37 @@
   }
 
   function onClose() {
+    // Reset on close
     open = false;
+    name = $t("default_device_name");
+    host = "localhost";
+    port = 59371;
   }
 </script>
 
 <Dialog {open} onOpenChange={(value) => (open = value)}>
   {#snippet button({ props })}
     <Button {...props}>
-      <img src="/form.svg" alt="QR Icon" width="32px" height="32px" />
-      Add Manually
+      <img src="/form.svg" alt="Form Icon" width="32px" height="32px" />
+      {$t("manual_add")}
     </Button>
   {/snippet}
 
   {#snippet children()}
     <div class="content">
       <form onsubmit={onSubmit}>
-        <label for="name">Name</label>
+        <label for="name">{$t("name")}</label>
         <TextInput id="name" type="text" bind:value={name} />
 
-        <label for="host">Host</label>
+        <label for="host">{$t("host")}</label>
         <TextInput id="host" type="text" bind:value={host} />
 
-        <label for="port">Port</label>
+        <label for="port">{$t("port")}</label>
         <NumberInput id="port" bind:value={port} />
 
         <div class="actions">
-          <DialogCloseButton buttonLabel={{ text: "Cancel" }} />
-          <Button type="submit">Create</Button>
+          <DialogCloseButton buttonLabel={{ text: $t("cancel") }} />
+          <Button type="submit">{$t("create")}</Button>
         </div>
       </form>
     </div>

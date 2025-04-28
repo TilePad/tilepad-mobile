@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "svelte-i18n";
   import Button from "$lib/components/input/Button.svelte";
   import PulseLoader from "$lib/components/PulseLoader.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
@@ -15,9 +16,11 @@
       <p class="host">{details.host}:{details.port}</p>
     {/if}
 
-    <h1>Connecting</h1>
+    <h1>{$t("connecting")}</h1>
 
-    <Button onclick={disconnect}>Cancel</Button>
+    <Button onclick={disconnect}>
+      {$t("cancel")}
+    </Button>
   </div>
 </div>
 

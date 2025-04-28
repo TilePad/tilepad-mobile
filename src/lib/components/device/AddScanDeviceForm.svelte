@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { EncodedInterfaces } from "$lib/api/types/server";
 
+  import { t } from "svelte-i18n";
   import { Portal } from "bits-ui";
   import { onDestroy } from "svelte";
   import { testServerConnection } from "$lib/api/server";
@@ -45,7 +46,7 @@
       if (hasPermission !== "granted") {
         const result = await barcode.requestPermissions();
         if (result === "denied") {
-          console.error("DENIED PERMISSION REQUEST");
+          console.error("camera permission denied");
           barcode.openAppSettings();
           return;
         }
@@ -168,50 +169,50 @@
     {#snippet button({ props })}
       <Button {...props} onclick={onOpen}>
         <img src="/qr-icon.svg" alt="QR Icon" width="32px" height="32px" />
-        Scan QR Code
+        {$t("scan_qr_code")}
       </Button>
     {/snippet}
 
     {#snippet children()}
       <div class="content">
         {#if currentState === State.Scanning}
-          <p>Scanning</p>
+          <p>{$t("scanning")}</p>
           <div class="actions">
-            <Button onclick={onClose}>Cancel</Button>
+            <Button onclick={onClose}>{$t("cancel")}</Button>
           </div>
         {:else if currentState === State.Checking}
           <PulseLoader />
-          <p>Checking addresses...</p>
+          <p>{$t("checking_addresses")}</p>
           <div class="actions">
-            <Button onclick={onClose}>Cancel</Button>
+            <Button onclick={onClose}>{$t("cancel")}</Button>
           </div>
         {:else if currentState === State.Scanned}
           <form onsubmit={onSubmit}>
-            <label for="name">Name</label>
+            <label for="name">{$t("name")}</label>
             <TextInput id="name" type="text" bind:value={name} />
 
-            <label for="host">Host</label>
+            <label for="host">{$t("host")}</label>
             <TextInput id="host" type="text" bind:value={host} />
 
-            <label for="port">Port</label>
+            <label for="port">{$t("port")}</label>
             <NumberInput id="port" bind:value={port} />
 
             <div class="actions">
-              <Button onclick={onClose}>Cancel</Button>
-              <Button type="submit">Save</Button>
+              <Button onclick={onClose}>{$t("cancel")}</Button>
+              <Button type="submit">{$t("save")}</Button>
             </div>
           </form>
         {:else if currentState === State.NothingValid}
-          <p>None of the scanned addresses were connectable</p>
+          <p>{$t("scanned_none")}</p>
 
           <div class="actions">
-            <Button onclick={onClose}>Cancel</Button>
+            <Button onclick={onClose}>{$t("cancel")}</Button>
           </div>
         {:else if currentState === State.InvalidQR}
-          <p>QR code is not a valid Tilepad QR</p>
+          <p>{$t("invalid_qr")}</p>
 
           <div class="actions">
-            <Button onclick={onClose}>Cancel</Button>
+            <Button onclick={onClose}>{$t("cancel")}</Button>
           </div>
         {/if}
       </div>
@@ -223,8 +224,8 @@
   <Portal to={document.body}>
     <div class="scan-overlay">
       <div class="top">
-        <h1>Scan QR Code</h1>
-        <Button onclick={onClose}>Cancel</Button>
+        <h1>{$t("scan_qr_code")}</h1>
+        <Button onclick={onClose}>{$t("cancel")}</Button>
       </div>
       <div class="skeleton" style="width: 100%; height: 0.5rem"></div>
     </div>

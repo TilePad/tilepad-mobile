@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "svelte-i18n";
   import Button from "$lib/components/input/Button.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
@@ -7,11 +8,11 @@
 
 <div class="layout">
   <div class="modal">
-    <h1>Connection Lost</h1>
-    <p>Lost connection</p>
+    <h1>{$t("connection_lost")}</h1>
+    <p>{$t("connection_lost_desc")}</p>
     <div class="actions">
-      <Button onclick={disconnect}>Back</Button>
-      <Button onclick={reconnect}>Reconnect</Button>
+      <Button onclick={disconnect}>{$t("back")}</Button>
+      <Button onclick={reconnect}>{$t("reconnect")}</Button>
     </div>
   </div>
 </div>

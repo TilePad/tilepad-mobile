@@ -15,6 +15,7 @@ pub struct SettingsModel {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default)]
 pub struct SettingsConfig {
+    pub language: String,
     pub device_name: String,
 }
 
@@ -22,7 +23,10 @@ impl Default for SettingsConfig {
     fn default() -> Self {
         let device_name = get_device_name();
 
-        Self { device_name }
+        Self {
+            language: "en".to_string(),
+            device_name,
+        }
     }
 }
 

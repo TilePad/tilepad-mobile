@@ -1,6 +1,10 @@
 <script lang="ts">
+  import { t } from "svelte-i18n";
+  import Aside from "$lib/components/Aside.svelte";
   import { getErrorMessage } from "$lib/utils/error";
   import { createDevice, createDevicesQuery } from "$lib/api/devices";
+  import SettingsSection from "$lib/components/SettingsSection.svelte";
+  import SkeletonList from "$lib/components/skeleton/SkeletonList.svelte";
   import DeviceListItem from "$lib/components/device/DeviceListItem.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
   import AddScanDeviceForm from "$lib/components/device/AddScanDeviceForm.svelte";
@@ -43,15 +47,21 @@
         />
       {/if}
     </div>
+
+    <SettingsSection />
   </div>
 
   <div class="right">
-    <h1 class="header">Devices</h1>
+    <h1 class="header">{$t("devices")}</h1>
 
     {#if $devicesQuery.isLoading}
-      <p>Loading...</p>
+      <SkeletonList />
     {:else if $devicesQuery.isError}
-      <p>Failed to get devices: {getErrorMessage($devicesQuery.error)}</p>
+      <Aside severity="error" style="margin: 1rem;">
+        {$t("devices_error", {
+          values: { error: getErrorMessage($devicesQuery.error) },
+        })}
+      </Aside>
     {:else if $devicesQuery.isSuccess}
       <div class="devices-wrapper">
         <div class="devices">

@@ -2,6 +2,7 @@
   import type { DeviceModel } from "$lib/api/types/devices";
   import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
+  import { t } from "svelte-i18n";
   import { toast } from "svelte-sonner";
   import { removeDevice } from "$lib/api/devices";
   import { toastErrorMessage } from "$lib/utils/error";
@@ -19,9 +20,9 @@
     const removePromise = removeDevice(device.id);
 
     toast.promise(removePromise, {
-      loading: "Removing device",
-      success: "Removed device",
-      error: toastErrorMessage("Failed to remove device"),
+      loading: $t("device_removing"),
+      success: $t("device_removed"),
+      error: toastErrorMessage($t("device_remove_error")),
     });
   }
 </script>
@@ -41,10 +42,11 @@
           port: device.port,
           accessToken: device.access_token,
         })}
-      >Connect
+    >
+      {$t("connect")}
     </Button>
 
-    <Button onclick={onRemove}>Remove</Button>
+    <Button onclick={onRemove}>{$t("remove")}</Button>
   </div>
 </div>
 

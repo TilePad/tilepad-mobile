@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "svelte-i18n";
   import { getDeviceName } from "$lib/api/devices";
   import Button from "$lib/components/input/Button.svelte";
   import PulseLoader from "$lib/components/PulseLoader.svelte";
@@ -16,17 +17,17 @@
       <p class="host">{details.host}:{details.port}</p>
     {/if}
 
-    <h1>Waiting for approval</h1>
+    <h1>{$t("requesting_approval")}</h1>
 
     <p>
-      Please approve this device
+      {$t("requesting_approval_device")}
 
       {#await getDeviceName() then hostname}
         <span class="device-name">{hostname}</span>
       {/await}
     </p>
 
-    <Button onclick={disconnect}>Cancel</Button>
+    <Button onclick={disconnect}>{$t("cancel")}</Button>
   </div>
 </div>
 

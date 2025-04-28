@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "svelte-i18n";
   import Button from "$lib/components/input/Button.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
@@ -7,9 +8,9 @@
 
 <div class="layout">
   <div class="modal">
-    <h1>Revoked</h1>
-    <p>This device has been revoked</p>
-    <Button onclick={disconnect}>Back</Button>
+    <h1>{$t("revoked")}</h1>
+    <p>{$t("revoked_desc")}</p>
+    <Button onclick={disconnect}>{$t("back")}</Button>
   </div>
 </div>
 

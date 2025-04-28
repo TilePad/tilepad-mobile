@@ -15,6 +15,7 @@
 <script lang="ts">
   import type { SettingsConfig } from "$lib/api/types/settings";
 
+  import { t } from "svelte-i18n";
   import Aside from "$lib/components/Aside.svelte";
   import { getErrorMessage } from "$lib/utils/error";
   import { createSettingsQuery } from "$lib/api/settings";
@@ -41,7 +42,9 @@
 {:else if $settingsQuery.isError}
   <!-- Error creating current profile -->
   <Aside severity="error" style="margin: 1rem;">
-    Failed to load settings: {getErrorMessage($settingsQuery.error)}
+    {$t("settings_error", {
+      values: { error: getErrorMessage($settingsQuery.error) },
+    })}
   </Aside>
 {:else if $settingsQuery.isSuccess && settings}
   {@render children?.()}

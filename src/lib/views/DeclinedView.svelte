@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "svelte-i18n";
   import Button from "$lib/components/input/Button.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
@@ -7,9 +8,9 @@
 
 <div class="layout">
   <div class="modal">
-    <h1>Declined</h1>
-    <p>Accessed to tilepad was declined</p>
-    <Button onclick={disconnect}>Back</Button>
+    <h1>{$t("declined")}</h1>
+    <p>{$t("declined_desc")}</p>
+    <Button onclick={disconnect}>{$t("back")}</Button>
   </div>
 </div>
 
