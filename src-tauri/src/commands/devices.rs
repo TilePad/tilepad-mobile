@@ -49,6 +49,5 @@ pub async fn devices_set_access_token(
 /// Get the name of the current mobile device
 #[tauri::command]
 pub async fn get_device_name() -> CmdResult<String> {
-    let name = nick_name::NickName::new()?;
-    Ok(name.get()?)
+    Ok(crate::utils::device::get_device_name())
 }

@@ -3,21 +3,26 @@ use tauri::{App, Manager, async_runtime::block_on};
 
 mod commands;
 mod database;
+mod utils;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    use commands::devices;
+    use commands::{devices, settings};
 
     tauri::Builder::default()
         .plugin(tauri_plugin_keep_screen_on::init())
         .plugin(tauri_plugin_haptics::init())
         .setup(setup)
         .invoke_handler(tauri::generate_handler![
+            // Devices
             devices::devices_get_devices,
             devices::devices_create_device,
             devices::devices_remove_device,
             devices::devices_set_access_token,
-            devices::get_device_name
+            devices::get_device_name,
+            // Settings
+            settings::settings_get_settings,
+            settings::settings_set_settings
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
