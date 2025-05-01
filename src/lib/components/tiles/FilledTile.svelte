@@ -45,7 +45,12 @@
   }
 </script>
 
-<button class="tile" use:tap={() => ({ timeframe: 1000 })} ontap={onTap}>
+<button
+  style="--tile-border-color: {config.icon_options.border_color}"
+  class="tile"
+  use:tap={() => ({ timeframe: 1000 })}
+  ontap={onTap}
+>
   <TileIcon icon={tile.config.icon} iconOptions={tile.config.icon_options} />
   <TileLabelElm label={config.label} />
 </button>
@@ -54,7 +59,7 @@
   .tile {
     position: relative;
     background-color: #151318;
-    border: 2px solid #715c8f;
+    border: 2px solid var(--tile-border-color);
     border-radius: 5px;
     display: flex;
     justify-content: center;
