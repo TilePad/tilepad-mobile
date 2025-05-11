@@ -4,9 +4,6 @@
 
   import TileGrid from "$lib/components/tiles/TileGrid.svelte";
 
-  import EmptyTile from "./EmptyTile.svelte";
-  import FilledTile from "./FilledTile.svelte";
-
   type Props = {
     tiles: TileModel[];
     folder: FolderModel;
@@ -14,23 +11,17 @@
   };
 
   const { tiles, folder, onClick }: Props = $props();
-
-  function getTile(tiles: TileModel[], row: number, column: number) {
-    return tiles.find((tile) => tile.row === row && tile.column === column);
-  }
 </script>
 
 <div class="grid-wrapper">
-  <TileGrid rows={folder.config.rows} columns={folder.config.columns}>
-    {#snippet tile(row, column)}
-      {@const tile = getTile(tiles, row, column) ?? null}
-      {#if tile !== null}
-        <FilledTile {tile} onClick={() => onClick(tile.id)} />
-      {:else}
-        <EmptyTile />
-      {/if}
-    {/snippet}
-  </TileGrid>
+  <TileGrid
+    {tiles}
+    rows={folder.config.rows}
+    columns={folder.config.columns}
+    onClickTile={(tile) => {
+      onClick(tile.id);
+    }}
+  />
 </div>
 
 <style>
@@ -40,6 +31,7 @@
     flex-flow: column;
 
     height: 100%;
+    width: 100%;
 
     overflow: hidden;
     padding: 1rem;

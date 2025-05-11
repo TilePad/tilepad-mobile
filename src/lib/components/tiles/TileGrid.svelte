@@ -1,72 +1,95 @@
-<script lang="ts">
-  import type { Snippet } from "svelte";
+<script lang="ts" module>
+  export const DESIRED_TILE_WIDTH = 120;
+</script>
 
-  import { range } from "$lib/utils/svelte.svelte";
+<script lang="ts">
+  import type { TileModel } from "$lib/api/types/tiles";
+
+  import EmptyTile from "./EmptyTile.svelte";
+  import FilledTile from "./FilledTile.svelte";
 
   type Props = {
+    tiles: TileModel[];
     rows: number;
     columns: number;
-    tile: Snippet<[number, number]>;
+    onClickTile: (tile: TileModel) => void;
   };
 
-  const { rows, columns, tile }: Props = $props();
-
-  let container: HTMLDivElement | undefined = $state();
+  const { tiles, rows, columns, onClickTile }: Props = $props();
 
   let containerWidth = $state(0);
   let containerHeight = $state(0);
 
   const gap = 10;
 
-  const desiredWidth = 120;
-
-  const tileWidth = $derived(
-    Math.min(
+  const { tileSize, left, width, height } = $derived.by(() => {
+    const tileSize = Math.min(
       (containerWidth - gap * (columns - 1)) / columns,
       (containerHeight - gap * (rows - 1)) / rows,
-    ),
-  );
+    );
 
-  const sizeAdjust = $derived.by(() => {
-    const ratio = (tileWidth - desiredWidth) / desiredWidth;
-    return 1 + ratio;
+    const spannedWidth = tileSize * columns + gap * (columns - 1);
+    const spannedHeight = tileSize * rows + gap * (rows - 1);
+
+    const left = (containerWidth - spannedWidth) / 2;
+
+    return {
+      tileSize,
+      width: spannedWidth,
+      height: spannedHeight,
+      left,
+    };
   });
+
+  const items = $derived(createGridItems(tiles));
+
+  function createGridItems(tiles: TileModel[]) {
+    const out = [];
+    for (let i = 0; i < rows * columns; i += 1) {
+      const row = Math.floor(i / columns);
+      const column = i % columns;
+      const tile = getTile(tiles, row, column);
+      const id = tile?.id ?? `${i}`;
+
+      out.push({ id, tile, row, column });
+    }
+    return out;
+  }
+
+  function getTile(tiles: TileModel[], row: number, column: number) {
+    return tiles.find(
+      (tile) => tile.position.row === row && tile.position.column === column,
+    );
+  }
 </script>
 
 <div
-  class="grid"
-  style="--tile-size-adjustment: {sizeAdjust};"
-  bind:this={container}
+  class="container"
   bind:clientWidth={containerWidth}
   bind:clientHeight={containerHeight}
 >
-  {#each range(0, rows) as row}
-    <div class="row">
-      {#each range(0, columns) as column}
-        <div class="tile" style="width: {tileWidth}px; height: {tileWidth}px;">
-          {@render tile(row, column)}
-        </div>
-      {/each}
-    </div>
-  {/each}
+  <div
+    class="grid"
+    style="transform: translateX({left}px); width: {width}px; height: {height}px;"
+  >
+    {#each items as item}
+      {@const tile = item.tile}
+      {#if tile !== undefined}
+        <FilledTile {tile} {tileSize} {gap} onClick={() => onClickTile(tile)} />
+      {:else}
+        <EmptyTile row={item.row} column={item.column} width={tileSize} {gap} />
+      {/if}
+    {/each}
+  </div>
 </div>
 
 <style>
   .grid {
-    display: flex;
-    flex-flow: column;
-
-    width: 100%;
-    height: 100%;
-    gap: 10px;
+    position: relative;
   }
 
-  .row {
-    display: flex;
-    flex-flow: row;
-    justify-content: center;
-
+  .container {
     width: 100%;
-    gap: 10px;
+    height: 100%;
   }
 </style>

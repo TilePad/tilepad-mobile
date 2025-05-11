@@ -72,20 +72,18 @@
   <ActionDrawer open={drawerOpen} onClose={() => (drawerOpen = false)} />
 
   <div class="layout" in:fly={{ x: -100, duration: 250 }}>
-    <div class="tiles">
-      <TilesView
-        {tiles}
-        {folder}
-        onClick={(tileId) => {
-          try {
-            impactFeedback("medium");
-          } catch (_err) {
-            //
-          }
-          clickTile(tileId);
-        }}
-      />
-    </div>
+    <TilesView
+      {tiles}
+      {folder}
+      onClick={(tileId) => {
+        try {
+          impactFeedback("medium");
+        } catch (_err) {
+          //
+        }
+        clickTile(tileId);
+      }}
+    />
   </div>
 </ServerProvider>
 
@@ -93,10 +91,6 @@
   .layout {
     height: 100%;
     width: 100%;
-  }
-
-  .tiles {
     overflow: hidden;
-    height: 100%;
   }
 </style>

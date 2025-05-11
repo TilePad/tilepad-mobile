@@ -5,15 +5,58 @@
 
   import TileIcon from "./TileIcon.svelte";
   import TileLabelElm from "./TileLabelElm.svelte";
+  import { DESIRED_TILE_WIDTH } from "./TileGrid.svelte";
 
   type Props = {
     tile: TileModel;
+    tileSize: number;
+    gap: number;
     onClick: VoidFunction;
   };
 
-  const { tile, onClick }: Props = $props();
+  const { tile, tileSize, gap, onClick }: Props = $props();
 
   const config = $derived(tile.config);
+
+  const { tileX, tileY, tileZ, tileWidth, tileHeight, sizeAdjust } =
+    $derived.by(() => {
+      const position = tile.position;
+      const tileWidth =
+        tileSize * position.column_span + gap * (position.column_span - 1);
+      const tileHeight =
+        tileSize * position.row_span + gap * (position.row_span - 1);
+
+      // When measuring the desired width/height the ratio must first remove the gap size
+      const desiredWidth =
+        DESIRED_TILE_WIDTH - gap * (position.column_span - 1);
+      const desiredHeight = DESIRED_TILE_WIDTH - gap * (position.row_span - 1);
+
+      const ratioX = (tileWidth - desiredWidth) / desiredWidth;
+      const ratioY = (tileHeight - desiredHeight) / desiredHeight;
+
+      const sizeAdjustX = 1 + ratioX;
+      const sizeAdjustY = 1 + ratioY;
+      const sizeAdjust = Math.min(sizeAdjustX, sizeAdjustY);
+
+      if (tile.config.label.label === "Pause recording") {
+        console.log(tile, sizeAdjust, sizeAdjustX, sizeAdjustY);
+      }
+
+      const tileX = tileSize * position.column + gap * position.column;
+      const tileY = tileSize * position.row + gap * position.row;
+      const tileZ =
+        (position.row + position.row_span) *
+        (position.column + position.column_span);
+
+      return {
+        tileX,
+        tileY,
+        tileZ,
+        tileWidth,
+        tileHeight,
+        sizeAdjust,
+      };
+    });
 
   function onTap(event: TapCustomEvent) {
     onClick();
@@ -45,32 +88,49 @@
   }
 </script>
 
-<button
-  style="--tile-border-color: {config.icon_options.border_color}"
-  class="tile"
-  use:tap={() => ({ timeframe: 1000 })}
-  ontap={onTap}
+<div
+  class="tile-container"
+  style="--tile-size-adjustment: {sizeAdjust}; --tile-width: {tileWidth}px; --tile-height: {tileHeight}px; --tile-x: {tileX}px; --tile-y: {tileY}px; --tile-z: {tileZ}"
 >
-  <TileIcon icon={tile.config.icon} iconOptions={tile.config.icon_options} />
-  <TileLabelElm label={config.label} />
-</button>
+  <button
+    style="--tile-border-color: {config.icon_options.border_color}"
+    class="tile"
+    use:tap={() => ({ timeframe: 1000 })}
+    ontap={onTap}
+  >
+    <TileIcon icon={tile.config.icon} iconOptions={tile.config.icon_options} />
+    <TileLabelElm label={config.label} />
+  </button>
+</div>
 
 <style>
+  .tile-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    transform: translate(var(--tile-x), var(--tile-y));
+    width: var(--tile-width);
+    height: var(--tile-height);
+    z-index: calc(var(--tile-z));
+  }
+
   .tile {
     position: relative;
-    background-color: #151318;
-    border: 2px solid var(--tile-border-color);
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
+    width: var(--tile-width);
+    height: var(--tile-height);
+
     color: #ccc;
-    font-size: 1.5rem;
+
+    border: 2px solid var(--tile-border-color);
+    cursor: pointer;
+
+    background-color: #151318;
+
     user-select: none;
     overflow: hidden;
   }
