@@ -4,7 +4,7 @@
   import { tap, type TapCustomEvent } from "svelte-gestures";
 
   import TileIcon from "./TileIcon.svelte";
-  import TileLabelElm from "./TileLabelElm.svelte";
+  import TileLabelElm from "./TileLabel.svelte";
   import { DESIRED_TILE_WIDTH } from "./TileGrid.svelte";
 
   type Props = {
