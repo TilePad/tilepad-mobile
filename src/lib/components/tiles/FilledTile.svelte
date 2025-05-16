@@ -1,11 +1,13 @@
 <script lang="ts">
   import type { TileModel } from "$lib/api/types/tiles";
+  import type { DisplayContext } from "$lib/api/types/plugin";
 
   import { tap, type TapCustomEvent } from "svelte-gestures";
 
   import TileIcon from "./TileIcon.svelte";
   import TileLabelElm from "./TileLabel.svelte";
   import { DESIRED_TILE_WIDTH } from "./TileGrid.svelte";
+  import { getServerContext } from "../ServerProvider.svelte";
 
   type Props = {
     tile: TileModel;
@@ -15,8 +17,15 @@
   };
 
   const { tile, tileSize, gap, onClick }: Props = $props();
+  const serverContext = getServerContext();
 
   const config = $derived(tile.config);
+  const displayCtx: DisplayContext = $derived({
+    device_id: serverContext.deviceId,
+    tile_id: tile.id,
+    action_id: tile.action_id,
+    plugin_id: tile.plugin_id,
+  });
 
   const { tileX, tileY, tileZ, tileWidth, tileHeight, sizeAdjust } =
     $derived.by(() => {
@@ -89,7 +98,11 @@
     use:tap={() => ({ timeframe: 1000 })}
     ontap={onTap}
   >
-    <TileIcon icon={tile.config.icon} iconOptions={tile.config.icon_options} />
+    <TileIcon
+      ctx={displayCtx}
+      icon={tile.config.icon}
+      iconOptions={tile.config.icon_options}
+    />
     <TileLabelElm label={config.label} />
   </button>
 </div>

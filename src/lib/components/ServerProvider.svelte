@@ -5,6 +5,7 @@
 
   interface ServerProviderContext {
     serverURL: string;
+    deviceId: string;
   }
 
   export function getServerContext(): ServerProviderContext {
@@ -15,14 +16,18 @@
 <script lang="ts">
   type Props = {
     serverURL: string;
+    deviceId: string;
     children?: Snippet;
   };
 
-  const { serverURL, children }: Props = $props();
+  const { serverURL, deviceId, children }: Props = $props();
 
   setContext(serverContextKey, {
     get serverURL() {
       return serverURL;
+    },
+    get deviceId() {
+      return deviceId;
     },
   });
 </script>

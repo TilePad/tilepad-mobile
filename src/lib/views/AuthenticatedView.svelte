@@ -18,9 +18,10 @@
     details: TilepadSocketDetails;
     tiles: TileModel[];
     folder: FolderModel;
+    deviceId: string;
   };
 
-  const { details, tiles, folder }: Props = $props();
+  const { details, tiles, folder, deviceId }: Props = $props();
   const serverURL = $derived(`http://${details.host}:${details.port}`);
 
   const { clickTile } = getTilepadSocket();
@@ -68,7 +69,7 @@
 
 <svelte:body use:swipe={() => ({})} onswipe={onSwipe} />
 
-<ServerProvider {serverURL}>
+<ServerProvider {serverURL} {deviceId}>
   <ActionDrawer open={drawerOpen} onClose={() => (drawerOpen = false)} />
 
   <div class="layout" in:fly={{ x: -100, duration: 250 }}>

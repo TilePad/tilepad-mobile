@@ -1,5 +1,8 @@
+import { EventEmitter } from "$lib/utils/eventEmitter";
+
 import type { TileModel } from "./types/tiles";
 import type { FolderModel } from "./types/folders";
+import type { DisplayContext } from "./types/plugin";
 import type {
   ClientDeviceMessage,
   ServerDeviceMessage,
@@ -19,6 +22,7 @@ type SocketState =
   // Authenticated and ready
   | {
       type: "Authenticated";
+      deviceId: string;
       tiles: TileModel[];
       folder: FolderModel | null;
     }
@@ -39,26 +43,38 @@ export interface TilepadSocketDetails {
   accessToken: string | null;
 }
 
+type TilepadSocketEvents = {
+  recv_from_plugin: (ctx: DisplayContext, message: object) => void;
+};
+
 export type TilepadSocket = {
+  events: EventEmitter<TilepadSocketEvents>;
   state: () => SocketState;
   details: () => TilepadSocketDetails | null;
   connect: (details: TilepadSocketDetails) => void;
   disconnect: () => void;
   reconnect: () => void;
   clickTile: (tileId: string) => void;
+  sendDisplayMessage: (ctx: DisplayContext, message: object) => void;
 };
 
 type DisconnectFunction = VoidFunction;
 type ClickTileFunction = (tileId: string) => void;
+type SendDisplayMessageFunction = (
+  ctx: DisplayContext,
+  message: object,
+) => void;
 
 export function createTilepadSocket(
   getDeviceName: () => string,
 ): TilepadSocket {
+  const events = new EventEmitter<TilepadSocketEvents>();
   let detailsState: TilepadSocketDetails | null = $state(null);
   let state: SocketState = $state({ type: "Initial" });
 
   let onDisconnect: DisconnectFunction | undefined;
   let onClickTile: ClickTileFunction | undefined;
+  let sendDisplayMessage: SendDisplayMessageFunction | undefined;
 
   const disconnect = () => {
     state = { type: "Initial" };
@@ -89,6 +105,14 @@ export function createTilepadSocket(
             sendMessage({
               type: "TileClicked",
               tile_id: tileId,
+            });
+          };
+
+          sendDisplayMessage = (ctx, message) => {
+            sendMessage({
+              type: "RecvFromDisplay",
+              ctx,
+              message,
             });
           };
 
@@ -188,7 +212,12 @@ export function createTilepadSocket(
         }
 
         case "Authenticated": {
-          setState({ type: "Authenticated", tiles: [], folder: null });
+          setState({
+            type: "Authenticated",
+            deviceId: msg.device_id,
+            tiles: [],
+            folder: null,
+          });
           sendMessage({ type: "RequestTiles" });
           break;
         }
@@ -204,11 +233,16 @@ export function createTilepadSocket(
 
           break;
         }
+        case "RecvFromPlugin": {
+          events.emit("recv_from_plugin", msg.ctx, msg.message);
+          break;
+        }
       }
     }
   };
 
   return {
+    events,
     state() {
       return state;
     },
@@ -221,6 +255,9 @@ export function createTilepadSocket(
 
     clickTile: (tileId: string) => {
       if (onClickTile) onClickTile(tileId);
+    },
+    sendDisplayMessage: (ctx: DisplayContext, message: object) => {
+      if (sendDisplayMessage) sendDisplayMessage(ctx, message);
     },
   };
 }

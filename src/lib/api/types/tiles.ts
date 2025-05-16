@@ -51,12 +51,17 @@ export type TileIconUrl = {
   src: string;
 };
 
+export type TileIconDisplay = {
+  path: string;
+};
+
 export enum TileIconType {
   None = "None",
   PluginIcon = "PluginIcon",
   IconPack = "IconPack",
   Uploaded = "Uploaded",
   Url = "Url",
+  Display = "Display",
 }
 
 export type TileIcon =
@@ -64,7 +69,8 @@ export type TileIcon =
   | ({ type: TileIconType.PluginIcon } & TileIconPluginIcon)
   | ({ type: TileIconType.IconPack } & TileIconIconPack)
   | ({ type: TileIconType.Uploaded } & TileIconUploaded)
-  | ({ type: TileIconType.Url } & TileIconUrl);
+  | ({ type: TileIconType.Url } & TileIconUrl)
+  | ({ type: TileIconType.Display } & TileIconDisplay);
 
 export type CreateTile = Omit<TileModel, "id">;
 
