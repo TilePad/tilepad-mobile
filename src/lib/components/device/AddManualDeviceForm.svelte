@@ -16,7 +16,7 @@
   let open = $state(false);
   let name = $state($t("default_device_name"));
   let host = $state("localhost");
-  let port = $state(59371);
+  let port = $state(8532);
 
   function onSubmit(event: Event) {
     event.preventDefault();
@@ -29,7 +29,7 @@
     open = false;
     name = $t("default_device_name");
     host = "localhost";
-    port = 59371;
+    port = 8532;
   }
 </script>
 
