@@ -1,5 +1,6 @@
 import { x25519 } from "@noble/curves/ed25519";
 import { equalBytes } from "@noble/curves/utils";
+import { decode, encode } from "@msgpack/msgpack";
 import { EventEmitter } from "$lib/utils/eventEmitter";
 import { randomBytes } from "@noble/ciphers/webcrypto";
 import { xchacha20poly1305 } from "@noble/ciphers/chacha";
@@ -155,6 +156,8 @@ export function createTilepadSocket(
       `ws://${details.host}:${details.port}/devices/ws`,
     );
 
+    socket.binaryType = "arraybuffer";
+
     socket.onopen = () => {
       // Connection opened
       setState({ type: "Authenticating" });
@@ -171,7 +174,9 @@ export function createTilepadSocket(
     };
 
     socket.onmessage = (event) => {
-      const msg: ServerDeviceMessage = JSON.parse(event.data);
+      const msg = decode(event.data) as ServerDeviceMessage;
+      console.log(msg);
+      console.log(event.data);
       onMessage(msg);
     };
 
@@ -190,8 +195,7 @@ export function createTilepadSocket(
     };
 
     const sendMessage = (msg: ClientDeviceMessage) => {
-      socket.send(JSON.stringify(msg));
-      console.log(msg);
+      socket.send(encode(msg));
     };
 
     const sendEncryptedMessage = (msg: ClientDeviceMessageEncrypted) => {
