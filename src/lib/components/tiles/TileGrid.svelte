@@ -72,7 +72,7 @@
     class="grid"
     style="transform: translateX({left}px); width: {width}px; height: {height}px;"
   >
-    {#each items as item}
+    {#each items as item (item.id)}
       {@const tile = item.tile}
       {#if tile !== undefined}
         <FilledTile {tile} {tileSize} {gap} onClick={() => onClickTile(tile)} />
