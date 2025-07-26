@@ -45,5 +45,10 @@
     "created_by": "Created By",
     "third_party_licenses": "Third party licenses",
     "readme_error": "Failed to load README: {error}",
-    "close": "Close"
+    "close": "Close",
+    "server_key_changed_title": "Public Key Mismatch Detected",
+    "server_key_changed": "The public key for this identity has changed since you first trusted it.",
+    "confirm": "Confirm",
+    "new": "New",
+    "trust_new_key": "Trust new key"
 }

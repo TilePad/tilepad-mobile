@@ -11,7 +11,8 @@ export type DeviceModel = {
   name: string;
   host: string;
   port: number;
-  access_token: string | null;
+  client_private_key: number[];
+  server_public_key: number[] | null;
   order: number;
   created_at: string;
 };
@@ -20,6 +21,6 @@ export type CreateDevice = {
   name: string;
   host: string;
   port: number;
-  access_token: string | null;
+  client_private_key: Uint8Array;
   order: number;
 };

@@ -1,4 +1,10 @@
+import { x25519 } from "@noble/curves/ed25519";
+import { equalBytes } from "@noble/curves/utils";
+import { decode, encode } from "@msgpack/msgpack";
 import { EventEmitter } from "$lib/utils/eventEmitter";
+import { randomBytes } from "@noble/ciphers/webcrypto";
+import { xchacha20poly1305 } from "@noble/ciphers/chacha";
+import { bytesToUtf8, utf8ToBytes } from "@noble/ciphers/utils";
 
 import type { TileModel } from "./types/tiles";
 import type { FolderModel } from "./types/folders";
@@ -6,15 +12,26 @@ import type { DisplayContext } from "./types/plugin";
 import type {
   ClientDeviceMessage,
   ServerDeviceMessage,
+  ClientDeviceMessageEncrypted,
+  ServerDeviceMessageEncrypted,
 } from "./types/protocol";
 
-import { setDeviceAccessToken } from "./devices";
+import { setDeviceServerPublicKey } from "./devices";
 
 type SocketState =
   //  Initial disconnected state
   | { type: "Initial" }
   // Connecting to the socket
   | { type: "Connecting" }
+  // User must confirm the changed server key
+  | {
+      type: "ConfirmChangedServerKey";
+      serverPublicKey: number[];
+      lastServerPublicKey: number[] | null;
+
+      onConfirm: VoidFunction;
+      onCancel: VoidFunction;
+    }
   // Requesting approval from the server
   | { type: "RequestingApproval" }
   // Authenticating with known token
@@ -40,7 +57,8 @@ export interface TilepadSocketDetails {
   deviceId: string;
   host: string;
   port: number;
-  accessToken: string | null;
+  clientPrivateKey: number[];
+  serverPublicKey: number[] | null;
 }
 
 type TilepadSocketEvents = {
@@ -76,6 +94,8 @@ export function createTilepadSocket(
   let onClickTile: ClickTileFunction | undefined;
   let sendDisplayMessage: SendDisplayMessageFunction | undefined;
 
+  let sharedSecretState: Uint8Array | null = null;
+
   const disconnect = () => {
     state = { type: "Initial" };
 
@@ -102,14 +122,14 @@ export function createTilepadSocket(
         // When authenticated setup the tile click handler
         case "Authenticated": {
           onClickTile = (tileId) => {
-            sendMessage({
+            sendEncryptedMessage({
               type: "TileClicked",
               tile_id: tileId,
             });
           };
 
           sendDisplayMessage = (ctx, message) => {
-            sendMessage({
+            sendEncryptedMessage({
               type: "RecvFromDisplay",
               ctx,
               message,
@@ -136,21 +156,27 @@ export function createTilepadSocket(
       `ws://${details.host}:${details.port}/devices/ws`,
     );
 
+    socket.binaryType = "arraybuffer";
+
     socket.onopen = () => {
       // Connection opened
-      if (details.accessToken) {
-        state = { type: "Authenticating" };
-        sendMessage({
-          type: "Authenticate",
-          access_token: details.accessToken,
-        });
-      } else {
-        requestApproval();
-      }
+      setState({ type: "Authenticating" });
+
+      const clientPublicKey = x25519.getPublicKey(
+        new Uint8Array(details.clientPrivateKey),
+      );
+
+      sendMessage({
+        type: "InitiateHandshake",
+        name: getDeviceName(),
+        public_key: new Array(...clientPublicKey),
+      });
     };
 
     socket.onmessage = (event) => {
-      const msg: ServerDeviceMessage = JSON.parse(event.data);
+      const msg = decode(event.data) as ServerDeviceMessage;
+      console.log(msg);
+      console.log(event.data);
       onMessage(msg);
     };
 
@@ -169,23 +195,39 @@ export function createTilepadSocket(
     };
 
     const sendMessage = (msg: ClientDeviceMessage) => {
-      socket.send(JSON.stringify(msg));
+      socket.send(encode(msg));
     };
 
-    const requestApproval = async () => {
-      state = { type: "RequestingApproval" };
+    const sendEncryptedMessage = (msg: ClientDeviceMessageEncrypted) => {
+      // Ensure we are in the correct state to perform encryption
+      if (sharedSecretState === null) {
+        disconnect();
+        return;
+      }
 
-      // Request the device name
-      const name = getDeviceName();
+      const encodedMessage = JSON.stringify(msg);
+      const encodedMessageBytes = utf8ToBytes(encodedMessage);
 
-      sendMessage({ type: "RequestApproval", name });
+      // Encrypt it with our cipher
+      const clientNonce = randomBytes(24);
+      const cipher = xchacha20poly1305(sharedSecretState, clientNonce);
+      const output = cipher.encrypt(encodedMessageBytes);
 
-      // Clear current access token
-      setDeviceAccessToken(details.deviceId, null);
+      sendMessage({
+        type: "Encrypted",
+        message: Array.from(output),
+        nonce: Array.from(clientNonce),
+      });
     };
 
-    function onMessage(msg: ServerDeviceMessage) {
+    function onEncryptedMessage(msg: ServerDeviceMessageEncrypted) {
       switch (msg.type) {
+        // Pending approval from the server
+        case "ApprovalRequested": {
+          setState({ type: "RequestingApproval" });
+          break;
+        }
+
         // Server declined approval
         case "Declined": {
           setState({ type: "Declined" });
@@ -200,14 +242,13 @@ export function createTilepadSocket(
 
         // Server approved access
         case "Approved": {
-          const token = msg.access_token;
-
-          // Update current device access token
-          setDeviceAccessToken(details.deviceId, token);
-          setState({ type: "Authenticating" });
-
-          // Authenticate with the current token
-          sendMessage({ type: "Authenticate", access_token: token });
+          setState({
+            type: "Authenticated",
+            deviceId: msg.device_id,
+            tiles: [],
+            folder: null,
+          });
+          sendEncryptedMessage({ type: "RequestTiles" });
           break;
         }
 
@@ -218,14 +259,10 @@ export function createTilepadSocket(
             tiles: [],
             folder: null,
           });
-          sendMessage({ type: "RequestTiles" });
+          sendEncryptedMessage({ type: "RequestTiles" });
           break;
         }
 
-        case "InvalidAccessToken": {
-          requestApproval();
-          break;
-        }
         case "Tiles": {
           if (state.type === "Authenticated") {
             setState({ ...state, tiles: msg.tiles, folder: msg.folder });
@@ -233,8 +270,127 @@ export function createTilepadSocket(
 
           break;
         }
+
         case "RecvFromPlugin": {
           events.emit("recv_from_plugin", msg.ctx, msg.message);
+          break;
+        }
+      }
+    }
+
+    function completeChallenge(
+      serverPublicKey: Uint8Array,
+      clientPrivateKey: Uint8Array,
+      encryptedChallenge: Uint8Array,
+      serverNonce: Uint8Array,
+    ) {
+      const sharedSecret = x25519.getSharedSecret(
+        clientPrivateKey,
+        serverPublicKey,
+      );
+
+      // Decrypt the server challenge
+      const decryptedChallenge = decryptMessage(
+        sharedSecret,
+        encryptedChallenge,
+        serverNonce,
+      );
+
+      // Encrypt it with our cipher
+      const clientEncryptedChallenge = encryptMessage(
+        sharedSecret,
+        decryptedChallenge,
+      );
+
+      sharedSecretState = sharedSecret;
+
+      // Send the completed challenge to the server
+      sendMessage({
+        type: "AuthenticateChallengeResponse",
+        challenge: Array.from(clientEncryptedChallenge.message),
+        nonce: Array.from(clientEncryptedChallenge.nonce),
+      });
+    }
+
+    function onMessage(msg: ServerDeviceMessage) {
+      switch (msg.type) {
+        case "AuthenticateChallenge": {
+          const { server_public_key, challenge, nonce } = msg;
+
+          const clientPrivateKey = new Uint8Array(details.clientPrivateKey);
+
+          const serverPublicKey = new Uint8Array(server_public_key);
+          const encryptedChallenge = new Uint8Array(challenge);
+          const serverNonce = new Uint8Array(nonce);
+
+          const onConfirm = () => {
+            // Store the confirmed public key
+            setDeviceServerPublicKey(details.deviceId, server_public_key)
+              //
+              .catch(console.error);
+
+            // Complete the challenge and continue
+            completeChallenge(
+              serverPublicKey,
+              clientPrivateKey,
+              encryptedChallenge,
+              serverNonce,
+            );
+          };
+
+          const onCancel = () => {
+            disconnect();
+          };
+
+          const lastServerPublicKey = details.serverPublicKey
+            ? new Uint8Array(details.serverPublicKey)
+            : null;
+
+          console.log(serverPublicKey, lastServerPublicKey);
+
+          if (
+            lastServerPublicKey !== null &&
+            !equalBytes(serverPublicKey, lastServerPublicKey)
+          ) {
+            setState({
+              type: "ConfirmChangedServerKey",
+              serverPublicKey: msg.server_public_key,
+              lastServerPublicKey: details.serverPublicKey,
+              onConfirm,
+              onCancel,
+            });
+            return;
+          } else {
+            // TOFU (Trust On First Use) or server is still trusted
+            onConfirm();
+          }
+
+          break;
+        }
+        case "EncryptedMessage": {
+          const { message, nonce } = msg;
+
+          // Ensure we are in the correct state to perform decryption
+          if (sharedSecretState === null) {
+            disconnect();
+            return;
+          }
+
+          const output = decryptMessage(
+            sharedSecretState,
+            new Uint8Array(message),
+            new Uint8Array(nonce),
+          );
+          const payload = bytesToUtf8(output);
+
+          const decryptedMessage: ServerDeviceMessageEncrypted =
+            JSON.parse(payload);
+          onEncryptedMessage(decryptedMessage);
+          break;
+        }
+        case "Error": {
+          console.error(msg.message);
+          disconnect();
           break;
         }
       }
@@ -259,5 +415,21 @@ export function createTilepadSocket(
     sendDisplayMessage: (ctx: DisplayContext, message: object) => {
       if (sendDisplayMessage) sendDisplayMessage(ctx, message);
     },
+  };
+}
+
+function decryptMessage(key: Uint8Array, data: Uint8Array, nonce: Uint8Array) {
+  const cipher = xchacha20poly1305(key, nonce);
+  const output = cipher.decrypt(data);
+  return output;
+}
+
+function encryptMessage(key: Uint8Array, data: Uint8Array) {
+  const nonce = randomBytes(24);
+  const cipher = xchacha20poly1305(key, nonce);
+  const message = cipher.encrypt(data);
+  return {
+    message,
+    nonce,
   };
 }

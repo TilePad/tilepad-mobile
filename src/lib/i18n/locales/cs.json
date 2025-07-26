@@ -45,5 +45,10 @@
     "created_by": "Vytvořil",
     "third_party_licenses": "Licence třetích stran",
     "readme_error": "Nepodařilo se načíst README: {error}",
-    "close": "Zavřít"
+    "close": "Zavřít",
+    "server_key_changed_title": "Zjištěn nesoulad veřejného klíče",
+    "server_key_changed": "Veřejný klíč této identity se od prvního důvěryhodného připojení změnil.",
+    "confirm": "Potvrdit",
+    "new": "Nový",
+    "trust_new_key": "Důvěřovat novému klíči"
 }

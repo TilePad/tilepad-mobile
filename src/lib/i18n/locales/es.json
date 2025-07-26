@@ -45,5 +45,10 @@
     "created_by": "Creado por",
     "third_party_licenses": "Licencias de terceros",
     "readme_error": "Error al cargar README: {error}",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "server_key_changed_title": "Conflicto de clave pública detectado",
+    "server_key_changed": "La clave pública de esta identidad ha cambiado desde que se confió por primera vez.",
+    "confirm": "Confirmar",
+    "new": "Nuevo",
+    "trust_new_key": "Confiar en la nueva clave"
 }
