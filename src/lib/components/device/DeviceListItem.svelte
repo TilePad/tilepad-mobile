@@ -40,7 +40,8 @@
           deviceId: device.id,
           host: device.host,
           port: device.port,
-          accessToken: device.access_token,
+          clientPrivateKey: device.client_private_key,
+          serverPublicKey: device.server_public_key,
         })}
     >
       {$t("connect")}

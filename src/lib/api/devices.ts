@@ -24,13 +24,13 @@ export async function createDevice(create: CreateDevice) {
   return model;
 }
 
-export async function setDeviceAccessToken(
+export async function setDeviceServerPublicKey(
   deviceId: string,
-  accessToken: string | null,
+  publicKey: number[] | null,
 ) {
-  const device = await invoke<DeviceModel>("devices_set_access_token", {
+  const device = await invoke<DeviceModel>("devices_set_server_public_key", {
     deviceId,
-    accessToken,
+    publicKey,
   });
   invalidateDevices();
   return device;

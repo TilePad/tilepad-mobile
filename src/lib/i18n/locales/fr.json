@@ -45,5 +45,10 @@
     "created_by": "Créé par",
     "third_party_licenses": "Licences tierces",
     "readme_error": "Échec du chargement du README : {error}",
-    "close": "Fermer"
+    "close": "Fermer",
+    "server_key_changed_title": "Incohérence de clé publique détectée",
+    "server_key_changed": "La clé publique de cette identité a changé depuis la première fois où vous lui avez fait confiance.",
+    "confirm": "Confirmer",
+    "new": "Nouveau",
+    "trust_new_key": "Faire confiance à la nouvelle clé"
 }

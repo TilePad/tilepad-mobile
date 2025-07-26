@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t } from "svelte-i18n";
+  import { x25519 } from "@noble/curves/ed25519";
   import Aside from "$lib/components/Aside.svelte";
   import { getErrorMessage } from "$lib/utils/error";
   import { createDevice, createDevicesQuery } from "$lib/api/devices";
@@ -20,11 +21,13 @@
     port: number,
     order: number,
   ) {
+    const clientPrivateKey = x25519.utils.randomSecretKey();
+
     await createDevice({
       name,
       host,
       port,
-      access_token: null,
+      client_private_key: clientPrivateKey,
       order,
     });
   }

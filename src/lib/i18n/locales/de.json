@@ -45,5 +45,10 @@
     "created_by": "Erstellt von",
     "third_party_licenses": "Lizenzen Dritter",
     "readme_error": "README konnte nicht geladen werden: {error}",
-    "close": "Schließen"
+    "close": "Schließen",
+    "server_key_changed_title": "Öffentlicher Schlüssel stimmt nicht überein",
+    "server_key_changed": "Der öffentliche Schlüssel für diese Identität hat sich seit dem ersten Vertrauensaufbau geändert.",
+    "confirm": "Bestätigen",
+    "new": "Neu",
+    "trust_new_key": "Neuem Schlüssel vertrauen"
 }

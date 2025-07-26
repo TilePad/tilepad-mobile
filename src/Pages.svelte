@@ -3,6 +3,7 @@
   import RevokedView from "$lib/views/RevokedView.svelte";
   import DeclinedView from "$lib/views/DeclinedView.svelte";
   import ConnectingView from "$lib/views/ConnectingView.svelte";
+  import ServerTrustView from "$lib/views/ServerTrustView.svelte";
   import AuthenticatedView from "$lib/views/AuthenticatedView.svelte";
   import RequestingApproval from "$lib/views/RequestingApproval.svelte";
   import AuthenticatingView from "$lib/views/AuthenticatingView.svelte";
@@ -24,6 +25,13 @@
   <RequestingApproval />
 {:else if state.type === "Authenticating"}
   <AuthenticatingView />
+{:else if state.type === "ConfirmChangedServerKey"}
+  <ServerTrustView
+    serverPublicKey={state.serverPublicKey}
+    lastServerPublicKey={state.lastServerPublicKey}
+    onConfirm={state.onConfirm}
+    onCancel={state.onCancel}
+  />
 {:else if state.type === "Authenticated"}
   {#if details != null && state.folder !== null}
     <AuthenticatedView

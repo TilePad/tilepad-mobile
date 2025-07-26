@@ -30,16 +30,16 @@ pub async fn devices_remove_device(db: State<'_, DbPool>, device_id: DeviceId) -
     Ok(())
 }
 
-/// Update a specific device access token
+/// Update a specific device server public key
 #[tauri::command]
-pub async fn devices_set_access_token(
+pub async fn devices_set_server_public_key(
     db: State<'_, DbPool>,
     device_id: DeviceId,
-    access_token: Option<String>,
+    public_key: Option<Vec<u8>>,
 ) -> CmdResult<DeviceModel> {
     let device = DeviceModel::get_by_id(db.inner(), device_id)
         .await?
         .context("device not found")?;
-    let device = device.set_access_token(db.inner(), access_token).await?;
+    let device = device.set_server_public_key(db.inner(), public_key).await?;
     Ok(device)
 }

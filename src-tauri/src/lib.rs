@@ -18,7 +18,7 @@ pub fn run() {
             devices::devices_get_devices,
             devices::devices_create_device,
             devices::devices_remove_device,
-            devices::devices_set_access_token,
+            devices::devices_set_server_public_key,
             // Settings
             settings::settings_get_settings,
             settings::settings_set_settings,
