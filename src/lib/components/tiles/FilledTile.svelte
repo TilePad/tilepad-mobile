@@ -8,6 +8,7 @@
   import TileLabelElm from "./TileLabel.svelte";
   import { DESIRED_TILE_WIDTH } from "./TileGrid.svelte";
   import { getServerContext } from "../ServerProvider.svelte";
+  import TileIndicator from "./TileIndicator.svelte";
 
   type Props = {
     tile: TileModel;
@@ -104,6 +105,8 @@
       iconOptions={tile.config.icon_options}
     />
     <TileLabelElm label={config.label} />
+
+    <TileIndicator tile_id={tile.id} />
   </button>
 </div>
 

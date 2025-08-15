@@ -10,6 +10,7 @@ import type { TileModel } from "./types/tiles";
 import type { FolderModel } from "./types/folders";
 import type { DisplayContext } from "./types/plugin";
 import type {
+  DeviceIndicator,
   ClientDeviceMessage,
   ServerDeviceMessage,
   ClientDeviceMessageEncrypted,
@@ -63,6 +64,11 @@ export interface TilepadSocketDetails {
 
 type TilepadSocketEvents = {
   recv_from_plugin: (ctx: DisplayContext, message: object) => void;
+  indicator: (
+    tile_id: string,
+    indicator: DeviceIndicator,
+    duration: number,
+  ) => void;
 };
 
 export type TilepadSocket = {
@@ -175,8 +181,6 @@ export function createTilepadSocket(
 
     socket.onmessage = (event) => {
       const msg = decode(event.data) as ServerDeviceMessage;
-      console.log(msg);
-      console.log(event.data);
       onMessage(msg);
     };
 
@@ -273,6 +277,12 @@ export function createTilepadSocket(
 
         case "RecvFromPlugin": {
           events.emit("recv_from_plugin", msg.ctx, msg.message);
+          break;
+        }
+
+        case "DisplayIndicator": {
+          console.log("INDICATOR", msg);
+          events.emit("indicator", msg.tile_id, msg.indicator, msg.duration);
           break;
         }
       }

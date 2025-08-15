@@ -47,4 +47,16 @@ export type ServerDeviceMessageEncrypted =
   | { type: "Revoked" }
   | { type: "Authenticated"; device_id: string }
   | { type: "Tiles"; tiles: TileModel[]; folder: FolderModel }
-  | { type: "RecvFromPlugin"; ctx: DisplayContext; message: object };
+  | { type: "RecvFromPlugin"; ctx: DisplayContext; message: object }
+  | {
+      type: "DisplayIndicator";
+      tile_id: string;
+      indicator: DeviceIndicator;
+      duration: number;
+    };
+
+export enum DeviceIndicator {
+  Error = "Error",
+  Success = "Success",
+  Warning = "Warning",
+}
