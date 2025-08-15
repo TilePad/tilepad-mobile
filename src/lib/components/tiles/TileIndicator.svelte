@@ -6,6 +6,7 @@
   import SolarCheckCircleBoldDuotone from "~icons/solar/check-circle-bold-duotone";
   import SolarCloseCircleBoldDuotone from "~icons/solar/close-circle-bold-duotone";
   import { fade, scale, slide } from "svelte/transition";
+  import LoadingSpinner from "../loading/LoadingSpinner.svelte";
 
   type Props = {
     tile_id: TileId;
@@ -32,6 +33,12 @@
 
     if (currentState !== null) {
       clearTimeout(currentState.timeout);
+    }
+
+    // Don't show anything for the None indicator, just clear the state
+    if (indicator === DeviceIndicator.None) {
+      currentState = null;
+      return;
     }
 
     const timeout = setTimeout(() => {
@@ -62,6 +69,10 @@
       <SolarCheckCircleBoldDuotone />
     {:else if currentState.indicator === DeviceIndicator.Warning}
       <SolarDangerTriangleBoldDuotone />
+    {:else if currentState.indicator === DeviceIndicator.Loading}
+      <div class="spinner">
+        <LoadingSpinner size={24} />
+      </div>
     {/if}
   </div>
 {/if}
@@ -77,11 +88,23 @@
     border-radius: calc(4px * var(--tile-size-adjustment));
   }
 
+  .spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+  }
+
   .indicator[data-indicator="Error"] {
     color: #db5858;
   }
 
   .indicator[data-indicator="Success"] {
+    color: #74e358;
+  }
+
+  .indicator[data-indicator="Loading"] {
     color: #74e358;
   }
 

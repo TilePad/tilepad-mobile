@@ -59,4 +59,6 @@ export enum DeviceIndicator {
   Error = "Error",
   Success = "Success",
   Warning = "Warning",
+  Loading = "Loading",
+  None = "None",
 }
