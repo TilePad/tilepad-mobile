@@ -3,12 +3,13 @@
   import { Select } from "bits-ui";
   import { slide } from "svelte/transition";
   import TwemojiFlagSpain from "~icons/twemoji/flag-spain";
+  import DownArrow from "~icons/solar/alt-arrow-down-bold";
   import TwemojiFlagFrance from "~icons/twemoji/flag-france";
   import TwemojiFlagGermany from "~icons/twemoji/flag-germany";
   import TwemojiFlagCzechia from "~icons/twemoji/flag-czechia";
-  import SolarAltArrowUpBold from "~icons/solar/alt-arrow-up-bold";
-  import SolarAltArrowDownBold from "~icons/solar/alt-arrow-down-bold";
   import TwemojiFlagUnitedStates from "~icons/twemoji/flag-united-states";
+
+  import Button from "../input/Button.svelte";
 
   type Props = {
     value: string;
@@ -33,16 +34,16 @@
 </script>
 
 <Select.Root
+  bind:open
   allowDeselect={false}
   type="single"
-  onOpenChange={(value) => (open = value)}
   {value}
   onValueChange={(value) => onChangeValue(value)}
 >
   <Select.Trigger>
     {#snippet child({ props })}
-      <div class="trigger-wrapper">
-        <button class="trigger" {...props}>
+      <div class="wrapper" data-open={open}>
+        <Button class="trigger" variant="secondary" {...props}>
           <span class="label">
             {#if language}
               <language.icon />
@@ -51,13 +52,8 @@
               {$t("select_language")}
             {/if}
           </span>
-
-          {#if open}
-            <SolarAltArrowUpBold />
-          {:else}
-            <SolarAltArrowDownBold />
-          {/if}
-        </button>
+          <DownArrow class="trigger__icon" />
+        </Button>
       </div>
     {/snippet}
   </Select.Trigger>
@@ -72,7 +68,7 @@
               class="content"
               transition:slide={{ duration: 100 }}
             >
-              {#each languages as language}
+              {#each languages as language (language.value)}
                 <Select.Item value={language.value} label={language.label}>
                   {#snippet child({ props, selected, highlighted })}
                     <div
@@ -87,7 +83,7 @@
                       </span>
 
                       {#if language.auto}
-                        <span class="auto-label">
+                        <span {...props} class="auto-label">
                           {$t("auto")}
                         </span>
                       {/if}
@@ -142,36 +138,33 @@
     outline: 1px solid white;
   }
 
-  .trigger {
-    padding: 0.5rem;
-    border: none;
-    background-color: #141316;
-    border: 1px solid #3a3542;
-    color: #fff;
-    border-radius: 0.25rem;
-    align-items: center;
-    display: flex;
-    gap: 0.5rem;
-    cursor: pointer;
-    font-size: 1em;
-    text-decoration: none;
-    justify-content: space-between;
-    width: 100%;
-  }
-
   .label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .trigger-wrapper {
-    display: flex;
-  }
-
   .auto-label {
     padding: 0.25rem 0.5rem;
     background-color: #141316;
     border-radius: 0.25rem;
+  }
+
+  .wrapper {
+    width: 100%;
+  }
+
+  .wrapper:global(> .trigger) {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .wrapper:global(> .trigger > .trigger__icon) {
+    transition: all var(--tp-transition-fast);
+    transform-origin: center;
+  }
+
+  .wrapper[data-open="true"]:global(> .trigger > .trigger__icon) {
+    transform: rotate(-180deg);
   }
 </style>

@@ -1,19 +1,28 @@
 <script module lang="ts">
   export type ButtonProps = {
-    variant?: "default" | "warning" | "error";
+    variant?: "default" | "warning" | "error" | "secondary";
     transparent?: boolean;
     children?: Snippet;
+    size?: ButtonSize;
+    loading?: boolean;
   } & HTMLButtonAttributes;
+
+  export type ButtonSize = "default" | "small" | "icon";
 </script>
 
 <script lang="ts">
   import type { Snippet } from "svelte";
   import type { HTMLButtonAttributes } from "svelte/elements";
 
+  import LoadingSpinner from "../loading/LoadingSpinner.svelte";
+
   const {
     variant = "default",
     transparent,
+    size = "default",
     children,
+    loading,
+    disabled,
     ...props
   }: ButtonProps = $props();
 </script>
@@ -21,26 +30,61 @@
 <button
   type="button"
   {...props}
+  disabled={disabled || loading}
   class="btn {props.class}"
   class:btn--transparent={transparent}
+  class:btn--loading={loading}
+  data-size={size}
   data-variant={variant}
 >
+  {#if loading}
+    <LoadingSpinner size={size === "small" ? 15 : 20} />
+  {/if}
+
   {@render children?.()}
 </button>
 
 <style>
   .btn {
-    padding: 0.5rem;
-    background-color: #544d5e;
-    border: none;
-    color: #fff;
-    border-radius: 0.25rem;
+    display: inline-flex;
     align-items: center;
-    display: flex;
-    gap: 0.5rem;
+    justify-content: flex-start;
+    gap: var(--tp-space-2);
+    height: var(--tp-btn-height-lg);
+    padding: 0 var(--tp-btn-padding-x-md);
+    font-size: var(--tp-text-base);
+    font-weight: var(--tp-font-weight-medium);
+    border-radius: var(--tp-radius-md);
+    border: 1px solid transparent;
     cursor: pointer;
-    font-size: 1em;
+    transition: all var(--tp-transition-fast);
+
+    background-color: #544d5e;
+    color: #fff;
+
     text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .btn[data-size="icon"] {
+    padding: 0.25rem;
+  }
+
+  .btn[data-variant="secondary"] {
+    background: var(--tp-bg-tertiary);
+    color: var(--tp-text-primary);
+    border-color: var(--tp-border-primary);
+  }
+
+  .btn[data-variant="secondary"]:hover {
+    background: var(--tp-bg-quaternary);
+    border-color: var(--tp-border-hover);
+  }
+
+  .btn[data-size="small"] {
+    padding: 0 var(--tp-btn-padding-x-sm);
+    height: var(--tp-btn-height-sm);
+    font-size: var(--tp-text-sm);
   }
 
   .btn[data-variant="warning"] {
@@ -69,10 +113,10 @@
 
   .btn:disabled,
   .btn:disabled:hover {
-    background-color: #222;
+    background-color: #3e3946;
     border: 1px solid #333;
     cursor: not-allowed;
-    color: #777;
+    color: #b3b3b3;
   }
 
   .btn--transparent {

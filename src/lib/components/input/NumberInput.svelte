@@ -1,12 +1,14 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from "svelte/elements";
 
-  type Props = {} & Omit<HTMLInputAttributes, "type">;
+  type Props = {
+    type?: "number";
+  } & Omit<HTMLInputAttributes, "type">;
 
-  let { value = $bindable(), ...props }: Props = $props();
+  const { type = "number", ...props }: Props = $props();
 </script>
 
-<input type="number" bind:value {...props} />
+<input {...props} {type} />
 
 <style>
   input {
