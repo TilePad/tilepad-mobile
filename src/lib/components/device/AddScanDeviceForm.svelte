@@ -195,7 +195,11 @@
             <TextInput id="host" type="text" bind:value={host} />
 
             <label for="port">{$t("port")}</label>
-            <NumberInput id="port" bind:value={port} />
+            <NumberInput
+              id="port"
+              value={port}
+              oninput={(event) => (port = event.currentTarget.valueAsNumber)}
+            />
 
             <div class="actions">
               <Button onclick={onClose}>{$t("cancel")}</Button>
