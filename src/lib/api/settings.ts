@@ -1,11 +1,11 @@
-// [KEYS] ------------------------------------------------------
-
 import { invoke } from "@tauri-apps/api/core";
 import { createQuery, createMutation } from "@tanstack/svelte-query";
 
 import type { SettingsConfig } from "./types/settings";
 
 import { queryClient } from "./client";
+
+// [KEYS] ------------------------------------------------------
 
 const settingsKeys = {
   root: ["settings"],

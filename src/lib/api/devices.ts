@@ -5,6 +5,8 @@ import type { DeviceModel, CreateDevice } from "./types/devices";
 
 import { queryClient } from "./client";
 
+// [KEYS] ------------------------------------------------------
+
 const devicesKeys = {
   root: ["devices"],
   requests: ["devices", "requests"],

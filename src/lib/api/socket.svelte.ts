@@ -2,9 +2,6 @@ import { x25519 } from "@noble/curves/ed25519";
 import { equalBytes } from "@noble/curves/utils";
 import { decode, encode } from "@msgpack/msgpack";
 import { EventEmitter } from "$lib/utils/eventEmitter";
-import { randomBytes } from "@noble/ciphers/webcrypto";
-import { xchacha20poly1305 } from "@noble/ciphers/chacha";
-import { bytesToUtf8, utf8ToBytes } from "@noble/ciphers/utils";
 
 import type { TileModel } from "./types/tiles";
 import type { FolderModel } from "./types/folders";
@@ -18,6 +15,12 @@ import type {
 } from "./types/protocol";
 
 import { setDeviceServerPublicKey } from "./devices";
+import {
+  decryptMessage,
+  decryptPayload,
+  encryptMessage,
+  encryptPayload,
+} from "./encryption";
 
 type SocketState =
   //  Initial disconnected state
@@ -209,18 +212,13 @@ export function createTilepadSocket(
         return;
       }
 
-      const encodedMessage = JSON.stringify(msg);
-      const encodedMessageBytes = utf8ToBytes(encodedMessage);
-
-      // Encrypt it with our cipher
-      const clientNonce = randomBytes(24);
-      const cipher = xchacha20poly1305(sharedSecretState, clientNonce);
-      const output = cipher.encrypt(encodedMessageBytes);
+      // Encrypt it with our key
+      const { message, nonce } = encryptPayload(msg, sharedSecretState);
 
       sendMessage({
         type: "Encrypted",
-        message: Array.from(output),
-        nonce: Array.from(clientNonce),
+        message: Array.from(message),
+        nonce: Array.from(nonce),
       });
     };
 
@@ -383,16 +381,13 @@ export function createTilepadSocket(
             return;
           }
 
-          const output = decryptMessage(
+          const payload = decryptPayload<ServerDeviceMessageEncrypted>(
             sharedSecretState,
             new Uint8Array(message),
             new Uint8Array(nonce),
           );
-          const payload = bytesToUtf8(output);
 
-          const decryptedMessage: ServerDeviceMessageEncrypted =
-            JSON.parse(payload);
-          onEncryptedMessage(decryptedMessage);
+          onEncryptedMessage(payload);
           break;
         }
         case "Error": {
@@ -422,21 +417,5 @@ export function createTilepadSocket(
     sendDisplayMessage: (ctx: DisplayContext, message: object) => {
       if (sendDisplayMessage) sendDisplayMessage(ctx, message);
     },
-  };
-}
-
-function decryptMessage(key: Uint8Array, data: Uint8Array, nonce: Uint8Array) {
-  const cipher = xchacha20poly1305(key, nonce);
-  const output = cipher.decrypt(data);
-  return output;
-}
-
-function encryptMessage(key: Uint8Array, data: Uint8Array) {
-  const nonce = randomBytes(24);
-  const cipher = xchacha20poly1305(key, nonce);
-  const message = cipher.encrypt(data);
-  return {
-    message,
-    nonce,
   };
 }
