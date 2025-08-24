@@ -50,5 +50,6 @@
     "server_key_changed": "Der öffentliche Schlüssel für diese Identität hat sich seit dem ersten Vertrauensaufbau geändert.",
     "confirm": "Bestätigen",
     "new": "Neu",
-    "trust_new_key": "Neuem Schlüssel vertrauen"
+    "trust_new_key": "Neuem Schlüssel vertrauen",
+    "version": "Version"
 }

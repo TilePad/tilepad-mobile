@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { SettingsConfig } from "$lib/api/types/settings";
 
-  import { t } from "svelte-i18n";
   import { watch, useDebounce } from "runed";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
   import { createSetSettingsMutation } from "$lib/api/settings";
   import TextInput from "$lib/components/input/TextInput.svelte";
   import CreatorSection from "$lib/components/CreatorSection.svelte";
@@ -11,6 +11,8 @@
   import SolarDocumentAddBoldDuotone from "~icons/solar/document-add-bold-duotone";
 
   import LicensesDialog from "./liceneses/LicensesDialog.svelte";
+
+  const i18n = i18nContext.get();
 
   const settingsContext = getSettingsContext();
   const currentSettings = $derived.by(settingsContext.settings);
@@ -57,16 +59,16 @@
 
 <div class="settings">
   <div class="tile-item">
-    <label class="tile-label" for="language">{$t("language")}</label>
+    <label class="tile-label" for="language">{i18n.f("language")}</label>
     <LanguageSelector
       value={settings.language}
       onChangeValue={(value) => onChangeLanguage(value)}
     />
-    <p class="tile-description">{$t("language_description")}</p>
+    <p class="tile-description">{i18n.f("language_description")}</p>
   </div>
 
   <div class="tile-item">
-    <label class="tile-label" for="deviceName">{$t("device_name")}</label>
+    <label class="tile-label" for="deviceName">{i18n.f("device_name")}</label>
     <TextInput
       style="width: 100%"
       id="deviceName"
@@ -74,14 +76,14 @@
       onchange={(event) => onChangeDeviceName(event.currentTarget.value)}
     />
     <p class="tile-description">
-      {$t("device_name_description")}
+      {i18n.f("device_name_description")}
     </p>
   </div>
 
   <LicensesDialog
     triggerProps={{ style: "background: #28272c;" }}
     buttonLabel={{
-      text: $t("third_party_licenses"),
+      text: i18n.f("third_party_licenses"),
       icon: SolarDocumentAddBoldDuotone,
     }}
   />

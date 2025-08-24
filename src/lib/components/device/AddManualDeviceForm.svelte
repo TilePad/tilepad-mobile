@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
 
   import Button from "../input/Button.svelte";
   import Dialog from "../dialog/Dialog.svelte";
@@ -13,8 +13,10 @@
 
   const { onAddDevice }: Props = $props();
 
+  const i18n = i18nContext.get();
+
   let open = $state(false);
-  let name = $state($t("default_device_name"));
+  let name = $state(i18n.f("default_device_name"));
   let host = $state("localhost");
   let port = $state(8532);
 
@@ -27,7 +29,7 @@
   function onClose() {
     // Reset on close
     open = false;
-    name = $t("default_device_name");
+    name = i18n.f("default_device_name");
     host = "localhost";
     port = 8532;
   }
@@ -37,20 +39,20 @@
   {#snippet button({ props })}
     <Button {...props}>
       <img src="/form.svg" alt="Form Icon" width="32px" height="32px" />
-      {$t("manual_add")}
+      {i18n.f("manual_add")}
     </Button>
   {/snippet}
 
   {#snippet children()}
     <div class="content">
       <form onsubmit={onSubmit}>
-        <label for="name">{$t("name")}</label>
+        <label for="name">{i18n.f("name")}</label>
         <TextInput id="name" type="text" bind:value={name} />
 
-        <label for="host">{$t("host")}</label>
+        <label for="host">{i18n.f("host")}</label>
         <TextInput id="host" type="text" bind:value={host} />
 
-        <label for="port">{$t("port")}</label>
+        <label for="port">{i18n.f("port")}</label>
         <NumberInput
           id="port"
           value={port}
@@ -58,8 +60,8 @@
         />
 
         <div class="actions">
-          <DialogCloseButton buttonLabel={{ text: $t("cancel") }} />
-          <Button type="submit">{$t("create")}</Button>
+          <DialogCloseButton buttonLabel={{ text: i18n.f("cancel") }} />
+          <Button type="submit">{i18n.f("create")}</Button>
         </div>
       </form>
     </div>

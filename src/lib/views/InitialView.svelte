@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
   import { x25519 } from "@noble/curves/ed25519";
   import Aside from "$lib/components/Aside.svelte";
   import { getErrorMessage } from "$lib/utils/error";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
   import { createDevice, createDevicesQuery } from "$lib/api/devices";
   import SettingsSection from "$lib/components/SettingsSection.svelte";
   import SkeletonList from "$lib/components/skeleton/SkeletonList.svelte";
@@ -10,6 +10,8 @@
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
   import AddScanDeviceForm from "$lib/components/device/AddScanDeviceForm.svelte";
   import AddManualDeviceForm from "$lib/components/device/AddManualDeviceForm.svelte";
+
+  const i18n = i18nContext.get();
 
   const { connect } = getTilepadSocket();
 
@@ -55,13 +57,13 @@
   </div>
 
   <div class="right">
-    <h1 class="header">{$t("devices")}</h1>
+    <h1 class="header">{i18n.f("devices")}</h1>
 
     {#if $devicesQuery.isLoading}
       <SkeletonList />
     {:else if $devicesQuery.isError}
       <Aside severity="error" style="margin: 1rem;">
-        {$t("devices_error", {
+        {i18n.f("devices_error", {
           values: { error: getErrorMessage($devicesQuery.error) },
         })}
       </Aside>

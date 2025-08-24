@@ -15,20 +15,12 @@
 <script lang="ts">
   import type { SettingsConfig } from "$lib/api/types/settings";
 
-  import { t } from "svelte-i18n";
-  import Aside from "$lib/components/Aside.svelte";
-  import { getErrorMessage } from "$lib/utils/error";
-  import { createSettingsQuery } from "$lib/api/settings";
-  import SkeletonList from "$lib/components/skeleton/SkeletonList.svelte";
-
   type Props = {
+    settings: SettingsConfig;
     children?: Snippet;
   };
 
-  const { children }: Props = $props();
-
-  const settingsQuery = createSettingsQuery();
-  const settings = $derived($settingsQuery.data);
+  const { children, settings }: Props = $props();
 
   setContext(settingsContextKey, {
     settings() {
@@ -37,15 +29,4 @@
   });
 </script>
 
-{#if $settingsQuery.isLoading}
-  <SkeletonList style="margin: 1rem;" />
-{:else if $settingsQuery.isError}
-  <!-- Error creating current profile -->
-  <Aside severity="error" style="margin: 1rem;">
-    {$t("settings_error", {
-      values: { error: getErrorMessage($settingsQuery.error) },
-    })}
-  </Aside>
-{:else if $settingsQuery.isSuccess && settings}
-  {@render children?.()}
-{/if}
+{@render children?.()}

@@ -1,17 +1,19 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
   import Button from "$lib/components/input/Button.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
+
+  const i18n = i18nContext.get();
 
   const { disconnect } = getTilepadSocket();
 </script>
 
 <div class="layout">
   <div class="modal">
-    <h1>{$t("connection_failed")}</h1>
-    <p>{$t("connection_failed_desc")}</p>
+    <h1>{i18n.f("connection_failed")}</h1>
+    <p>{i18n.f("connection_failed_desc")}</p>
     <Button onclick={disconnect}>
-      {$t("back")}
+      {i18n.f("back")}
     </Button>
   </div>
 </div>

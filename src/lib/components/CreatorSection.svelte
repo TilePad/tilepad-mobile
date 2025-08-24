@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
   import { getVersion } from "@tauri-apps/api/app";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
+
+  const i18n = i18nContext.get();
 </script>
 
 <div class="block">
@@ -13,13 +15,13 @@
   />
   <div class="creator-text">
     <p>
-      {$t("created_by")}
+      {i18n.f("created_by")}
       <a class="creator" href="https://github.com/jacobtread" target="_blank">
         Jacobtread
       </a>
     </p>
     <p class="version">
-      {$t("version")}:
+      {i18n.f("version")}:
       {#await getVersion() then version}
         {version}
       {/await}

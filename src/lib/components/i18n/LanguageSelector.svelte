@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
   import { Select } from "bits-ui";
   import { slide } from "svelte/transition";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
   import TwemojiFlagSpain from "~icons/twemoji/flag-spain";
   import DownArrow from "~icons/solar/alt-arrow-down-bold";
   import TwemojiFlagFrance from "~icons/twemoji/flag-france";
@@ -17,6 +17,8 @@
   };
 
   const { value, onChangeValue }: Props = $props();
+
+  const i18n = i18nContext.get();
 
   const languages = [
     { icon: TwemojiFlagUnitedStates, label: "English", value: "en" },
@@ -49,7 +51,7 @@
               <language.icon />
               {language.label}
             {:else}
-              {$t("select_language")}
+              {i18n.f("select_language")}
             {/if}
           </span>
           <DownArrow class="trigger__icon" />
@@ -84,7 +86,7 @@
 
                       {#if language.auto}
                         <span {...props} class="auto-label">
-                          {$t("auto")}
+                          {i18n.f("auto")}
                         </span>
                       {/if}
                     </div>

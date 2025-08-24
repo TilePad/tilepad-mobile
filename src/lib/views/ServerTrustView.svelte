@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
   import Button from "$lib/components/input/Button.svelte";
   import PulseLoader from "$lib/components/PulseLoader.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
@@ -11,6 +11,8 @@
     onConfirm: VoidFunction;
     onCancel: VoidFunction;
   };
+
+  const i18n = i18nContext.get();
 
   const { serverPublicKey, lastServerPublicKey, onConfirm, onCancel }: Props =
     $props();
@@ -33,25 +35,25 @@
       <p class="host">{details.host}:{details.port}</p>
     {/if}
 
-    <h1>{$t("server_key_changed_title")}</h1>
-    <p>{$t("server_key_changed")}</p>
+    <h1>{i18n.f("server_key_changed_title")}</h1>
+    <p>{i18n.f("server_key_changed")}</p>
 
     {#await fingerprint(new Uint8Array(serverPublicKey)) then print}
-      <p class="print">{$t("new")}:<br />{print}</p>
+      <p class="print">{i18n.f("new")}:<br />{print}</p>
     {/await}
 
     {#if lastServerPublicKey}
       {#await fingerprint(new Uint8Array(lastServerPublicKey)) then print}
-        <p class="print">{$t("previous")}:<br />{print}</p>
+        <p class="print">{i18n.f("previous")}:<br />{print}</p>
       {/await}
     {/if}
 
     <div class="actions">
       <Button onclick={onCancel}>
-        {$t("cancel")}
+        {i18n.f("cancel")}
       </Button>
       <Button variant="error" onclick={onConfirm}>
-        {$t("trust_new_key")}
+        {i18n.f("trust_new_key")}
       </Button>
     </div>
   </div>

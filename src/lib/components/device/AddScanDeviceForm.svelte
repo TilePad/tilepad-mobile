@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { EncodedInterfaces } from "$lib/api/types/server";
 
-  import { t } from "svelte-i18n";
   import { Portal } from "bits-ui";
   import { onDestroy } from "svelte";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
   import { testServerConnection } from "$lib/api/server";
   import { cancel } from "@tauri-apps/plugin-barcode-scanner";
   import * as barcode from "@tauri-apps/plugin-barcode-scanner";
@@ -19,6 +19,8 @@
   };
 
   const { onAddDevice }: Props = $props();
+
+  const i18n = i18nContext.get();
 
   const State = {
     Initial: 0,
@@ -169,32 +171,32 @@
     {#snippet button({ props })}
       <Button {...props} onclick={onOpen}>
         <img src="/qr-icon.svg" alt="QR Icon" width="32px" height="32px" />
-        {$t("scan_qr_code")}
+        {i18n.f("scan_qr_code")}
       </Button>
     {/snippet}
 
     {#snippet children()}
       <div class="content">
         {#if currentState === State.Scanning}
-          <p>{$t("scanning")}</p>
+          <p>{i18n.f("scanning")}</p>
           <div class="actions">
-            <Button onclick={onClose}>{$t("cancel")}</Button>
+            <Button onclick={onClose}>{i18n.f("cancel")}</Button>
           </div>
         {:else if currentState === State.Checking}
           <PulseLoader />
-          <p>{$t("checking_addresses")}</p>
+          <p>{i18n.f("checking_addresses")}</p>
           <div class="actions">
-            <Button onclick={onClose}>{$t("cancel")}</Button>
+            <Button onclick={onClose}>{i18n.f("cancel")}</Button>
           </div>
         {:else if currentState === State.Scanned}
           <form onsubmit={onSubmit}>
-            <label for="name">{$t("name")}</label>
+            <label for="name">{i18n.f("name")}</label>
             <TextInput id="name" type="text" bind:value={name} />
 
-            <label for="host">{$t("host")}</label>
+            <label for="host">{i18n.f("host")}</label>
             <TextInput id="host" type="text" bind:value={host} />
 
-            <label for="port">{$t("port")}</label>
+            <label for="port">{i18n.f("port")}</label>
             <NumberInput
               id="port"
               value={port}
@@ -202,21 +204,21 @@
             />
 
             <div class="actions">
-              <Button onclick={onClose}>{$t("cancel")}</Button>
-              <Button type="submit">{$t("save")}</Button>
+              <Button onclick={onClose}>{i18n.f("cancel")}</Button>
+              <Button type="submit">{i18n.f("save")}</Button>
             </div>
           </form>
         {:else if currentState === State.NothingValid}
-          <p>{$t("scanned_none")}</p>
+          <p>{i18n.f("scanned_none")}</p>
 
           <div class="actions">
-            <Button onclick={onClose}>{$t("cancel")}</Button>
+            <Button onclick={onClose}>{i18n.f("cancel")}</Button>
           </div>
         {:else if currentState === State.InvalidQR}
-          <p>{$t("invalid_qr")}</p>
+          <p>{i18n.f("invalid_qr")}</p>
 
           <div class="actions">
-            <Button onclick={onClose}>{$t("cancel")}</Button>
+            <Button onclick={onClose}>{i18n.f("cancel")}</Button>
           </div>
         {/if}
       </div>
@@ -228,8 +230,8 @@
   <Portal to={document.body}>
     <div class="scan-overlay">
       <div class="top">
-        <h1>{$t("scan_qr_code")}</h1>
-        <Button onclick={onClose}>{$t("cancel")}</Button>
+        <h1>{i18n.f("scan_qr_code")}</h1>
+        <Button onclick={onClose}>{i18n.f("cancel")}</Button>
       </div>
       <div class="skeleton" style="width: 100%; height: 0.5rem"></div>
     </div>

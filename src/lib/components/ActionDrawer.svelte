@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
   import { Dialog } from "bits-ui";
   import { fade, slide } from "svelte/transition";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
 
   import Button from "./input/Button.svelte";
   import { getTilepadSocket } from "./WebsocketProvider.svelte";
@@ -12,6 +12,8 @@
   };
 
   const { open, onClose }: Props = $props();
+
+  const i18n = i18nContext.get();
 
   const { disconnect } = getTilepadSocket();
 </script>
@@ -44,7 +46,7 @@
           >
             <div class="content-inner">
               <img src="/tilepad-logo.svg" alt="Tilepad Logo" class="logo" />
-              <Button onclick={disconnect}>{$t("disconnect")}</Button>
+              <Button onclick={disconnect}>{i18n.f("disconnect")}</Button>
             </div>
           </div>
         {/if}

@@ -2,9 +2,9 @@
   import type { DeviceModel } from "$lib/api/types/devices";
   import type { TilepadSocketDetails } from "$lib/api/socket.svelte";
 
-  import { t } from "svelte-i18n";
   import { toast } from "svelte-sonner";
   import { removeDevice } from "$lib/api/devices";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
   import { toastErrorMessage } from "$lib/utils/error";
 
   import Button from "../input/Button.svelte";
@@ -16,13 +16,15 @@
 
   const { device, onConnect }: Props = $props();
 
+  const i18n = i18nContext.get();
+
   function onRemove() {
     const removePromise = removeDevice(device.id);
 
     toast.promise(removePromise, {
-      loading: $t("device_removing"),
-      success: $t("device_removed"),
-      error: toastErrorMessage($t("device_remove_error")),
+      loading: i18n.f("device_removing"),
+      success: i18n.f("device_removed"),
+      error: toastErrorMessage(i18n.f("device_remove_error")),
     });
   }
 </script>
@@ -44,10 +46,10 @@
           serverPublicKey: device.server_public_key,
         })}
     >
-      {$t("connect")}
+      {i18n.f("connect")}
     </Button>
 
-    <Button onclick={onRemove}>{$t("remove")}</Button>
+    <Button onclick={onRemove}>{i18n.f("remove")}</Button>
   </div>
 </div>
 

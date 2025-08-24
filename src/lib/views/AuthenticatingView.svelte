@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
   import Button from "$lib/components/input/Button.svelte";
   import PulseLoader from "$lib/components/PulseLoader.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
+
+  const i18n = i18nContext.get();
 
   const { details: detailsRef, disconnect } = getTilepadSocket();
   const details = $derived.by(detailsRef);
@@ -16,10 +18,10 @@
       <p class="host">{details.host}:{details.port}</p>
     {/if}
 
-    <h1>{$t("authenticating")}</h1>
+    <h1>{i18n.f("authenticating")}</h1>
 
     <Button onclick={disconnect}>
-      {$t("cancel")}
+      {i18n.f("cancel")}
     </Button>
   </div>
 </div>

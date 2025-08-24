@@ -50,5 +50,6 @@
     "server_key_changed": "The public key for this identity has changed since you first trusted it.",
     "confirm": "Confirm",
     "new": "New",
-    "trust_new_key": "Trust new key"
+    "trust_new_key": "Trust new key",
+    "version": "Version"
 }

@@ -50,5 +50,6 @@
     "server_key_changed": "Veřejný klíč této identity se od prvního důvěryhodného připojení změnil.",
     "confirm": "Potvrdit",
     "new": "Nový",
-    "trust_new_key": "Důvěřovat novému klíči"
+    "trust_new_key": "Důvěřovat novému klíči",
+    "version": "Verze"
 }

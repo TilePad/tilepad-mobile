@@ -1,45 +1,28 @@
-<!-- Setup and load i18n -->
-<script lang="ts" module>
-  import { init, register, getLocaleFromNavigator } from "svelte-i18n";
-
-  // Register languages
-  register("en", () => import("../../i18n/locales/en.json"));
-  register("de", () => import("../../i18n/locales/de.json"));
-  register("es", () => import("../../i18n/locales/es.json"));
-  register("fr", () => import("../../i18n/locales/fr.json"));
-  register("cs", () => import("../../i18n/locales/cs.json"));
-
-  // Initialize i18n
-  init({
-    fallbackLocale: "en",
-    initialLocale: getLocaleFromNavigator(),
-  });
-</script>
-
 <script lang="ts">
+  import { watch } from "runed";
   import { type Snippet } from "svelte";
-  import { isLoading, locale as svelteLocale } from "svelte-i18n";
+  import { i18nContext } from "$lib/i18n/i18n.svelte";
 
   import SkeletonList from "../skeleton/SkeletonList.svelte";
-  import { getSettingsContext } from "../SettingsProvider.svelte";
 
   type Props = {
+    locale: string;
     children?: Snippet;
   };
 
-  const settingsContext = getSettingsContext();
-  const settings = $derived.by(settingsContext.settings);
+  const { locale, children }: Props = $props();
 
-  const locale = $derived(settings.language);
+  const context = i18nContext.get();
 
-  const { children }: Props = $props();
-
-  $effect(() => {
-    svelteLocale.set(locale);
-  });
+  watch(
+    () => ({ context, locale }),
+    ({ context, locale }) => {
+      context.locale = locale;
+    },
+  );
 </script>
 
-{#if $isLoading}
+{#if context.loading}
   <SkeletonList />
 {:else}
   {@render children?.()}
