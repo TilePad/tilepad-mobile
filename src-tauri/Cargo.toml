@@ -1,6 +1,6 @@
 [package]
 name = "tilepad-mobile"
-version = "0.2.0"
+version = "0.3.0"
 description = "Tilepad mobile app"
 authors = ["Jacobtread"]
 edition = "2024"
