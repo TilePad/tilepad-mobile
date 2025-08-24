@@ -281,7 +281,6 @@ export function createTilepadSocket(
         }
 
         case "DisplayIndicator": {
-          console.log("INDICATOR", msg);
           events.emit("indicator", msg.tile_id, msg.indicator, msg.duration);
           break;
         }
@@ -355,8 +354,6 @@ export function createTilepadSocket(
           const lastServerPublicKey = details.serverPublicKey
             ? new Uint8Array(details.serverPublicKey)
             : null;
-
-          console.log(serverPublicKey, lastServerPublicKey);
 
           if (
             lastServerPublicKey !== null &&
