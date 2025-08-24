@@ -46,7 +46,7 @@ impl SettingsModel {
     pub async fn update(mut self, db: &DbPool, config: SettingsConfig) -> DbResult<SettingsModel> {
         let config_json = serde_json::to_value(&config).map_err(|err| DbErr::Encode(err.into()))?;
 
-        sqlx::query("UPDATE \"settings\" SET \"config\" = ? WHERE \"id\" = ?")
+        sqlx::query(r#"UPDATE "settings" SET "config" = ? WHERE "id" = ?"#)
             .bind(config_json)
             .bind(self.id)
             .execute(db)
@@ -59,7 +59,7 @@ impl SettingsModel {
 
     // Get a settings model by ID
     async fn get_by_id(db: &DbPool, id: u32) -> DbResult<Option<SettingsModel>> {
-        sqlx::query_as("SELECT * FROM \"settings\" WHERE \"id\" = ?")
+        sqlx::query_as(r#"SELECT * FROM "settings" WHERE "id" = ?"#)
             .bind(id)
             .fetch_optional(db)
             .await
@@ -76,10 +76,10 @@ impl SettingsModel {
             serde_json::to_value(&model.config).map_err(|err| DbErr::Encode(err.into()))?;
 
         sqlx::query(
-            "
-                INSERT INTO \"settings\" (\"id\", \"config\")
+            r#"
+                INSERT INTO "settings" ("id", "config")
                 VALUES (?, ?)
-            ",
+            "#,
         )
         .bind(model.id)
         .bind(config_json)
