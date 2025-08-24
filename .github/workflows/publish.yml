@@ -80,6 +80,10 @@ jobs:
           mv ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk ./tilepad-${{ steps.app_version.outputs.version }}.apk
           mv ./src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab ./tilepad-${{ steps.app_version.outputs.version }}.aab
 
+      - name: Create latest.json
+        run: |
+          echo "{ \"version\": \"${{ steps.app_version.outputs.version }}\" }" > latest.json
+
       - name: Publish
         uses: softprops/action-gh-release@v2
         env:
@@ -92,3 +96,4 @@ jobs:
           files: |
             ./tilepad-${{ steps.app_version.outputs.version }}.apk
             ./tilepad-${{ steps.app_version.outputs.version }}.aab
+            ./latest.json
