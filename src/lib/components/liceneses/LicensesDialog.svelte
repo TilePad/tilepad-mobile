@@ -1,6 +1,5 @@
 <script lang="ts">
   import { t } from "svelte-i18n";
-  import { getLicenses } from "$lib/api/app";
   import { getErrorMessage } from "$lib/utils/error";
 
   import type { DialogProps } from "../dialog/Dialog.svelte";
@@ -14,31 +13,33 @@
   type Props = DialogProps & {};
 
   const { ...restProps }: Props = $props();
+
+  const licenseMarkdownPromise = import(
+    "../../../../THIRD_PARTY_LICENSES.md?raw"
+  );
 </script>
 
 <Dialog {...restProps}>
-  {#snippet children()}
-    <div class="content">
-      <div class="header">
-        <h2>{$t("third_party_licenses")}</h2>
-        <DialogCloseButton buttonLabel={{ text: $t("close") }} />
-      </div>
-
-      <div class="viewer">
-        {#await getLicenses()}
-          <SkeletonList />
-        {:then markdown}
-          <Markdown source={markdown} />
-        {:catch error}
-          <Aside severity="error" style="margin: 1rem;">
-            {$t("readme_error", {
-              values: { error: getErrorMessage(error) },
-            })}
-          </Aside>
-        {/await}
-      </div>
+  <div class="content">
+    <div class="header">
+      <h2>{$t("third_party_licenses")}</h2>
+      <DialogCloseButton buttonLabel={{ text: $t("close") }} />
     </div>
-  {/snippet}
+
+    <div class="viewer">
+      {#await licenseMarkdownPromise}
+        <SkeletonList />
+      {:then markdown}
+        <Markdown source={markdown.default} />
+      {:catch error}
+        <Aside severity="error" style="margin: 1rem;">
+          {$t("readme_error", {
+            values: { error: getErrorMessage(error) },
+          })}
+        </Aside>
+      {/await}
+    </div>
+  </div>
 </Dialog>
 
 <style>
