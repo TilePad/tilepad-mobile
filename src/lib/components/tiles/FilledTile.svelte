@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { TileModel } from "$lib/api/types/tiles";
-  import type { DisplayContext } from "$lib/api/types/plugin";
 
   import { tap, type TapCustomEvent } from "svelte-gestures";
+  import { type DisplayContext } from "$lib/api/types/plugin";
   import { serverContext } from "$lib/contexts/server.context";
 
   import TileIcon from "./TileIcon.svelte";
   import TileLabelElm from "./TileLabel.svelte";
+  import TileContainer from "./TileContainer.svelte";
   import TileIndicator from "./TileIndicator.svelte";
-  import { DESIRED_TILE_WIDTH } from "./TileGrid.svelte";
 
   type Props = {
     tile: TileModel;
@@ -18,6 +18,7 @@
   };
 
   const { tile, tileSize, gap, onClick }: Props = $props();
+
   const currentServerContext = serverContext.get();
 
   const config = $derived(tile.config);
@@ -27,37 +28,6 @@
     action_id: tile.action_id,
     plugin_id: tile.plugin_id,
   });
-
-  const { tileX, tileY, tileZ, tileWidth, tileHeight, sizeAdjust } =
-    $derived.by(() => {
-      const position = tile.position;
-      const tileWidth =
-        tileSize * position.column_span + gap * (position.column_span - 1);
-      const tileHeight =
-        tileSize * position.row_span + gap * (position.row_span - 1);
-
-      const ratioX = (tileWidth - DESIRED_TILE_WIDTH) / DESIRED_TILE_WIDTH;
-      const ratioY = (tileHeight - DESIRED_TILE_WIDTH) / DESIRED_TILE_WIDTH;
-
-      const sizeAdjustX = 1 + ratioX;
-      const sizeAdjustY = 1 + ratioY;
-      const sizeAdjust = Math.min(sizeAdjustX, sizeAdjustY);
-
-      const tileX = tileSize * position.column + gap * position.column;
-      const tileY = tileSize * position.row + gap * position.row;
-      const tileZ =
-        (position.row + position.row_span) *
-        (position.column + position.column_span);
-
-      return {
-        tileX,
-        tileY,
-        tileZ,
-        tileWidth,
-        tileHeight,
-        sizeAdjust,
-      };
-    });
 
   function onTap(event: TapCustomEvent) {
     onClick();
@@ -89,37 +59,51 @@
   }
 </script>
 
-<div
-  class="tile-container"
-  style="--tile-size-adjustment: {sizeAdjust}; --tile-width: {tileWidth}px; --tile-height: {tileHeight}px; --tile-x: {tileX}px; --tile-y: {tileY}px; --tile-z: {tileZ}"
->
+<TileContainer position={tile.position} {tileSize} {gap}>
   <button
-    style="--tile-border-color: {config.icon_options.border_color}"
-    class="tile"
     use:tap={() => ({ timeframe: 1000 })}
     ontap={onTap}
+    style="--tile-border-color: {config.icon_options.border_color}"
+    class="tile"
+    aria-roledescription="button"
+    data-drop-zone="filledTile"
+    data-row={tile.position.row}
+    data-column={tile.position.column}
   >
     <TileIcon
       ctx={displayCtx}
-      icon={tile.config.icon}
-      iconOptions={tile.config.icon_options}
+      icon={config.icon}
+      iconOptions={config.icon_options}
     />
-    <TileLabelElm label={config.label} />
-
+    <TileLabelElm {...config.label} />
     <TileIndicator tile_id={tile.id} />
   </button>
-</div>
+</TileContainer>
 
 <style>
-  .tile-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    transform: translate(var(--tile-x), var(--tile-y));
+  .tile {
+    position: relative;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: var(--tile-width);
     height: var(--tile-height);
-    z-index: calc(var(--tile-z));
+    color: #ccc;
+
+    border: 2px solid var(--tile-border-color);
+    cursor: pointer;
+
+    background-color: #151318;
+
+    user-select: none;
+    overflow: hidden;
+    transition: all 0.1s ease;
+  }
+
+  /* Disable pointer events for children to make dragging work properly */
+  .tile > :global(*) {
+    pointer-events: none;
   }
 
   .tile {

@@ -77,7 +77,7 @@
       {#if tile !== undefined}
         <FilledTile {tile} {tileSize} {gap} onClick={() => onClickTile(tile)} />
       {:else}
-        <EmptyTile row={item.row} column={item.column} width={tileSize} {gap} />
+        <EmptyTile row={item.row} column={item.column} {tileSize} {gap} />
       {/if}
     {/each}
   </div>

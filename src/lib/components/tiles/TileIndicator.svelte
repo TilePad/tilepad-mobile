@@ -1,12 +1,14 @@
 <script lang="ts">
-  import { DeviceIndicator } from "$lib/api/types/protocol";
   import type { TileId } from "$lib/api/types/tiles";
-  import { getTilepadSocket } from "../WebsocketProvider.svelte";
-  import SolarDangerTriangleBoldDuotone from "~icons/solar/danger-triangle-bold-duotone";
+
+  import { scale } from "svelte/transition";
+  import { DeviceIndicator } from "$lib/api/types/protocol";
   import SolarCheckCircleBoldDuotone from "~icons/solar/check-circle-bold-duotone";
   import SolarCloseCircleBoldDuotone from "~icons/solar/close-circle-bold-duotone";
-  import { fade, scale, slide } from "svelte/transition";
+  import SolarDangerTriangleBoldDuotone from "~icons/solar/danger-triangle-bold-duotone";
+
   import LoadingSpinner from "../loading/LoadingSpinner.svelte";
+  import { getTilepadSocket } from "../WebsocketProvider.svelte";
 
   type Props = {
     tile_id: TileId;

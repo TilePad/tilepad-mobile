@@ -1,32 +1,21 @@
 <script lang="ts">
+  import TileContainer from "./TileContainer.svelte";
+
   type Props = {
     row: number;
     column: number;
-    width: number;
+    tileSize: number;
     gap: number;
   };
 
-  const { row, column, width, gap }: Props = $props();
-
-  const { tileX, tileY, tileWidth, tileHeight } = $derived.by(() => {
-    const tileWidth = width;
-    const tileHeight = width;
-
-    const tileX = tileWidth * column + gap * column;
-    const tileY = tileHeight * row + gap * row;
-
-    return {
-      tileX,
-      tileY,
-      tileWidth,
-      tileHeight,
-    };
-  });
+  const { row, column, tileSize, gap }: Props = $props();
 </script>
 
-<div
-  class="tile-container"
-  style="--tile-width: {tileWidth}px; --tile-height: {tileHeight}px; --tile-x: {tileX}px; --tile-y: {tileY}px;"
+<TileContainer
+  position={{ row, column, row_span: 1, column_span: 1 }}
+  {tileSize}
+  {gap}
+  empty
 >
   <div
     class="tile"
@@ -34,19 +23,9 @@
     data-row={row}
     data-column={column}
   ></div>
-</div>
+</TileContainer>
 
 <style>
-  .tile-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    transform: translate(var(--tile-x), var(--tile-y));
-    width: var(--tile-width);
-    height: var(--tile-height);
-  }
-
   .tile {
     position: relative;
     background-color: #242129;
@@ -58,7 +37,6 @@
     width: var(--tile-width);
     height: var(--tile-height);
     color: #ccc;
-    user-select: none;
 
     user-select: none;
     overflow: hidden;
