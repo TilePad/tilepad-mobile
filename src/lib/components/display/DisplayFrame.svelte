@@ -1,13 +1,12 @@
 <script lang="ts">
   import { getPluginAssetPath } from "$lib/api/utils/url";
+  import { serverContext } from "$lib/contexts/server.context";
   import {
     type DisplayContext,
     encodeDisplayContext,
   } from "$lib/api/types/plugin";
 
   import type { DisplayMessage } from "./displayMessage";
-
-  import { getServerContext } from "../ServerProvider.svelte";
 
   type Props = {
     ctx: DisplayContext;
@@ -21,14 +20,14 @@
   };
 
   const { ctx, inspector, onFrameEvent, onFrameMount }: Props = $props();
-  const serverContext = getServerContext();
+  const currentServerContext = serverContext.get();
 
   const inspectorSrc = $derived.by(() => {
     const params = new URLSearchParams();
     params.append("ctx", encodeDisplayContext(ctx));
 
     const baseSrc = getPluginAssetPath(
-      serverContext.serverURL,
+      currentServerContext.serverURL,
       ctx.plugin_id,
       inspector,
     );

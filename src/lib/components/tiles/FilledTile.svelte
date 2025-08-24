@@ -3,12 +3,12 @@
   import type { DisplayContext } from "$lib/api/types/plugin";
 
   import { tap, type TapCustomEvent } from "svelte-gestures";
+  import { serverContext } from "$lib/contexts/server.context";
 
   import TileIcon from "./TileIcon.svelte";
   import TileLabelElm from "./TileLabel.svelte";
-  import { DESIRED_TILE_WIDTH } from "./TileGrid.svelte";
-  import { getServerContext } from "../ServerProvider.svelte";
   import TileIndicator from "./TileIndicator.svelte";
+  import { DESIRED_TILE_WIDTH } from "./TileGrid.svelte";
 
   type Props = {
     tile: TileModel;
@@ -18,11 +18,11 @@
   };
 
   const { tile, tileSize, gap, onClick }: Props = $props();
-  const serverContext = getServerContext();
+  const currentServerContext = serverContext.get();
 
   const config = $derived(tile.config);
   const displayCtx: DisplayContext = $derived({
-    device_id: serverContext.deviceId,
+    device_id: currentServerContext.deviceId,
     tile_id: tile.id,
     action_id: tile.action_id,
     plugin_id: tile.plugin_id,

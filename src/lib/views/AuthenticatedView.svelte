@@ -7,11 +7,11 @@
   import { fly } from "svelte/transition";
   import { loadFont } from "$lib/utils/fontLoader";
   import { impactFeedback } from "@tauri-apps/plugin-haptics";
+  import { serverContext } from "$lib/contexts/server.context";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import { keepScreenOn } from "tauri-plugin-keep-screen-on-api";
   import { swipe, type SwipeCustomEvent } from "svelte-gestures";
   import ActionDrawer from "$lib/components/ActionDrawer.svelte";
-  import ServerProvider from "$lib/components/ServerProvider.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
   type Props = {
@@ -65,28 +65,35 @@
       loadFont(serverURL, label.font, label.bold, label.italic);
     }
   });
+
+  serverContext.set({
+    get serverURL() {
+      return serverURL;
+    },
+    get deviceId() {
+      return deviceId;
+    },
+  });
 </script>
 
 <svelte:body use:swipe={() => ({})} onswipe={onSwipe} />
 
-<ServerProvider {serverURL} {deviceId}>
-  <ActionDrawer open={drawerOpen} onClose={() => (drawerOpen = false)} />
+<ActionDrawer open={drawerOpen} onClose={() => (drawerOpen = false)} />
 
-  <div class="layout" in:fly={{ x: -100, duration: 250 }}>
-    <TilesView
-      {tiles}
-      {folder}
-      onClick={(tileId) => {
-        try {
-          impactFeedback("medium");
-        } catch (_err) {
-          //
-        }
-        clickTile(tileId);
-      }}
-    />
-  </div>
-</ServerProvider>
+<div class="layout" in:fly={{ x: -100, duration: 250 }}>
+  <TilesView
+    {tiles}
+    {folder}
+    onClick={(tileId) => {
+      try {
+        impactFeedback("medium");
+      } catch (_err) {
+        //
+      }
+      clickTile(tileId);
+    }}
+  />
+</div>
 
 <style>
   .layout {
