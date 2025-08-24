@@ -7,15 +7,16 @@
   import type { DisplayMessage } from "./displayMessage";
 
   import DisplayFrame from "./DisplayFrame.svelte";
-  import { getTilepadSocket } from "../WebsocketProvider.svelte";
   import DisplayPluginMessageListener from "./DisplayPluginMessageListener.svelte";
 
   type Props = {
     ctx: DisplayContext;
     inspector: string;
+    style: string;
+    sendMessage: (ctx: DisplayContext, message: object) => void;
   };
 
-  const { ctx, inspector }: Props = $props();
+  const { ctx, inspector, style, sendMessage }: Props = $props();
 
   type CurrentFrameData = {
     ctx: DisplayContext;
@@ -23,7 +24,6 @@
   };
 
   let currentFrame: CurrentFrameData | undefined;
-  const { sendDisplayMessage } = getTilepadSocket();
 
   /**
    * Handle the current frame mounting
@@ -58,7 +58,7 @@
    * @param message
    */
   function onSendToPlugin(ctx: DisplayContext, message: object) {
-    sendDisplayMessage(ctx, message);
+    sendMessage(ctx, message);
   }
 
   async function onGetTile(ctx: DisplayContext, send: (data: object) => void) {
@@ -91,5 +91,5 @@
 </script>
 
 <DisplayPluginMessageListener {onMessage}>
-  <DisplayFrame {onFrameEvent} {onFrameMount} {ctx} {inspector} />
+  <DisplayFrame {onFrameEvent} {onFrameMount} {ctx} {inspector} {style} />
 </DisplayPluginMessageListener>

@@ -14,6 +14,7 @@
   } from "$lib/api/utils/url";
 
   import Display from "../display/Display.svelte";
+  import { getTilepadSocket } from "../WebsocketProvider.svelte";
 
   type Props = {
     ctx: DisplayContext;
@@ -22,6 +23,7 @@
   };
 
   const { ctx, icon, iconOptions }: Props = $props();
+  const { sendDisplayMessage } = getTilepadSocket();
 
   const currentServerContext = serverContext.get();
 
@@ -64,7 +66,12 @@
 </script>
 
 {#if icon.type === TileIconType.Display}
-  <Display {ctx} inspector={icon.path} />
+  <Display
+    {ctx}
+    inspector={icon.path}
+    {style}
+    sendMessage={sendDisplayMessage}
+  />
 {:else if src !== null}
   <img
     class="tile__icon"
