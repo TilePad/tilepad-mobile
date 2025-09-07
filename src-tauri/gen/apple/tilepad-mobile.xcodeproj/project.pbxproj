@@ -1,0 +1,545 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		269A84AE076ADF8AF0390DBB /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFA8583B9F8E3CB953590430 /* QuartzCore.framework */; };
+		3C2B47401ED519A4EEE386F3 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EDFFC5CF34A883CE303A545 /* main.mm */; };
+		76251E3839645A4FAB00E035 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA189CF1ADCDC026601B866C /* Assets.xcassets */; };
+		7C6892D8B3BFB577E78B5B33 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98249D74761958AFB16BB16D /* LaunchScreen.storyboard */; };
+		7FD064D7A9453A2BEE3ED86D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88CBD856A4CF416E5BDC9DEE /* Security.framework */; };
+		848B8D2D46275A4066D32B84 /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1692A37A973165DA07311257 /* libapp.a */; };
+		A1621E3864D4F006DA3FA5E3 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA45F59FECA3DA43EE73B56B /* Metal.framework */; };
+		AE5C15D8BB92802B8CE9D7E4 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 75DFC7661FBE74306AD5ED44 /* assets */; };
+		E2CF2683198EC7F37EE91334 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D11A86E52648F655E09B86 /* UIKit.framework */; };
+		E2D87678E312DEB4FD9E96E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6F0806452ECD4727204F9D4 /* CoreGraphics.framework */; };
+		F8FE3F62F65C4D724C8084CC /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C6739496002AF9BFEE88DBA /* MetalKit.framework */; };
+		F963F8396E74BC705B29ABB3 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 305261E277B4666D305F05A2 /* WebKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0E0B5E43330321B686E2DBB2 /* m202502251226_create_devices_table.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = m202502251226_create_devices_table.sql; sourceTree = "<group>"; };
+		0EDFFC5CF34A883CE303A545 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		10D72CE6E70CB6D0F52538C9 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		1692A37A973165DA07311257 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		221DEC1273C0081246E77C91 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+		305261E277B4666D305F05A2 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		3BDD3E9379ADE4231EC27B28 /* main.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.rs; sourceTree = "<group>"; };
+		40F04594D30A56D0888E7DEF /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		4EE26E560FC896C2098C2BC5 /* m202504281419_create_settings_table.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = m202504281419_create_settings_table.sql; sourceTree = "<group>"; };
+		52D11A86E52648F655E09B86 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		621EC2886665DCF59F019328 /* settings.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = settings.rs; sourceTree = "<group>"; };
+		70BA5370DC5859A2A70533CB /* Tilepad Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tilepad Mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		75DFC7661FBE74306AD5ED44 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		7C6739496002AF9BFEE88DBA /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		82A460F8F10FD5B9FE1A8014 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		88CBD856A4CF416E5BDC9DEE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		98249D74761958AFB16BB16D /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A0E19B1E8099DBF945EEC5BF /* lib.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = lib.rs; sourceTree = "<group>"; };
+		A1BABECFB45AB4E7566F0A82 /* m202502251151_create_migrations_table.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = m202502251151_create_migrations_table.sql; sourceTree = "<group>"; };
+		BA45F59FECA3DA43EE73B56B /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		BD648BE873F03EBB5E14476C /* tilepad-mobile_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "tilepad-mobile_iOS.entitlements"; sourceTree = "<group>"; };
+		C67A2490B5692E4F225097D5 /* settings.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = settings.rs; sourceTree = "<group>"; };
+		C6F0806452ECD4727204F9D4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		CA189CF1ADCDC026601B866C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CC582260650958D75CF56DF2 /* devices.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = devices.rs; sourceTree = "<group>"; };
+		CFA8583B9F8E3CB953590430 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		DDA7BBF531E30DFE0925B44C /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		E6EC0DF83450EC37D823805E /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		E764416316243464506081EE /* device.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = device.rs; sourceTree = "<group>"; };
+		F4ED3CA79D109DED1D302508 /* device.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = device.rs; sourceTree = "<group>"; };
+		FDB881DABDCC15C461DF36B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5877C3EB2E92D66FC6D742F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				848B8D2D46275A4066D32B84 /* libapp.a in Frameworks */,
+				E2D87678E312DEB4FD9E96E8 /* CoreGraphics.framework in Frameworks */,
+				A1621E3864D4F006DA3FA5E3 /* Metal.framework in Frameworks */,
+				F8FE3F62F65C4D724C8084CC /* MetalKit.framework in Frameworks */,
+				269A84AE076ADF8AF0390DBB /* QuartzCore.framework in Frameworks */,
+				7FD064D7A9453A2BEE3ED86D /* Security.framework in Frameworks */,
+				E2CF2683198EC7F37EE91334 /* UIKit.framework in Frameworks */,
+				F963F8396E74BC705B29ABB3 /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1DF8AF9E512ADCF8D41F70E0 /* migrations */ = {
+			isa = PBXGroup;
+			children = (
+				A1BABECFB45AB4E7566F0A82 /* m202502251151_create_migrations_table.sql */,
+				0E0B5E43330321B686E2DBB2 /* m202502251226_create_devices_table.sql */,
+				4EE26E560FC896C2098C2BC5 /* m202504281419_create_settings_table.sql */,
+				E6EC0DF83450EC37D823805E /* mod.rs */,
+			);
+			path = migrations;
+			sourceTree = "<group>";
+		};
+		1E6BECAEF83871DA8C28EA3C /* tilepad-mobile_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				FDB881DABDCC15C461DF36B1 /* Info.plist */,
+				BD648BE873F03EBB5E14476C /* tilepad-mobile_iOS.entitlements */,
+			);
+			path = "tilepad-mobile_iOS";
+			sourceTree = "<group>";
+		};
+		1F848DBB3487CEFA05234087 /* entity */ = {
+			isa = PBXGroup;
+			children = (
+				E764416316243464506081EE /* device.rs */,
+				40F04594D30A56D0888E7DEF /* mod.rs */,
+				621EC2886665DCF59F019328 /* settings.rs */,
+			);
+			path = entity;
+			sourceTree = "<group>";
+		};
+		2728AA7D2917A956B7AF1206 /* tilepad-mobile */ = {
+			isa = PBXGroup;
+			children = (
+				0EDFFC5CF34A883CE303A545 /* main.mm */,
+				5F160D2BB8EBBE18F3BB22B0 /* bindings */,
+			);
+			path = "tilepad-mobile";
+			sourceTree = "<group>";
+		};
+		49906656C7F8259FF3158C41 /* commands */ = {
+			isa = PBXGroup;
+			children = (
+				CC582260650958D75CF56DF2 /* devices.rs */,
+				DDA7BBF531E30DFE0925B44C /* mod.rs */,
+				C67A2490B5692E4F225097D5 /* settings.rs */,
+			);
+			path = commands;
+			sourceTree = "<group>";
+		};
+		5F160D2BB8EBBE18F3BB22B0 /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				221DEC1273C0081246E77C91 /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		6D0628B5599E4CC2B653F10A = {
+			isa = PBXGroup;
+			children = (
+				75DFC7661FBE74306AD5ED44 /* assets */,
+				CA189CF1ADCDC026601B866C /* Assets.xcassets */,
+				98249D74761958AFB16BB16D /* LaunchScreen.storyboard */,
+				F4D53385915A4B000D4481A6 /* Externals */,
+				AEEDE5F97BE82D38838CE96D /* Sources */,
+				E4CCAF5CE855B5A84E27688F /* src */,
+				1E6BECAEF83871DA8C28EA3C /* tilepad-mobile_iOS */,
+				FC3A5CA7CDB439C2CB612150 /* Frameworks */,
+				9049E9434415CCC467159B81 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7CC172781A80857761C8E9B3 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				F4ED3CA79D109DED1D302508 /* device.rs */,
+				82A460F8F10FD5B9FE1A8014 /* mod.rs */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+		9049E9434415CCC467159B81 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				70BA5370DC5859A2A70533CB /* Tilepad Mobile.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AEEDE5F97BE82D38838CE96D /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				2728AA7D2917A956B7AF1206 /* tilepad-mobile */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		BE2F088213C8C715123BA61F /* database */ = {
+			isa = PBXGroup;
+			children = (
+				10D72CE6E70CB6D0F52538C9 /* mod.rs */,
+				1F848DBB3487CEFA05234087 /* entity */,
+				1DF8AF9E512ADCF8D41F70E0 /* migrations */,
+			);
+			path = database;
+			sourceTree = "<group>";
+		};
+		E4CCAF5CE855B5A84E27688F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				A0E19B1E8099DBF945EEC5BF /* lib.rs */,
+				3BDD3E9379ADE4231EC27B28 /* main.rs */,
+				49906656C7F8259FF3158C41 /* commands */,
+				BE2F088213C8C715123BA61F /* database */,
+				7CC172781A80857761C8E9B3 /* utils */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		F4D53385915A4B000D4481A6 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		FC3A5CA7CDB439C2CB612150 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C6F0806452ECD4727204F9D4 /* CoreGraphics.framework */,
+				1692A37A973165DA07311257 /* libapp.a */,
+				BA45F59FECA3DA43EE73B56B /* Metal.framework */,
+				7C6739496002AF9BFEE88DBA /* MetalKit.framework */,
+				CFA8583B9F8E3CB953590430 /* QuartzCore.framework */,
+				88CBD856A4CF416E5BDC9DEE /* Security.framework */,
+				52D11A86E52648F655E09B86 /* UIKit.framework */,
+				305261E277B4666D305F05A2 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D9C3380BDF616C788989E974 /* tilepad-mobile_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 26A7D6D28D280A9AF6B6521B /* Build configuration list for PBXNativeTarget "tilepad-mobile_iOS" */;
+			buildPhases = (
+				EEB35D05B3D97F109F61C2F3 /* Build Rust Code */,
+				E47C035CF55B9ECE0799FE2A /* Sources */,
+				036009190FCA52096131B9B5 /* Resources */,
+				5877C3EB2E92D66FC6D742F7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "tilepad-mobile_iOS";
+			packageProductDependencies = (
+			);
+			productName = "tilepad-mobile_iOS";
+			productReference = 70BA5370DC5859A2A70533CB /* Tilepad Mobile.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8155B685320B158BC353AFBD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = 391AA39F12141C309FCDDAD9 /* Build configuration list for PBXProject "tilepad-mobile" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 6D0628B5599E4CC2B653F10A;
+			minimizedProjectReferenceProxies = 1;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D9C3380BDF616C788989E974 /* tilepad-mobile_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		036009190FCA52096131B9B5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				76251E3839645A4FAB00E035 /* Assets.xcassets in Resources */,
+				7C6892D8B3BFB577E78B5B33 /* LaunchScreen.storyboard in Resources */,
+				AE5C15D8BB92802B8CE9D7E4 /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		EEB35D05B3D97F109F61C2F3 /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NVS_HOME=\"$HOME/.nvs\"\n[ -s \"$NVS_HOME/nvs.sh\" ] && . \"$NVS_HOME/nvs.sh\"\nnpm run -- tauri ios xcode-script -v --platform ${PLATFORM_DISPLAY_NAME:?} --sdk-root ${SDKROOT:?} --framework-search-paths \"${FRAMEWORK_SEARCH_PATHS:?}\" --header-search-paths \"${HEADER_SEARCH_PATHS:?}\" --gcc-preprocessor-definitions \"${GCC_PREPROCESSOR_DEFINITIONS:-}\" --configuration ${CONFIGURATION:?} ${FORCE_COLOR} ${ARCHS:?}\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E47C035CF55B9ECE0799FE2A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C2B47401ED519A4EEE386F3 /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0F330C90EB7672403C2A587B /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+		2913E89D35C8360A96878505 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "tilepad-mobile_iOS/tilepad-mobile_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = JP2DFK9Q8R;
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "tilepad-mobile_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jacobtread.tilepad.mobile;
+				PRODUCT_NAME = "Tilepad Mobile";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = release;
+		};
+		A317DBFC1CADC39A473607BE /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "tilepad-mobile_iOS/tilepad-mobile_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = JP2DFK9Q8R;
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "tilepad-mobile_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jacobtread.tilepad.mobile;
+				PRODUCT_NAME = "Tilepad Mobile";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = debug;
+		};
+		FB8078AB70B97DDE816AC6E0 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		26A7D6D28D280A9AF6B6521B /* Build configuration list for PBXNativeTarget "tilepad-mobile_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A317DBFC1CADC39A473607BE /* debug */,
+				2913E89D35C8360A96878505 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		391AA39F12141C309FCDDAD9 /* Build configuration list for PBXProject "tilepad-mobile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB8078AB70B97DDE816AC6E0 /* debug */,
+				0F330C90EB7672403C2A587B /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8155B685320B158BC353AFBD /* Project object */;
+}

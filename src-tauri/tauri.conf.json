@@ -35,6 +35,9 @@
     ],
     "resources": {
       "../THIRD_PARTY_LICENSES.md": "THIRD_PARTY_LICENSES.md"
+    },
+    "iOS": {
+      "developmentTeam": "Jacob Read (Personal Team)"
     }
   }
 }
