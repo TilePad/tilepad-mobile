@@ -24,6 +24,7 @@
   const currentServerContext = serverContext.get();
 
   const inspectorSrc = $derived.by(() => {
+    // eslint-disable-next-line svelte/prefer-svelte-reactivity
     const params = new URLSearchParams();
     params.append("ctx", encodeDisplayContext(ctx));
 

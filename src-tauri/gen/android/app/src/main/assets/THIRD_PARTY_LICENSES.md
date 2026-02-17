@@ -1,7 +1,9 @@
 # Third party licenses
+
 This page lists the licenses of third party dependencies used by this project
 
 ## Licenses
+
 - Apache-2.0 OR MIT
 - 0BSD OR Apache-2.0 OR MIT
 - MIT OR Unlicense
@@ -24,6 +26,7 @@ This page lists the licenses of third party dependencies used by this project
 - (MIT OR Apache-2.0) AND Unicode-3.0
 - Apache-2.0 OR BSL-1.0 OR MIT
 - Apache-2.0 OR BSD-2-Clause OR MIT
+
 ## Apache-2.0 OR MIT
 
 - [addr2line](https://github.com/gimli-rs/addr2line) - 0.24.2
@@ -348,11 +351,13 @@ This page lists the licenses of third party dependencies used by this project
 - [zeroize](https://github.com/RustCrypto/utils/tree/master/zeroize) - 1.8.1
 
 ---
+
 ## 0BSD OR Apache-2.0 OR MIT
 
 - [adler2](https://github.com/oyvindln/adler2) - 2.0.0
 
 ---
+
 ## MIT OR Unlicense
 
 - [aho-corasick](https://github.com/BurntSushi/aho-corasick) - 1.1.3
@@ -363,6 +368,7 @@ This page lists the licenses of third party dependencies used by this project
 - [winapi-util](https://github.com/BurntSushi/winapi-util) - 0.1.9
 
 ---
+
 ## BSD-3-Clause
 
 - [alloc-no-stdlib](https://github.com/dropbox/rust-alloc-no-stdlib) - 2.0.4
@@ -370,6 +376,7 @@ This page lists the licenses of third party dependencies used by this project
 - [subtle](https://github.com/dalek-cryptography/subtle) - 2.6.1
 
 ---
+
 ## MIT
 
 - [atk](https://github.com/gtk-rs/gtk3-rs) - 0.18.2
@@ -500,16 +507,19 @@ This page lists the licenses of third party dependencies used by this project
 - [x11-dl](https://github.com/AltF02/x11-rs.git) - 2.21.0
 
 ---
+
 ## BSD-3-Clause AND MIT
 
 - [brotli](https://github.com/dropbox/rust-brotli) - 7.0.0
 
 ---
+
 ## BSD-3-Clause OR MIT
 
 - [brotli-decompressor](https://github.com/dropbox/rust-brotli-decompressor) - 4.0.3
 
 ---
+
 ## Apache-2.0 OR MIT OR Zlib
 
 - [bytemuck](https://github.com/Lokathor/bytemuck) - 1.22.0
@@ -531,6 +541,7 @@ This page lists the licenses of third party dependencies used by this project
 - [tinyvec_macros](https://github.com/Soveu/tinyvec_macros) - 0.1.1
 
 ---
+
 ## MPL-2.0
 
 - [cssparser](https://github.com/servo/rust-cssparser) - 0.27.2
@@ -541,6 +552,7 @@ This page lists the licenses of third party dependencies used by this project
 - [thin-slice](https://github.com/heycam/thin-slice) - 0.1.1
 
 ---
+
 ## Apache-2.0
 
 - [dpi](https://github.com/rust-windowing/winit) - 0.1.1
@@ -548,16 +560,19 @@ This page lists the licenses of third party dependencies used by this project
 - [tao](https://github.com/tauri-apps/tao) - 0.33.0
 
 ---
+
 ## Apache-2.0 OR CC0-1.0 OR MIT-0
 
 - [dunce](https://gitlab.com/kornelski/dunce) - 1.0.5
 
 ---
+
 ## Zlib
 
 - [foldhash](https://github.com/orlp/foldhash) - 0.1.5
 
 ---
+
 ## Unicode-3.0
 
 - [icu_collections](https://github.com/unicode-org/icu4x) - 1.5.0
@@ -581,11 +596,13 @@ This page lists the licenses of third party dependencies used by this project
 - [zerovec-derive](https://github.com/unicode-org/icu4x) - 0.10.3
 
 ---
+
 ## ISC
 
 - [libloading](https://github.com/nagisa/rust_libloading/) - 0.7.4
 
 ---
+
 ## Apache-2.0 OR Apache-2.0 WITH LLVM-exception OR MIT
 
 - [linux-raw-sys](https://github.com/sunfishcode/linux-raw-sys) - 0.9.4
@@ -596,6 +613,7 @@ This page lists the licenses of third party dependencies used by this project
 - [wit-bindgen-rt](https://github.com/bytecodealliance/wit-bindgen) - 0.39.0
 
 ---
+
 ## Apache-2.0 OR BSD-3-Clause OR MIT
 
 - [nick-name](https://github.com/nziq53/nickname) - 0.1.2
@@ -603,32 +621,38 @@ This page lists the licenses of third party dependencies used by this project
 - [num_enum_derive](https://github.com/illicitonion/num_enum) - 0.7.3
 
 ---
+
 ## Apache-2.0 OR LGPL-2.1-or-later OR MIT
 
 - [r-efi](https://github.com/r-efi/r-efi) - 5.2.0
 
 ---
+
 ## Apache-2.0 OR BSL-1.0
 
 - [ryu](https://github.com/dtolnay/ryu) - 1.0.20
 
 ---
+
 ## Apache-2.0 WITH LLVM-exception
 
 - [target-lexicon](https://github.com/bytecodealliance/target-lexicon) - 0.12.16
 
 ---
+
 ## (MIT OR Apache-2.0) AND Unicode-3.0
 
 - [unicode-ident](https://github.com/dtolnay/unicode-ident) - 1.0.18
 
 ---
+
 ## Apache-2.0 OR BSL-1.0 OR MIT
 
 - [wasite](https://github.com/ardaku/wasite) - 0.1.0
 - [whoami](https://github.com/ardaku/whoami) - 1.6.0
 
 ---
+
 ## Apache-2.0 OR BSD-2-Clause OR MIT
 
 - [zerocopy](https://github.com/google/zerocopy) - 0.8.25

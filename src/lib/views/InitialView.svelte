@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { x25519 } from "@noble/curves/ed25519.js";
   import Aside from "$lib/components/Aside.svelte";
+  import { x25519 } from "@noble/curves/ed25519.js";
   import { getErrorMessage } from "$lib/utils/error";
   import { i18nContext } from "$lib/i18n/i18n.svelte";
   import { createDevice, createDevicesQuery } from "$lib/api/devices";
@@ -70,7 +70,7 @@
     {:else if devicesQuery.isSuccess}
       <div class="devices-wrapper">
         <div class="devices">
-          {#each devicesQuery.data as device}
+          {#each devicesQuery.data as device (device.id)}
             <DeviceListItem {device} onConnect={connect} />
           {/each}
         </div>

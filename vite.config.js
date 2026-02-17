@@ -1,16 +1,14 @@
 import { defineConfig } from "vite";
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import { fileURLToPath } from "url";
+import { dirname, resolve } from "path";
 import Icons from "unplugin-icons/vite";
-import { svelte } from '@sveltejs/vite-plugin-svelte'
+import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
@@ -23,7 +21,7 @@ export default defineConfig(async () => ({
 
   resolve: {
     alias: {
-      $lib: resolve(__dirname, 'src/lib'),
+      $lib: resolve(__dirname, "src/lib"),
     },
   },
 
@@ -42,17 +40,17 @@ export default defineConfig(async () => ({
     host: host || false,
     hmr: host
       ? {
-        protocol: "ws",
-        host,
-        port: 1421,
-      }
+          protocol: "ws",
+          host,
+          port: 1421,
+        }
       : undefined,
     watch: {
       // 3. tell vite to ignore watching `src-tauri`
       ignored: ["**/src-tauri/**"],
     },
     fs: {
-      allow: ['.', 'THIRD_PARTY_LICENSES.md']
-    }
+      allow: [".", "THIRD_PARTY_LICENSES.md"],
+    },
   },
 }));

@@ -10,8 +10,8 @@
   import { serverContext } from "$lib/contexts/server.context";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import { keepScreenOn } from "tauri-plugin-keep-screen-on-api";
-  import { useSwipe, type SwipeCustomEvent } from "svelte-gestures";
   import ActionDrawer from "$lib/components/ActionDrawer.svelte";
+  import { useSwipe, type SwipeCustomEvent } from "svelte-gestures";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
   type Props = {
@@ -101,7 +101,7 @@
     onClick={(tileId) => {
       try {
         impactFeedback("medium");
-      } catch (_err) {
+      } catch {
         //
       }
       clickTile(tileId);

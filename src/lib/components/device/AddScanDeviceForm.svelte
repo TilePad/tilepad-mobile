@@ -175,54 +175,52 @@
       </Button>
     {/snippet}
 
-    {#snippet children()}
-      <div class="content">
-        {#if currentState === State.Scanning}
-          <p>{i18n.f("scanning")}</p>
-          <div class="actions">
-            <Button onclick={onClose}>{i18n.f("cancel")}</Button>
-          </div>
-        {:else if currentState === State.Checking}
-          <PulseLoader />
-          <p>{i18n.f("checking_addresses")}</p>
-          <div class="actions">
-            <Button onclick={onClose}>{i18n.f("cancel")}</Button>
-          </div>
-        {:else if currentState === State.Scanned}
-          <form onsubmit={onSubmit}>
-            <label for="name">{i18n.f("name")}</label>
-            <TextInput id="name" type="text" bind:value={name} />
+    <div class="content">
+      {#if currentState === State.Scanning}
+        <p>{i18n.f("scanning")}</p>
+        <div class="actions">
+          <Button onclick={onClose}>{i18n.f("cancel")}</Button>
+        </div>
+      {:else if currentState === State.Checking}
+        <PulseLoader />
+        <p>{i18n.f("checking_addresses")}</p>
+        <div class="actions">
+          <Button onclick={onClose}>{i18n.f("cancel")}</Button>
+        </div>
+      {:else if currentState === State.Scanned}
+        <form onsubmit={onSubmit}>
+          <label for="name">{i18n.f("name")}</label>
+          <TextInput id="name" type="text" bind:value={name} />
 
-            <label for="host">{i18n.f("host")}</label>
-            <TextInput id="host" type="text" bind:value={host} />
+          <label for="host">{i18n.f("host")}</label>
+          <TextInput id="host" type="text" bind:value={host} />
 
-            <label for="port">{i18n.f("port")}</label>
-            <NumberInput
-              id="port"
-              value={port}
-              oninput={(event) => (port = event.currentTarget.valueAsNumber)}
-            />
-
-            <div class="actions">
-              <Button onclick={onClose}>{i18n.f("cancel")}</Button>
-              <Button type="submit">{i18n.f("save")}</Button>
-            </div>
-          </form>
-        {:else if currentState === State.NothingValid}
-          <p>{i18n.f("scanned_none")}</p>
+          <label for="port">{i18n.f("port")}</label>
+          <NumberInput
+            id="port"
+            value={port}
+            oninput={(event) => (port = event.currentTarget.valueAsNumber)}
+          />
 
           <div class="actions">
             <Button onclick={onClose}>{i18n.f("cancel")}</Button>
+            <Button type="submit">{i18n.f("save")}</Button>
           </div>
-        {:else if currentState === State.InvalidQR}
-          <p>{i18n.f("invalid_qr")}</p>
+        </form>
+      {:else if currentState === State.NothingValid}
+        <p>{i18n.f("scanned_none")}</p>
 
-          <div class="actions">
-            <Button onclick={onClose}>{i18n.f("cancel")}</Button>
-          </div>
-        {/if}
-      </div>
-    {/snippet}
+        <div class="actions">
+          <Button onclick={onClose}>{i18n.f("cancel")}</Button>
+        </div>
+      {:else if currentState === State.InvalidQR}
+        <p>{i18n.f("invalid_qr")}</p>
+
+        <div class="actions">
+          <Button onclick={onClose}>{i18n.f("cancel")}</Button>
+        </div>
+      {/if}
+    </div>
   </Dialog>
 {/if}
 

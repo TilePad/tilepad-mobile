@@ -1,6 +1,6 @@
 import { x25519 } from "@noble/curves/ed25519.js";
-import { equalBytes } from "@noble/curves/utils.js";
 import { decode, encode } from "@msgpack/msgpack";
+import { equalBytes } from "@noble/curves/utils.js";
 import { EventEmitter } from "$lib/utils/eventEmitter";
 
 import type { TileModel } from "./types/tiles";

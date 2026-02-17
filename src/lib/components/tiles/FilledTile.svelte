@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { TileModel } from "$lib/api/types/tiles";
 
-  import { useTap, type TapCustomEvent } from "svelte-gestures";
   import { type DisplayContext } from "$lib/api/types/plugin";
   import { serverContext } from "$lib/contexts/server.context";
+  import { useTap, type TapCustomEvent } from "svelte-gestures";
 
   import TileIcon from "./TileIcon.svelte";
   import TileLabelElm from "./TileLabel.svelte";

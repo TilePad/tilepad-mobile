@@ -43,29 +43,27 @@
     </Button>
   {/snippet}
 
-  {#snippet children()}
-    <div class="content">
-      <form onsubmit={onSubmit}>
-        <label for="name">{i18n.f("name")}</label>
-        <TextInput id="name" type="text" bind:value={name} />
+  <div class="content">
+    <form onsubmit={onSubmit}>
+      <label for="name">{i18n.f("name")}</label>
+      <TextInput id="name" type="text" bind:value={name} />
 
-        <label for="host">{i18n.f("host")}</label>
-        <TextInput id="host" type="text" bind:value={host} />
+      <label for="host">{i18n.f("host")}</label>
+      <TextInput id="host" type="text" bind:value={host} />
 
-        <label for="port">{i18n.f("port")}</label>
-        <NumberInput
-          id="port"
-          value={port}
-          oninput={(event) => (port = event.currentTarget.valueAsNumber)}
-        />
+      <label for="port">{i18n.f("port")}</label>
+      <NumberInput
+        id="port"
+        value={port}
+        oninput={(event) => (port = event.currentTarget.valueAsNumber)}
+      />
 
-        <div class="actions">
-          <DialogCloseButton buttonLabel={{ text: i18n.f("cancel") }} />
-          <Button type="submit">{i18n.f("create")}</Button>
-        </div>
-      </form>
-    </div>
-  {/snippet}
+      <div class="actions">
+        <DialogCloseButton buttonLabel={{ text: i18n.f("cancel") }} />
+        <Button type="submit">{i18n.f("create")}</Button>
+      </div>
+    </form>
+  </div>
 </Dialog>
 
 <style>

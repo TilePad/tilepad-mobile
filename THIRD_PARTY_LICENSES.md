@@ -1,7 +1,9 @@
 # Third party licenses
+
 This page lists the licenses of third party dependencies used by this project
 
 ## Licenses
+
 - OFL-1.1
 - CC-BY-4.0
 - MIT
@@ -1212,4 +1214,3 @@ This page lists the licenses of third party dependencies used by this project
 - [zerocopy-derive](https://github.com/google/zerocopy) - 0.8.26
 
 ---
-
