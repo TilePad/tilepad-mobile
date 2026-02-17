@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { TileModel } from "$lib/api/types/tiles";
 
-  import { tap, type TapCustomEvent } from "svelte-gestures";
+  import { useTap, type TapCustomEvent } from "svelte-gestures";
   import { type DisplayContext } from "$lib/api/types/plugin";
   import { serverContext } from "$lib/contexts/server.context";
 
@@ -61,8 +61,7 @@
 
 <TileContainer position={tile.position} {tileSize} {gap}>
   <button
-    use:tap={() => ({ timeframe: 1000 })}
-    ontap={onTap}
+    {...useTap(onTap, () => ({ timeframe: 1000 }), {})}
     style="--tile-border-color: {config.icon_options.border_color}"
     class="tile"
     aria-roledescription="button"

@@ -10,7 +10,7 @@
   import { serverContext } from "$lib/contexts/server.context";
   import TilesView from "$lib/components/tiles/TilesView.svelte";
   import { keepScreenOn } from "tauri-plugin-keep-screen-on-api";
-  import { swipe, type SwipeCustomEvent } from "svelte-gestures";
+  import { useSwipe, type SwipeCustomEvent } from "svelte-gestures";
   import ActionDrawer from "$lib/components/ActionDrawer.svelte";
   import { getTilepadSocket } from "$lib/components/WebsocketProvider.svelte";
 
@@ -74,9 +74,23 @@
       return deviceId;
     },
   });
+
+  const { swipe, onswipe, onswipedown, onswipemove, onswipeup } = useSwipe(
+    onSwipe,
+    () => ({}),
+    {},
+    true,
+  );
 </script>
 
-<svelte:body use:swipe={() => ({})} onswipe={onSwipe} />
+{/* @ts-expect-error https://github.com/Rezi/svelte-gestures/issues/38#issuecomment-3315953573 */ null}
+<svelte:body
+  {@attach swipe}
+  {onswipe}
+  {onswipedown}
+  {onswipemove}
+  {onswipeup}
+/>
 
 <ActionDrawer open={drawerOpen} onClose={() => (drawerOpen = false)} />
 

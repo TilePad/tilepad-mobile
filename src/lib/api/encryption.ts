@@ -1,6 +1,5 @@
-import { randomBytes } from "@noble/ciphers/webcrypto";
-import { xchacha20poly1305 } from "@noble/ciphers/chacha";
-import { bytesToUtf8, utf8ToBytes } from "@noble/ciphers/utils";
+import { xchacha20poly1305 } from "@noble/ciphers/chacha.js";
+import { bytesToUtf8, utf8ToBytes, randomBytes } from "@noble/ciphers/utils.js";
 
 export function decryptMessage(
   key: Uint8Array,

@@ -1,5 +1,5 @@
-import { x25519 } from "@noble/curves/ed25519";
-import { equalBytes } from "@noble/curves/utils";
+import { x25519 } from "@noble/curves/ed25519.js";
+import { equalBytes } from "@noble/curves/utils.js";
 import { decode, encode } from "@msgpack/msgpack";
 import { EventEmitter } from "$lib/utils/eventEmitter";
 

@@ -15,6 +15,10 @@
     "tauri",
     "tilepad",
     "unplugin",
-    "vite"
+    "vite",
+    "onswipedown",
+    "onswipe",
+    "onswipemove",
+    "onswipeup"
   ]
 }

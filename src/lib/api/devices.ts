@@ -46,10 +46,10 @@ export async function removeDevice(deviceId: string) {
 // [QUERIES] ------------------------------------------------------
 
 export function createDevicesQuery() {
-  return createQuery({
+  return createQuery(() => ({
     queryKey: devicesKeys.devices,
     queryFn: getDevices,
-  });
+  }));
 }
 
 // [MUTATORS] ------------------------------------------------------

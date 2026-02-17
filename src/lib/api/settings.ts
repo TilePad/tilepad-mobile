@@ -24,16 +24,16 @@ async function setSettings(settings: SettingsConfig) {
 // [QUERIES] ------------------------------------------------------
 
 export function createSettingsQuery() {
-  return createQuery({
+  return createQuery(() => ({
     queryKey: settingsKeys.root,
     queryFn: getSettings,
-  });
+  }));
 }
 
 // [MUTATORS] ------------------------------------------------------
 
 export function createSetSettingsMutation() {
-  return createMutation({
+  return createMutation(() => ({
     scope: {
       id: "settings",
     },
@@ -42,5 +42,5 @@ export function createSetSettingsMutation() {
     onSuccess: (data) => {
       queryClient.setQueryData(settingsKeys.root, data);
     },
-  });
+  }));
 }
