@@ -10,7 +10,7 @@
   import { getSettingsContext } from "$lib/components/SettingsProvider.svelte";
   import SolarDocumentAddBoldDuotone from "~icons/solar/document-add-bold-duotone";
 
-  import LicensesDialog from "./liceneses/LicensesDialog.svelte";
+  import LicensesDialog from "./licenses/LicensesDialog.svelte";
 
   const i18n = i18nContext.get();
 
