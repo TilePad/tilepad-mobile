@@ -114,6 +114,7 @@ export function createTilepadSocket(
       onDisconnect = undefined;
     }
   };
+
   const reconnect = () => {
     if (detailsState !== null) {
       connect(detailsState);
